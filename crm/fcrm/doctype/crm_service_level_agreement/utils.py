@@ -20,7 +20,7 @@ def get_sla(doc: Document) -> Document:
 		frappe.qb.from_(SLA)
 		.select(SLA.name, SLA.condition)
 		.where(SLA.apply_on == doc.doctype)
-		.where(SLA.enabled == True)
+		.where(SLA.enabled == 1)
 		.where(Criterion.any([SLA.start_date.isnull(), SLA.start_date <= now]))
 		.where(Criterion.any([SLA.end_date.isnull(), SLA.end_date >= now]))
 	)
