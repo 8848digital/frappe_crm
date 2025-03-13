@@ -171,7 +171,7 @@ def get_doctype_fields_meta(DocField, doctype, allowed_fieldtypes, restricted_fi
 			DocField.options,
 		)
 		.where(DocField[parent] == doctype)
-		.where(DocField.hidden == False)  # noqa: E712
+		.where(DocField.hidden == 0)  # noqa: E712
 		.where(Criterion.any([DocField.fieldtype == i for i in allowed_fieldtypes]))
 		.where(Criterion.all([DocField.fieldname != i for i in restricted_fields]))
 		.run(as_dict=True)
