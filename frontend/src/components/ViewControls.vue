@@ -772,32 +772,31 @@ const quickFilterOptions = computed(() => {
 })
 
 const quickFilterList = computed(() => {
-  let filters = quickFilters.data || []
+  let filters = Array.isArray(quickFilters.data) ? quickFilters.data : [];
 
   filters.forEach((filter) => {
-    filter['value'] = filter.fieldtype == 'Check' ? false : ''
-    if (list.value.params?.filters[filter.fieldname]) {
-      let value = list.value.params.filters[filter.fieldname]
-      if (Array.isArray(value)) {
-        if (
-          (['Check', 'Select', 'Link', 'Date', 'Datetime'].includes(
-            filter.fieldtype,
-          ) &&
-            value[0]?.toLowerCase() == 'like') ||
-          value[0]?.toLowerCase() != 'like'
-        )
-          return
-        filter['value'] = value[1]?.replace(/%/g, '')
-      } else if (typeof value == 'boolean') {
-        filter['value'] = value
-      } else {
-        filter['value'] = value?.replace(/%/g, '')
-      }
-    }
-  })
+    filter['value'] = filter.fieldtype == 'Check' ? false : '';
 
-  return filters
-})
+    let value = list.value.params?.filters?.[filter.fieldname];
+
+    if (Array.isArray(value)) {
+      if (
+        (['Check', 'Select', 'Link', 'Date', 'Datetime'].includes(filter.fieldtype) &&
+          value[0]?.toLowerCase() == 'like') ||
+        value[0]?.toLowerCase() != 'like'
+      ) return;
+
+      filter['value'] = value[1]?.replace(/%/g, '');
+    } else if (typeof value == 'boolean') {
+      filter['value'] = value;
+    } else {
+      filter['value'] = value?.replace(/%/g, '');
+    }
+  });
+
+  return filters;
+});
+
 
 const quickFilters = createResource({
   url: 'crm.api.doc.get_quick_filters',
@@ -810,11 +809,16 @@ const quickFilters = createResource({
 })
 
 function setupNewQuickFilters(filters) {
+  if (!Array.isArray(filters)) {
+    console.warn("Expected an array, but got:", filters);
+    filters = []; // Default to empty array
+  }
+
   newQuickFilters.value = filters.map((f) => ({
-    label: f.label,
-    fieldname: f.fieldname,
-    fieldtype: f.fieldtype,
-  }))
+    label: f.label || '',
+    fieldname: f.fieldname || '',
+    fieldtype: f.fieldtype || 'Data',
+  }));
 }
 
 function applyQuickFilter(filter, value) {
