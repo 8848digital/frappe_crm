@@ -241,6 +241,7 @@ def create_customer_in_erpnext(doc, method):
 		"crm_deal": doc.name,
 		"contacts": json.dumps(contacts),
 		"address": json.dumps(address) if address else None,
+		"custom_business_vertical": doc.business_vertical
 	}
 	if not erpnext_crm_settings.is_erpnext_in_different_site:
 		from erpnext.frappe_crm_api import create_customer
