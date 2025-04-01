@@ -1,15 +1,9 @@
 <template>
   <Dialog v-model="show" :options="dialogOptions">
     <template #body>
-<<<<<<< HEAD
-      <div class="bg-surface-modal px-4 pb-6 pt-5 sm:px-6">
-        <div class="mb-5 flex items-center justify-between">
-          <div>
-=======
       <div class="px-4 pt-5 pb-6 bg-surface-modal sm:px-6">
         <div class="flex items-center justify-between mb-5">
           <div class="flex items-center gap-2">
->>>>>>> 832323f (fix: handle new document for call log)
             <h3 class="text-2xl font-semibold leading-6 text-ink-gray-9">
               {{ __(dialogOptions.title) || __('Untitled') }}
             </h3>
@@ -19,38 +13,30 @@
             <Button
               v-if="isManager() && !isMobileView"
               variant="ghost"
+              :tooltip="__('Edit fields layout')"
+              :icon="EditIcon"
               class="w-7"
               @click="openQuickEntryModal"
-            >
-<<<<<<< HEAD
-              <EditIcon class="h-4 w-4" />
-=======
-              <EditIcon class="w-4 h-4" />
->>>>>>> 832323f (fix: handle new document for call log)
-            </Button>
-            <Button variant="ghost" class="w-7" @click="show = false">
-              <FeatherIcon name="x" class="h-4 w-4" />
-            </Button>
+            />
+            <Button
+              variant="ghost"
+              class="w-7"
+              @click="show = false"
+              icon="x"
+            />
           </div>
         </div>
         <div v-if="tabs.data">
           <FieldLayout
             :tabs="tabs.data"
-<<<<<<< HEAD
-            :data="_callLog"
-            doctype="CRM Call Log"
-          />
-          <ErrorMessage class="mt-2" :message="error" />
-=======
             :data="callLog.doc"
             doctype="CRM Call Log"
           />
           <ErrorMessage class="mt-8" :message="error" />
->>>>>>> 832323f (fix: handle new document for call log)
         </div>
       </div>
-      <div class="px-4 pb-7 pt-4 sm:px-6">
-        <div class="space-y-2">
+      <div class="px-4 pt-4 pb-7 sm:px-6">
+        <div class="flex justify-end gap-2">
           <Button
             class="w-full"
             v-for="action in dialogOptions.actions"
@@ -74,10 +60,18 @@ import { showQuickEntryModal, quickEntryProps } from '@/composables/modals'
 import { getRandom } from '@/utils'
 import { capture } from '@/telemetry'
 import { useDocument } from '@/data/document'
-import { FeatherIcon, createResource, ErrorMessage, Badge } from 'frappe-ui'
-import { ref, nextTick, watch, computed } from 'vue'
+import { createResource, ErrorMessage, Badge } from 'frappe-ui'
+import { ref, nextTick, computed, onMounted } from 'vue'
 
 const props = defineProps({
+  data: {
+    type: Object,
+    default: () => ({}),
+  },
+  referenceDoc: {
+    type: Object,
+    default: () => ({}),
+  },
   options: {
     type: Object,
     default: {
@@ -89,14 +83,15 @@ const props = defineProps({
 const { isManager } = usersStore()
 
 const show = defineModel()
-const _callLog = defineModel('callLog')
 
 const loading = ref(false)
 const error = ref(null)
-const title = ref(null)
 const editMode = ref(false)
 
-const callLog = ref(null)
+const { document: callLog, triggerOnBeforeCreate } = useDocument(
+  'CRM Call Log',
+  props.data?.name || '',
+)
 
 const dialogOptions = computed(() => {
   let title = !editMode.value ? __('New Call Log') : __('Edit Call Log')
@@ -105,8 +100,7 @@ const dialogOptions = computed(() => {
     {
       label: editMode.value ? __('Save') : __('Create'),
       variant: 'solid',
-      onClick: () =>
-        editMode.value ? updateCallLog() : createCallLog.submit(),
+      onClick: () => (editMode.value ? updateCallLog() : createCallLog()),
     },
   ]
 
@@ -129,7 +123,10 @@ const callBacks = {
     loading.value = false
     if (err.exc_type == 'MandatoryError') {
       const errorMessage = err.messages
-        .map((msg) => msg.split(': ')[2].trim())
+        .map((msg) => {
+          let arr = msg.split(': ')
+          return arr[arr.length - 1].trim()
+        })
         .join(', ')
       error.value = __('These fields are required: {0}', [errorMessage])
       return
@@ -140,21 +137,24 @@ const callBacks = {
 
 async function updateCallLog() {
   loading.value = true
-  await callLog.value.save.submit(null, callBacks)
+  await callLog.save.submit(null, callBacks)
 }
 
-const createCallLog = createResource({
+async function createCallLog() {
+  Object.assign(callLog.doc, {
+    doctype: 'CRM Call Log',
+    id: getRandom(6),
+    telephony_medium: 'Manual',
+  })
+
+  await triggerOnBeforeCreate?.(props.referenceDoc)
+  await _createCallLog.submit({
+    doc: callLog.doc,
+  })
+}
+
+const _createCallLog = createResource({
   url: 'frappe.client.insert',
-  makeParams() {
-    return {
-      doc: {
-        doctype: 'CRM Call Log',
-        id: getRandom(6),
-        telephony_medium: 'Manual',
-        ...callLog.value.doc,
-      },
-    }
-  },
   onSuccess(doc) {
     loading.value = false
     if (doc.name) {
@@ -163,12 +163,7 @@ const createCallLog = createResource({
     }
   },
   onError(err) {
-<<<<<<< HEAD
-    loading.value = false
-    error.value = err
-=======
     callBacks.onError(err)
->>>>>>> 832323f (fix: handle new document for call log)
   },
 })
 
@@ -177,23 +172,13 @@ function handleCallLogUpdate(doc) {
   props.options.afterInsert && props.options.afterInsert(doc)
 }
 
-watch(
-  () => show.value,
-  (value) => {
-    if (!value) return
-    editMode.value = false
+onMounted(() => {
+  editMode.value = props.data?.name ? true : false
 
-    let docname = _callLog.value?.name
-    const { document } = useDocument('CRM Call Log', docname)
-    callLog.value = document
-
-    if (docname) {
-      editMode.value = true
-    } else {
-      callLog.value.doc = { ..._callLog.value }
-    }
-  },
-)
+  if (!props.data?.name) {
+    callLog.doc = { ...props.data }
+  }
+})
 
 function openQuickEntryModal() {
   showQuickEntryModal.value = true

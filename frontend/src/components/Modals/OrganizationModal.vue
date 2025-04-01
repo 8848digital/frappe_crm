@@ -1,8 +1,8 @@
 <template>
   <Dialog v-model="show" :options="{ size: 'xl' }">
     <template #body>
-      <div class="bg-surface-modal px-4 pb-6 pt-5 sm:px-6">
-        <div class="mb-5 flex items-center justify-between">
+      <div class="px-4 pt-5 pb-6 bg-surface-modal sm:px-6">
+        <div class="flex items-center justify-between mb-5">
           <div>
             <h3 class="text-2xl font-semibold leading-6 text-ink-gray-9">
               {{ __('New Organization') }}
@@ -13,34 +13,27 @@
               v-if="isManager() && !isMobileView"
               variant="ghost"
               class="w-7"
+              :tooltip="__('Edit fields layout')"
+              :icon="EditIcon"
               @click="openQuickEntryModal"
-            >
-<<<<<<< HEAD
-              <EditIcon class="h-4 w-4" />
-=======
-              <EditIcon class="w-4 h-4" />
->>>>>>> c4feed1 (fix: handle new document for lead/deal/contact/organization)
-            </Button>
-            <Button variant="ghost" class="w-7" @click="show = false">
-              <FeatherIcon name="x" class="h-4 w-4" />
-            </Button>
+            />
+            <Button
+              variant="ghost"
+              class="w-7"
+              @click="show = false"
+              icon="x"
+            />
           </div>
         </div>
         <FieldLayout
           v-if="tabs.data?.length"
           :tabs="tabs.data"
-<<<<<<< HEAD
-          :data="_organization"
-          doctype="CRM Organization"
-        />
-=======
-          :data="_organization.doc"
+          :data="organization.doc"
           doctype="CRM Organization"
         />
         <ErrorMessage class="mt-8" v-if="error" :message="__(error)" />
->>>>>>> c4feed1 (fix: handle new document for lead/deal/contact/organization)
       </div>
-      <div class="px-4 pb-7 pt-4 sm:px-6">
+      <div class="px-4 pt-4 pb-7 sm:px-6">
         <div class="space-y-2">
           <Button
             class="w-full"
@@ -68,11 +61,15 @@ import {
 } from '@/composables/modals'
 import { useDocument } from '@/data/document'
 import { capture } from '@/telemetry'
-import { call, FeatherIcon, createResource } from 'frappe-ui'
+import { call, createResource } from 'frappe-ui'
 import { ref, nextTick, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 
 const props = defineProps({
+  data: {
+    type: Object,
+    default: () => ({}),
+  },
   options: {
     type: Object,
     default: {
@@ -86,40 +83,34 @@ const { isManager } = usersStore()
 
 const router = useRouter()
 const show = defineModel()
-const organization = defineModel('organization')
 
 const loading = ref(false)
-const title = ref(null)
+const error = ref(null)
 
-const { document: _organization } = useDocument('CRM Organization')
-
-if (Object.keys(_organization.doc).length != 0) {
-  _organization.doc = { no_of_employees: '1-10' }
-}
-
-let doc = ref({})
+const { document: organization, triggerOnBeforeCreate } =
+  useDocument('CRM Organization')
 
 async function createOrganization() {
+  loading.value = true
+  error.value = null
+
+  await triggerOnBeforeCreate?.()
+
   const doc = await call(
     'frappe.client.insert',
     {
       doc: {
         doctype: 'CRM Organization',
-        ..._organization.doc,
+        ...organization.doc,
       },
     },
-<<<<<<< HEAD
-  })
-=======
     {
       onError: (err) => {
-        if (err.error.exc_type == 'ValidationError') {
-          error.value = err.error?.messages?.[0]
-        }
+        error.value = err.error?.messages?.[0]
+        loading.value = false
       },
     },
   )
->>>>>>> c4feed1 (fix: handle new document for lead/deal/contact/organization)
   loading.value = false
   if (doc.name) {
     capture('organization_created')
@@ -133,8 +124,6 @@ function handleOrganizationUpdate(doc) {
       name: 'Organization',
       params: { organizationId: doc.name },
     })
-  } else {
-    organization.value?.reload?.()
   }
   show.value = false
   props.options.afterInsert && props.options.afterInsert(doc)
@@ -152,13 +141,13 @@ const tabs = createResource({
           column.fields.forEach((field) => {
             if (field.fieldname == 'address') {
               field.create = (value, close) => {
-                _organization.doc.address = value
+                organization.doc.address = value
                 openAddressModal()
                 close()
               }
               field.edit = (address) => openAddressModal(address)
             } else if (field.fieldtype === 'Table') {
-              _organization.doc[field.fieldname] = []
+              organization.doc[field.fieldname] = []
             }
           })
         })
@@ -168,10 +157,8 @@ const tabs = createResource({
 })
 
 onMounted(() => {
-  Object.assign(
-    _organization.doc,
-    organization.value?.doc || organization.value || {},
-  )
+  organization.doc = { no_of_employees: '1-10' }
+  Object.assign(organization.doc, props.data)
 })
 
 function openQuickEntryModal() {
@@ -186,6 +173,5 @@ function openAddressModal(_address) {
     doctype: 'Address',
     address: _address,
   }
-  nextTick(() => (show.value = false))
 }
 </script>
