@@ -62,18 +62,12 @@
       </Button>
     </div>
   </div>
-  <ContactModal
-    v-model="showContactModal"
-    v-model:showQuickEntryModal="showQuickEntryModal"
-    :contact="{}"
-    @openAddressModal="(_address) => openAddressModal(_address)"
+  <ErrorPage
+    v-else-if="errorTitle"
+    :errorTitle="errorTitle"
+    :errorMessage="errorMessage"
   />
-  <QuickEntryModal
-    v-if="showQuickEntryModal"
-    v-model="showQuickEntryModal"
-    doctype="Contact"
-  />
-  <AddressModal v-model="showAddressModal" v-model:address="address" />
+  <AddressModal v-model="showAddressModal" v-model:address="_address" />
 </template>
 
 <script setup>
