@@ -52,10 +52,9 @@ import ERPNextIcon from '@/components/Icons/ERPNextIcon.vue'
 import HelpdeskIcon from '@/components/Icons/HelpdeskIcon.vue'
 import PhoneIcon from '@/components/Icons/PhoneIcon.vue'
 import Email2Icon from '@/components/Icons/Email2Icon.vue'
-import EmailTemplateIcon from '@/components/Icons/EmailTemplateIcon.vue'
-import SettingsIcon2 from '@/components/Icons/SettingsIcon2.vue'
-import Users from '@/components/Settings/Users.vue'
-import InviteUserPage from '@/components/Settings/InviteUserPage.vue'
+import Agents from '@/components/Settings/Agents.vue'
+import GeneralSettings from '@/components/Settings/GeneralSettings.vue'
+import InviteMemberPage from '@/components/Settings/InviteMemberPage.vue'
 import ProfileSettings from '@/components/Settings/ProfileSettings.vue'
 import WhatsAppSettings from '@/components/Settings/WhatsAppSettings.vue'
 import ERPNextSettings from '@/components/Settings/ERPNextSettings.vue'
@@ -106,30 +105,14 @@ const tabs = computed(() => {
       label: __('System Configuration'),
       items: [
         {
-          label: __('Forecasting'),
-          component: markRaw(ForecastingSettings),
-          icon: TrendingUpDownIcon,
-        },
-        {
-          label: __('Currency & Exchange Rate'),
-          icon: CircleDollarSignIcon,
-          component: markRaw(CurrencySettings),
-        },
-        {
-          label: __('Brand Settings'),
-          icon: SparkleIcon,
-          component: markRaw(BrandSettings),
-        },
-      ],
-      condition: () => isManager(),
-    },
-    {
-      label: __('User Management'),
-      items: [
-        {
-          label: __('Users'),
+          label: __('Agents'),
           icon: 'user',
-          component: markRaw(Users),
+          component: markRaw(Agents),
+        },
+        {
+          label: __('General'),
+          icon: 'settings',
+          component: markRaw(GeneralSettings),
           condition: () => isManager(),
         },
         {
