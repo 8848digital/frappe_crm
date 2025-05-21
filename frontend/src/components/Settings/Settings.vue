@@ -54,7 +54,7 @@ import PhoneIcon from '@/components/Icons/PhoneIcon.vue'
 import Email2Icon from '@/components/Icons/Email2Icon.vue'
 import Agents from '@/components/Settings/Agents.vue'
 import GeneralSettings from '@/components/Settings/GeneralSettings.vue'
-import InviteMemberPage from '@/components/Settings/InviteMemberPage.vue'
+import InviteAgentPage from '@/components/Settings/InviteAgentPage.vue'
 import ProfileSettings from '@/components/Settings/ProfileSettings.vue'
 import WhatsAppSettings from '@/components/Settings/WhatsAppSettings.vue'
 import ERPNextSettings from '@/components/Settings/ERPNextSettings.vue'
@@ -116,9 +116,9 @@ const tabs = computed(() => {
           condition: () => isManager(),
         },
         {
-          label: __('Invite User'),
-          icon: 'user-plus',
-          component: markRaw(InviteUserPage),
+          label: __('Invite Agent'),
+          icon: InviteIcon,
+          component: markRaw(InviteAgentPage),
           condition: () => isManager(),
         },
       ],
