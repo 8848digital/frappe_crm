@@ -83,7 +83,7 @@
                   :label="__('Delete')"
                   theme="red"
                   size="sm"
-                  @click="deleteOrganization"
+                  @click="deleteOrganization()"
                 >
                   <template #prefix>
                     <FeatherIcon name="trash-2" class="h-4 w-4" />
@@ -165,6 +165,13 @@
     :errorTitle="errorTitle"
     :errorMessage="errorMessage"
   />
+  <DeleteLinkedDocModal
+    v-if="showDeleteLinkedDocModal"
+    v-model="showDeleteLinkedDocModal"
+    :doctype="'CRM Organization'"
+    :docname="props.organizationId"
+    name="Organizations"
+  />
 </template>
 
 <script setup>
@@ -202,6 +209,7 @@ import {
 } from 'frappe-ui'
 import { h, computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import DeleteLinkedDocModal from '@/components/DeleteLinkedDocModal.vue'
 
 const props = defineProps({
   organizationId: {
@@ -221,6 +229,8 @@ const router = useRouter()
 
 const errorTitle = ref('')
 const errorMessage = ref('')
+
+const showDeleteLinkedDocModal = ref(false)
 
 const organization = createDocumentResource({
   doctype: 'CRM Organization',
@@ -260,7 +270,7 @@ const breadcrumbs = computed(() => {
     let view = getView(
       route.query.view,
       route.query.viewType,
-      'CRM Organization',
+      'CRM Organization'
     )
     if (view) {
       items.push({
@@ -297,6 +307,10 @@ usePageMeta(() => {
   }
 })
 
+async function deleteOrganization() {
+  showDeleteLinkedDocModal.value = true
+}
+
 async function changeOrganizationImage(file) {
   await call('frappe.client.set_value', {
     doctype: 'CRM Organization',
@@ -305,28 +319,6 @@ async function changeOrganizationImage(file) {
     value: file?.file_url || '',
   })
   organization.reload()
-}
-
-async function deleteOrganization() {
-  $dialog({
-    title: __('Delete organization'),
-    message: __('Are you sure you want to delete this organization?'),
-    actions: [
-      {
-        label: __('Delete'),
-        theme: 'red',
-        variant: 'solid',
-        async onClick(close) {
-          await call('frappe.client.delete', {
-            doctype: 'CRM Organization',
-            name: props.organizationId,
-          })
-          close()
-          router.push({ name: 'Organizations' })
-        },
-      },
-    ],
-  })
 }
 
 function website(url) {

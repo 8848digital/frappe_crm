@@ -1,52 +1,58 @@
 <template>
   <Dialog v-model="show" :options="{ size: 'xl' }">
-    <template #body v-if="!confirmDeleteInfo.show">
+    <template #body>
       <div class="bg-surface-modal px-4 pb-6 pt-5 sm:px-6">
-        <div class="mb-4 flex items-center justify-between">
+        <div class="mb-6 flex items-center justify-between">
           <div>
             <h3 class="text-2xl leading-6 text-ink-gray-9 font-semibold">
-              {{
-                linkedDocs?.length == 0
-                  ? __('Delete')
-                  : __('Delete or unlink linked documents')
-              }}
+              {{ __('Delete') }}
             </h3>
           </div>
           <div class="flex items-center gap-1">
-            <Button variant="ghost" icon="x" @click="show = false" />
+            <Button variant="ghost" class="w-7" @click="show = false">
+              <FeatherIcon name="x" class="h-4 w-4" />
+            </Button>
           </div>
         </div>
         <div>
-          <div v-if="linkedDocs?.length > 0">
-            <span class="text-ink-gray-5 text-base">
+          <div v-if="linkedDocs.data?.length > 0">
+            <span>
               {{
                 __(
-                  'Delete or unlink these linked documents before deleting this document',
+                  'Unlink these linked documents before deleting this document',
                 )
               }}
             </span>
-            <LinkedDocsListView
-              class="mt-4"
-              :rows="linkedDocs"
-              :columns="[
-                {
-                  label: 'Document',
-                  key: 'title',
-                },
-                {
-                  label: 'Master',
-                  key: 'reference_doctype',
-                  width: '30%',
-                },
-              ]"
-              @selectionsChanged="
-                (selections) => viewControls.updateSelections(selections)
-              "
-              :linkedDocsResource="linkedDocsResource"
-              :unlinkLinkedDoc="unlinkLinkedDoc"
-            />
+            <ul class="mt-5 space-y-1">
+              <hr />
+              <li v-for="doc in linkedDocs.data" :key="doc.name">
+                <div class="flex justify-between items-center">
+                  <span
+                    class="text-lg font-medium text-ellipsis overflow-hidden whitespace-nowrap w-full"
+                    >{{ doc.reference_doctype }} ({{
+                      doc.reference_docname
+                    }})</span
+                  >
+                  <div class="flex gap-2">
+                    <Button variant="ghost" @click="viewLinkedDoc(doc)">
+                      <div class="flex gap-1">
+                        <FeatherIcon name="external-link" class="h-4 w-4" />
+                        <span> View </span>
+                      </div>
+                    </Button>
+                    <Button variant="ghost" @click="unlinkLinkedDoc(doc)">
+                      <div class="flex gap-1">
+                        <FeatherIcon name="unlock" class="h-4 w-4" />
+                        <span> Unlink </span>
+                      </div>
+                    </Button>
+                  </div>
+                </div>
+                <hr class="my-2 w-full" />
+              </li>
+            </ul>
           </div>
-          <div v-if="linkedDocs?.length == 0" class="text-ink-gray-5 text-base">
+          <div v-if="linkedDocs.data?.length == 0">
             {{
               __('Are you sure you want to delete {0} - {1}?', [
                 props.doctype,
@@ -54,69 +60,33 @@
               ])
             }}
           </div>
+          <ErrorMessage class="mt-4" v-if="error" :message="__(error)" />
         </div>
       </div>
       <div class="px-4 pb-7 pt-0 sm:px-6">
         <div class="flex flex-row-reverse gap-2">
           <Button
-            v-if="linkedDocs?.length > 0"
-            :label="
-              viewControls?.selections?.length == 0
-                ? __('Delete all')
-                : __('Delete {0} item(s)', [viewControls?.selections?.length])
-            "
-            theme="red"
+            v-if="linkedDocs.data?.length > 0"
             variant="solid"
-            icon-left="trash-2"
-            @click="confirmDelete()"
-          />
-          <Button
-            v-if="linkedDocs?.length > 0"
-            :label="
-              viewControls?.selections?.length == 0
-                ? __('Unlink all')
-                : __('Unlink {0} item(s)', [viewControls?.selections?.length])
+            @click="
+              unlinkLinkedDoc({
+                reference_doctype: props.doctype,
+                reference_docname: props.docname,
+                removeAll: true,
+              })
             "
-            variant="subtle"
-            theme="gray"
-            icon-left="unlock"
-            @click="confirmUnlink()"
-          />
+          >
+            <div class="flex gap-1">
+              <FeatherIcon name="unlock" class="h-4 w-4" />
+              <span> Unlink all </span>
+            </div>
+          </Button>
           <Button
-            v-if="linkedDocs?.length == 0"
+            v-if="linkedDocs.data?.length == 0"
             variant="solid"
-            icon-left="trash-2"
             :label="__('Delete')"
             :loading="isDealCreating"
             @click="deleteDoc()"
-            theme="red"
-          />
-        </div>
-      </div>
-    </template>
-    <template #body v-if="confirmDeleteInfo.show">
-      <div class="bg-surface-modal px-4 pb-6 pt-5 sm:px-6">
-        <div class="mb-6 flex items-center justify-between">
-          <div>
-            <h3 class="text-2xl leading-6 text-ink-gray-9 font-semibold">
-              {{ confirmDeleteInfo.title }}
-            </h3>
-          </div>
-          <div class="flex items-center gap-1">
-            <Button variant="ghost" icon="x" @click="show = false" />
-          </div>
-        </div>
-        <div class="text-ink-gray-5 text-base">
-          {{ confirmDeleteInfo.message }}
-        </div>
-        <div class="flex justify-end gap-2 mt-6">
-          <Button variant="ghost" @click="cancel()">
-            {{ __('Cancel') }}
-          </Button>
-          <Button
-            variant="solid"
-            :label="confirmDeleteInfo.title"
-            @click="removeDocLinks()"
             theme="red"
           />
         </div>
@@ -128,7 +98,6 @@
 <script setup>
 import { createResource, call } from 'frappe-ui'
 import { useRouter } from 'vue-router'
-import { computed, ref } from 'vue'
 
 const show = defineModel()
 const router = useRouter()
@@ -145,24 +114,10 @@ const props = defineProps({
     type: String,
     required: true,
   },
-  reload: {
-    type: Function,
-  },
-})
-const viewControls = ref({
-  selections: [],
-  updateSelections: (selections) => {
-    viewControls.value.selections = Array.from(selections || [])
-  },
 })
 
-const confirmDeleteInfo = ref({
-  show: false,
-  title: '',
-})
-
-const linkedDocsResource = createResource({
-  url: 'crm.api.doc.get_linked_docs_of_document',
+const linkedDocs = createResource({
+  url: 'crm.api.doc.getLinkedDocs',
   params: {
     doctype: props.doctype,
     docname: props.docname,
@@ -175,83 +130,19 @@ const linkedDocsResource = createResource({
   },
 })
 
-const linkedDocs = computed(() => {
-  return (
-    linkedDocsResource.data?.map((doc) => ({
-      id: doc.reference_docname,
-      ...doc,
-    })) || []
-  )
-})
-
-const cancel = () => {
-  confirmDeleteInfo.value.show = false
-  viewControls.value.updateSelections([])
+const viewLinkedDoc = (doc) => {
+  window.open(`/app/Form/${doc.reference_doctype}/${doc.reference_docname}`)
 }
 
 const unlinkLinkedDoc = (doc) => {
-  let selectedDocs = []
-  if (viewControls.value.selections.length > 0) {
-    Array.from(viewControls.value.selections).forEach((selection) => {
-      const docData = linkedDocs.value.find((d) => d.id == selection)
-      selectedDocs.push({
-        doctype: docData.reference_doctype,
-        docname: docData.reference_docname,
-      })
-    })
-  } else {
-    selectedDocs = linkedDocs.value.map((doc) => ({
-      doctype: doc.reference_doctype,
-      docname: doc.reference_docname,
-    }))
-  }
-
-  call('crm.api.doc.remove_linked_doc_reference', {
-    items: selectedDocs,
-    remove_contact: props.doctype == 'Contact',
-    delete: doc.delete,
+  call('crm.api.doc.removeLinkedDocReference', {
+    doctype: doc.reference_doctype,
+    docname: doc.reference_docname,
+    removeAll: doc.removeAll,
+    removeContact: props.doctype == 'Contact',
   }).then(() => {
-    linkedDocsResource.reload()
-    confirmDeleteInfo.value = {
-      show: false,
-      title: '',
-    }
+    linkedDocs.reload()
   })
-}
-
-const confirmDelete = () => {
-  const items =
-    viewControls.value.selections.length == 0
-      ? 'all'
-      : viewControls.value.selections.length
-  confirmDeleteInfo.value = {
-    show: true,
-    title: __('Delete linked item'),
-    message: __('Are you sure you want to delete {0} linked item(s)?', [items]),
-    delete: true,
-  }
-}
-
-const confirmUnlink = () => {
-  const items =
-    viewControls.value.selections.length == 0
-      ? 'all'
-      : viewControls.value.selections.length
-  confirmDeleteInfo.value = {
-    show: true,
-    title: __('Unlink linked item'),
-    message: __('Are you sure you want to unlink {0} linked item(s)?', [items]),
-    delete: false,
-  }
-}
-
-const removeDocLinks = () => {
-  unlinkLinkedDoc({
-    reference_doctype: props.doctype,
-    reference_docname: props.docname,
-    delete: confirmDeleteInfo.value.delete,
-  })
-  viewControls.value.updateSelections([])
 }
 
 const deleteDoc = async () => {
@@ -260,6 +151,5 @@ const deleteDoc = async () => {
     name: props.docname,
   })
   router.push({ name: props.name })
-  props?.reload?.()
 }
 </script>
