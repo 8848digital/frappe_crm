@@ -146,13 +146,11 @@ function updateAssignees() {
     .map((assignee) => assignee.name)
 
   if (removedAssignees.length) {
-    for (let a of removedAssignees) {
-      call('frappe.desk.form.assign_to.remove', {
-        doctype: props.doctype,
-        name: props.doc.name,
-        assign_to: a,
-      })
-    }
+    call('crm.api.doc.remove_assignments', {
+      doctype: props.doctype,
+      name: props.doc.name,
+      assignees: JSON.stringify(removedAssignees),
+    })
   }
 
   if (addedAssignees.length) {
