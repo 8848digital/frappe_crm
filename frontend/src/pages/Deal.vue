@@ -13,8 +13,8 @@
         :actions="deal.data._customActions"
       />
       <AssignTo
-        v-model="deal.data._assignedTo"
-        :data="deal.data"
+        v-model="assignees.data"
+        :data="document.doc"
         doctype="CRM Deal"
       />
       <Dropdown
@@ -46,6 +46,7 @@
           v-model:reload="reload"
           v-model:tabIndex="tabIndex"
           v-model="deal"
+          @afterSave="reloadAssignees"
         />
       </template>
     </Tabs>
@@ -134,6 +135,7 @@
           :docname="lead.data.name"
           @update="updateField"
           @reload="sections.reload"
+          @afterFieldChange="reloadAssignees"
         >
           <template #actions="{ section }">
             <div v-if="section.name == 'contacts_section'" class="pr-2">
@@ -345,6 +347,7 @@ import { getSettings } from '@/stores/settings'
 import { globalStore } from '@/stores/global'
 import { statusesStore } from '@/stores/statuses'
 import { getMeta } from '@/stores/meta'
+import { useDocument } from '@/data/document'
 import { whatsappEnabled, callEnabled } from '@/composables/settings'
 import {
   createResource,
@@ -754,5 +757,13 @@ const activities = ref(null)
 
 function openEmailBox() {
   activities.value.emailBox.show = true
+}
+
+const { assignees, document } = useDocument('CRM Deal', props.dealId)
+
+function reloadAssignees(changes) {
+  if (changes?.hasOwnProperty('lead_owner')) {
+    assignees.reload()
+  }
 }
 </script>
