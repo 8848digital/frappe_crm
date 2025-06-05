@@ -15,9 +15,10 @@
     :doc="doc.data?.name"
     @after="redirect('notes')"
   />
-   <CallLogModal
+  <CallLogModal
+    v-if="showCallLogModal"
     v-model="showCallLogModal"
-    v-model:callLog="callLog"
+    :data="callLog"
     :options="{ afterInsert: () => activities.reload() }"
   />
 </template>

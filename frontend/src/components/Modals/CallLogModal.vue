@@ -60,15 +60,11 @@ import { showQuickEntryModal, quickEntryProps } from '@/composables/modals'
 import { getRandom } from '@/utils'
 import { capture } from '@/telemetry'
 import { useDocument } from '@/data/document'
-import { createResource, ErrorMessage, Badge } from 'frappe-ui'
+import { FeatherIcon, createResource, ErrorMessage, Badge } from 'frappe-ui'
 import { ref, nextTick, computed, onMounted } from 'vue'
 
 const props = defineProps({
   data: {
-    type: Object,
-    default: () => ({}),
-  },
-  referenceDoc: {
     type: Object,
     default: () => ({}),
   },
@@ -88,7 +84,7 @@ const loading = ref(false)
 const error = ref(null)
 const editMode = ref(false)
 
-const { document: callLog, triggerOnBeforeCreate } = useDocument(
+const { document: callLog } = useDocument(
   'CRM Call Log',
   props.data?.name || '',
 )
@@ -155,6 +151,16 @@ async function createCallLog() {
 
 const _createCallLog = createResource({
   url: 'frappe.client.insert',
+  makeParams() {
+    return {
+      doc: {
+        doctype: 'CRM Call Log',
+        id: getRandom(6),
+        telephony_medium: 'Manual',
+        ...callLog.doc,
+      },
+    }
+  },
   onSuccess(doc) {
     loading.value = false
     if (doc.name) {
