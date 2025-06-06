@@ -98,14 +98,14 @@ export function useDocument(doctype, docname) {
 
   async function triggerOnLoad() {
     const handler = async function () {
-      await this.onLoad?.()
+      await (this.onLoad?.() || this.on_load?.() || this.onload?.())
     }
     await trigger(handler)
   }
 
   async function triggerOnSave() {
     const handler = async function () {
-      await this.onSave?.()
+      await (this.onSave?.() || this.on_save?.())
     }
     await trigger(handler)
   }
