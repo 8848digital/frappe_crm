@@ -11,7 +11,15 @@
       <div class="absolute right-0">
         <Dropdown
           v-if="document.doc"
-          :options="statusOptions('deal', document, deal.data._customStatuses)"
+          :options="
+            statusOptions(
+              'deal',
+              updateStatus,
+              document.statuses?.length
+                ? document.statuses
+                : deal.data._customStatuses,
+            )
+          "
         >
           <template #default="{ open }">
             <Button :label="document.doc.status">
@@ -640,5 +648,10 @@ function reloadAssignees(data) {
   if (data?.hasOwnProperty('deal_owner')) {
     assignees.reload()
   }
+}
+
+function updateStatus(value) {
+  document.doc.status = value
+  document.save.submit()
 }
 </script>

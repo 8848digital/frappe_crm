@@ -100,10 +100,7 @@ export const statusesStore = defineStore('crm-statuses', () => {
         icon: () => h(IndicatorIcon, { class: statusesByName[status]?.color }),
         onClick: () => {
           capture('status_changed', { doctype, status })
-          if (document) {
-            document.doc.status = statusesByName[status]?.name
-            document.save.submit()
-          }
+          action && action(statusesByName[status]?.name)
         },
       })
     }
