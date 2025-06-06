@@ -74,7 +74,6 @@ const templates = createListResource({
   orderBy: 'modified desc',
   pageLength: 99999,
 })
-console.log("templates",templates)
 onMounted(() => {
   if (templates.data == null) {
     templates.fetch()
