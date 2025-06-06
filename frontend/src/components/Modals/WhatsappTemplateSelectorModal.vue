@@ -28,8 +28,8 @@
             {{ template.name }}
           </div>
           <TextEditor
-            v-if="template.template"
-            :content="template.template"
+            v-if="template.body"
+            :content="template.body"
             :editable="false"
             editor-class="!prose-sm max-w-none !text-sm text-ink-gray-5 focus:outline-none"
             class="flex-1 overflow-hidden"
@@ -69,14 +69,12 @@ const search = ref('')
 
 const templates = createListResource({
   type: 'list',
-  doctype: 'WhatsApp Templates',
-  cache: ['whatsappTemplates'],
-  fields: ['name', 'template', 'footer'],
-  filters: { status: 'APPROVED', for_doctype: ['in', [props.doctype, '']] },
+  doctype: 'WhatsApp Temp',
+  fields: ['name', 'body', 'footer'],
   orderBy: 'modified desc',
   pageLength: 99999,
 })
-
+console.log("templates",templates)
 onMounted(() => {
   if (templates.data == null) {
     templates.fetch()
