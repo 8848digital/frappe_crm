@@ -13,17 +13,14 @@
             <Button
               v-if="isManager() && !isMobileView"
               variant="ghost"
-              :tooltip="__('Edit fields layout')"
-              :icon="EditIcon"
               class="w-7"
               @click="openQuickEntryModal"
-            />
-            <Button
-              variant="ghost"
-              class="w-7"
-              @click="show = false"
-              icon="x"
-            />
+            >
+              <EditIcon class="w-4 h-4" />
+            </Button>
+            <Button variant="ghost" class="w-7" @click="show = false">
+              <FeatherIcon name="x" class="w-4 h-4" />
+            </Button>
           </div>
         </div>
         <div v-if="tabs.data">
@@ -36,7 +33,7 @@
         </div>
       </div>
       <div class="px-4 pt-4 pb-7 sm:px-6">
-        <div class="flex justify-end gap-2">
+        <div class="space-y-2">
           <Button
             class="w-full"
             v-for="action in dialogOptions.actions"

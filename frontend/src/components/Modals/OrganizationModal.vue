@@ -13,16 +13,13 @@
               v-if="isManager() && !isMobileView"
               variant="ghost"
               class="w-7"
-              :tooltip="__('Edit fields layout')"
-              :icon="EditIcon"
               @click="openQuickEntryModal"
-            />
-            <Button
-              variant="ghost"
-              class="w-7"
-              @click="show = false"
-              icon="x"
-            />
+            >
+              <EditIcon class="w-4 h-4" />
+            </Button>
+            <Button variant="ghost" class="w-7" @click="show = false">
+              <FeatherIcon name="x" class="w-4 h-4" />
+            </Button>
           </div>
         </div>
         <FieldLayout
