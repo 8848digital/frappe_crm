@@ -158,27 +158,6 @@ const tabs = computed(() => {
       ],
     },
     {
-      label: __('Automation & Rules'),
-      items: [
-        {
-          label: __('Assignment rules'),
-          icon: markRaw(h(SettingsIcon2, { class: 'rotate-90' })),
-          component: markRaw(AssignmentRulePage),
-        },
-      ],
-    },
-    {
-      label: __('Customization'),
-      items: [
-        {
-          label: __('Home Actions'),
-          component: markRaw(HomeActions),
-          icon: 'home',
-        },
-      ],
-      condition: () => isManager(),
-    },
-    {
       label: __('Integrations', null, 'FCRM'),
       items: [
         {
