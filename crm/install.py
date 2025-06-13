@@ -4,6 +4,7 @@ import click
 import frappe
 from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
 from crm.fcrm.doctype.crm_products.crm_products import create_product_details_script
+from crm.fcrm.doctype.fcrm_settings.fcrm_settings import create_forecasting_script
 
 
 
@@ -360,3 +361,4 @@ def add_standard_dropdown_items():
 def add_default_scripts():
 	for doctype in ["CRM Lead", "CRM Deal"]:
 		create_product_details_script(doctype)
+	create_forecasting_script()
