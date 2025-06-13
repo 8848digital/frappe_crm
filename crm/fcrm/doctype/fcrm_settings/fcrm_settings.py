@@ -94,9 +94,7 @@ def create_forecasting_script():
 
 
 def get_forecasting_script():
-	return (
-"""
-class CRMDeal {
+	return """class CRMDeal {
     async status() {
         await this.doc.trigger('updateProbability')
     }
@@ -109,6 +107,4 @@ class CRMDeal {
 
         this.doc.probability = status.probability
     }
-}
-"""
-)
+}"""
