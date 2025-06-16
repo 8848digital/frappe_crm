@@ -22,7 +22,11 @@
                   class="w-7 mr-2"
                   :icon="EditIcon"
                   @click="showSidePanelModal = true"
-                />
+                >
+                  <template #icon>
+                    <EditIcon />
+                  </template>
+                </Button>
               </slot>
             </template>
             <slot v-bind="{ section }">
