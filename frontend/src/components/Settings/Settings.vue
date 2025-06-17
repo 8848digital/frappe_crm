@@ -105,7 +105,7 @@ const tabs = computed(() => {
       label: __('System Configuration'),
       items: [
         {
-          label: __('Agents'),
+          label: __('Users'),
           icon: 'user',
           component: markRaw(Agents),
         },
@@ -116,7 +116,7 @@ const tabs = computed(() => {
           condition: () => isManager(),
         },
         {
-          label: __('Invite Agent'),
+          label: __('Invite User'),
           icon: InviteIcon,
           component: markRaw(InviteAgentPage),
           condition: () => isManager(),
