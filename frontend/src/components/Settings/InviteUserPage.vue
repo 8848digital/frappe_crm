@@ -21,11 +21,7 @@
           class="mt-4"
           v-model="role"
           :label="__('Invite as')"
-          :options="[
-            { label: __('Sales User'), value: 'Sales User' },
-            { label: __('Manager'), value: 'Sales Manager' },
-            { label: __('Admin'), value: 'System Manager' },
-          ]"
+          :options="roleOptions"
           :description="description"
         />
         <ErrorMessage class="mt-2" v-if="error" :message="error" />
@@ -82,6 +78,7 @@
 <script setup>
 import MultiValueInput from '@/components/Controls/MultiValueInput.vue'
 import { validateEmail, convertArrayToString } from '@/utils'
+import { usersStore } from '@/stores/users'
 import {
   createListResource,
   createResource,
@@ -89,6 +86,9 @@ import {
   Tooltip,
 } from 'frappe-ui'
 import { ref, computed } from 'vue'
+
+const { updateOnboardingStep } = useOnboarding('frappecrm')
+const { isAdmin, isManager } = usersStore()
 
 const invitees = ref([])
 const role = ref('Sales User')
@@ -99,10 +99,18 @@ const description = computed(() => {
     'System Manager':
       'Can manage all aspects of the CRM, including user management, customizations and settings.',
     'Sales Manager':
-      'Can manage and invite new agents, and create public & private views (reports).',
+      'Can manage and invite new users, and create public & private views (reports).',
     'Sales User':
       'Can work with leads and deals and create private views (reports).',
   }[role.value]
+})
+
+const roleOptions = computed(() => {
+  return [
+    { value: 'Sales User', label: __('Sales User') },
+    ...(isManager() ? [{ value: 'Sales Manager', label: __('Manager') }] : []),
+    ...(isAdmin() ? [{ value: 'System Manager', label: __('Admin') }] : []),
+  ]
 })
 
 const roleMap = {
@@ -121,7 +129,7 @@ const inviteByEmail = createResource({
   },
   onSuccess(data) {
     if (data?.existing_invites?.length) {
-      error.value = __('Agent with email {0} already exists', [
+      error.value = __('User with email {0} already exists', [
         data.existing_invites.join(', '),
       ])
     } else {
