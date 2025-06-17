@@ -112,6 +112,7 @@ const tabs = computed(() => {
           label: __('Users'),
           icon: 'user',
           component: markRaw(Users),
+          condition: () => isManager(),
         },
         {
           label: __('Invite User'),
