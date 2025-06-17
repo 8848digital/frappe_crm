@@ -115,7 +115,7 @@ const tabs = computed(() => {
         },
         {
           label: __('Invite User'),
-          icon: InviteIcon,
+          icon: 'user-plus',
           component: markRaw(InviteUserPage),
           condition: () => isManager(),
         },
