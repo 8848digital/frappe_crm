@@ -33,6 +33,7 @@
         doctype="User"
         @change="(option) => addValue(option) && ($refs.input.value = '')"
         :placeholder="__('John Doe')"
+        :filters="{ name: ['in', users.data.crmUsers?.map((user) => user.name)] }"
         :hideMe="true"
       >
         <template #item-prefix="{ option }">
@@ -106,7 +107,7 @@ const oldAssignees = ref([])
 
 const error = ref('')
 
-const { getUser } = usersStore()
+const { users, getUser } = usersStore()
 
 const removeValue = (value) => {
   assignees.value = assignees.value.filter(
