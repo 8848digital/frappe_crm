@@ -8,14 +8,27 @@
         <label class="block text-xs text-ink-gray-5 mb-1.5">
           {{ __('Invite by email') }}
         </label>
-        <MultiValueInput
-          v-model="invitees"
-          :validate="validateEmail"
-          :error-message="
-            (value) => __('{0} is an invalid email address', [value])
-          "
-          :fetchContacts="false"
-        />
+        <div
+          class="p-2 group bg-surface-gray-2 hover:bg-surface-gray-3 rounded"
+        >
+          <MultiSelectUserInput
+            class="flex-1"
+            inputClass="!bg-surface-gray-2 hover:!bg-surface-gray-3 group-hover:!bg-surface-gray-3"
+            :placeholder="__('john@doe.com')"
+            v-model="invitees"
+            :validate="validateEmail"
+            :error-message="
+              (value) => __('{0} is an invalid email address', [value])
+            "
+            :fetchUsers="false"
+          />
+        </div>
+        <div
+          v-if="userExistMessage || inviteeExistMessage"
+          class="text-xs text-ink-red-3 mt-1.5"
+        >
+          {{ userExistMessage || inviteeExistMessage }}
+        </div>
         <FormControl
           type="select"
           class="mt-4"
@@ -76,7 +89,7 @@
   </div>
 </template>
 <script setup>
-import MultiValueInput from '@/components/Controls/MultiValueInput.vue'
+import MultiSelectUserInput from '@/components/Controls/MultiSelectUserInput.vue'
 import { validateEmail, convertArrayToString } from '@/utils'
 import { usersStore } from '@/stores/users'
 import {
@@ -88,11 +101,43 @@ import {
 import { ref, computed } from 'vue'
 
 const { updateOnboardingStep } = useOnboarding('frappecrm')
-const { isAdmin, isManager } = usersStore()
+const { users, isAdmin, isManager } = usersStore()
 
 const invitees = ref([])
 const role = ref('Sales User')
 const error = ref(null)
+
+const userExistMessage = computed(() => {
+  const inviteesSet = new Set(invitees.value)
+  if (!inviteesSet.size) return null
+
+  if (!users.data?.crmUsers?.length) return null
+  const existingEmails = users.data.crmUsers.map((user) => user.name)
+  const existingUsersSet = new Set(existingEmails)
+
+  const existingInvitees = inviteesSet.intersection(existingUsersSet)
+  if (existingInvitees.size === 0) return null
+
+  return __('User with email {0} already exists', [
+    Array.from(existingInvitees).join(', '),
+  ])
+})
+
+const inviteeExistMessage = computed(() => {
+  const inviteesSet = new Set(invitees.value)
+  if (!inviteesSet.size) return null
+
+  if (!pendingInvitations.data?.length) return null
+  const existingEmails = pendingInvitations.data.map((user) => user.email)
+  const existingUsersSet = new Set(existingEmails)
+
+  const existingInvitees = inviteesSet.intersection(existingUsersSet)
+  if (existingInvitees.size === 0) return null
+
+  return __('User with email {0} already invited', [
+    Array.from(existingInvitees).join(', '),
+  ])
+})
 
 const description = computed(() => {
   return {
