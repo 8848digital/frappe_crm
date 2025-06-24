@@ -56,13 +56,7 @@ import InviteUserPage from '@/components/Settings/InviteUserPage.vue'
 import ProfileSettings from '@/components/Settings/ProfileSettings.vue'
 import WhatsAppSettings from '@/components/Settings/WhatsAppSettings.vue'
 import ERPNextSettings from '@/components/Settings/ERPNextSettings.vue'
-import HelpdeskSettings from '@/components/Settings/HelpdeskSettings.vue'
-import LeadSyncSourcePage from '@/components/Settings/LeadSyncing/LeadSyncSourcePage.vue'
-import BrandSettings from '@/components/Settings/BrandSettings.vue'
-import HomeActions from '@/components/Settings/HomeActions.vue'
-import ForecastingSettings from '@/components/Settings/ForecastingSettings.vue'
-import CurrencySettings from '@/components/Settings/CurrencySettings.vue'
-import EmailTemplatePage from '@/components/Settings/EmailTemplate/EmailTemplatePage.vue'
+import EmailTemplates from '@/components/Settings/EmailTemplate/EmailTemplates.vue'
 import TelephonySettings from '@/components/Settings/TelephonySettings.vue'
 import EmailConfig from '@/components/Settings/EmailConfig.vue'
 import SidebarLink from '@/components/SidebarLink.vue'
@@ -134,8 +128,8 @@ const tabs = computed(() => {
         },
         {
           label: __('Email Templates'),
-          icon: EmailTemplateIcon,
-          component: markRaw(EmailTemplatePage),
+          icon: Email2Icon,
+          component: markRaw(EmailTemplates),
         },
       ],
     },
