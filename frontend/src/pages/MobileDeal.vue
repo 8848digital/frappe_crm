@@ -79,6 +79,7 @@
               :sections="sections.data"
               doctype="CRM Deal"
               @reload="sections.reload"
+              @beforeFieldChange="beforeStatusChange"
               @afterFieldChange="reloadAssignees"
             >
               <template #actions="{ section }">
@@ -223,6 +224,8 @@
           v-model:reload="reload"
           v-model:tabIndex="tabIndex"
           v-model="deal"
+          @beforeSave="beforeStatusChange"
+          @afterSave="reloadAssignees"
         />
       </TabPanel>
     </Tabs>
@@ -671,6 +674,16 @@ function setLostReason() {
   }
 
   showLostReasonModal.value = true
+}
+
+function beforeStatusChange(data) {
+  if (data?.hasOwnProperty('status') && data.status == 'Lost') {
+    setLostReason()
+  } else {
+    document.save.submit(null, {
+      onSuccess: () => reloadAssignees(data),
+    })
+  }
 }
 
 function reloadAssignees(data) {
