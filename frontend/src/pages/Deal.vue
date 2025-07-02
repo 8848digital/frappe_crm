@@ -18,9 +18,16 @@
       />
       <AssignTo v-model="assignees.data" doctype="CRM Deal" :docname="dealId" />
       <Dropdown
-        v-if="doc && document.statuses"
-        :options="statuses"
-        placement="right"
+        v-if="document.doc"
+        :options="
+          statusOptions(
+            'deal',
+            document.statuses?.length
+              ? document.statuses
+              : deal.data._customStatuses,
+            triggerStatusChange,
+          )
+        "
       >
         <template #default="{ open }">
           <Button
@@ -780,6 +787,11 @@ function beforeStatusChange(data) {
       onSuccess: () => reloadAssignees(data),
     })
   }
+}
+
+async function triggerStatusChange(value) {
+  await triggerOnChange('status', value)
+  document.save.submit()
 }
 
 function reloadAssignees(data) {
