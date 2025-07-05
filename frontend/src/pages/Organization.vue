@@ -187,9 +187,9 @@ import CameraIcon from '@/components/Icons/CameraIcon.vue'
 import DealsIcon from '@/components/Icons/DealsIcon.vue'
 import ContactsIcon from '@/components/Icons/ContactsIcon.vue'
 import { showAddressModal, addressProps } from '@/composables/modals'
+import { useDocument } from '@/data/document'
 import { getSettings } from '@/stores/settings'
 import { getMeta } from '@/stores/meta'
-import { globalStore } from '@/stores/global'
 import { usersStore } from '@/stores/users'
 import { statusesStore } from '@/stores/statuses'
 import { getView } from '@/utils/view'
@@ -203,12 +203,11 @@ import {
   Tabs,
   call,
   createListResource,
-  createDocumentResource,
   usePageMeta,
   createResource,
 } from 'frappe-ui'
 import { h, computed, ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import DeleteLinkedDocModal from '@/components/DeleteLinkedDocModal.vue'
 
 const props = defineProps({
@@ -220,37 +219,20 @@ const props = defineProps({
 
 const { brand } = getSettings()
 const { getUser } = usersStore()
-const { $dialog } = globalStore()
 const { getDealStatus } = statusesStore()
 const { doctypeMeta } = getMeta('CRM Organization')
 
 const route = useRoute()
-const router = useRouter()
 
 const errorTitle = ref('')
 const errorMessage = ref('')
 
 const showDeleteLinkedDocModal = ref(false)
 
-const organization = createDocumentResource({
-  doctype: 'CRM Organization',
-  name: props.organizationId,
-  cache: ['organization', props.organizationId],
-  fields: ['*'],
-  auto: true,
-  onSuccess: () => {
-    errorTitle.value = ''
-    errorMessage.value = ''
-  },
-  onError: (err) => {
-    if (err.messages?.[0]) {
-      errorTitle.value = __('Not permitted')
-      errorMessage.value = __(err.messages?.[0])
-    } else {
-      router.push({ name: 'Organizations' })
-    }
-  },
-})
+const { document: organization } = useDocument(
+  'CRM Organization',
+  props.organizationId,
+)
 
 async function updateField(fieldname, value) {
   await organization.setValue.submit({
@@ -335,8 +317,6 @@ function openWebsite() {
   else window.open(organization.doc.website, '_blank')
 }
 
-const _organization = ref({})
-
 const sections = createResource({
   url: 'crm.fcrm.doctype.crm_fields_layout.crm_fields_layout.get_sidepanel_sections',
   cache: ['sidePanelSections', 'CRM Organization'],
@@ -353,7 +333,6 @@ function getParsedSections(_sections) {
           return {
             ...field,
             create: (value, close) => {
-              _organization.value.address = value
               openAddressModal()
               close()
             },

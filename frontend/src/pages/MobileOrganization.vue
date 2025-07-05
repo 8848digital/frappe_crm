@@ -159,6 +159,7 @@ import CameraIcon from '@/components/Icons/CameraIcon.vue'
 import DealsIcon from '@/components/Icons/DealsIcon.vue'
 import ContactsIcon from '@/components/Icons/ContactsIcon.vue'
 import { showAddressModal, addressProps } from '@/composables/modals'
+import { useDocument } from '@/data/document'
 import { getSettings } from '@/stores/settings'
 import { getMeta } from '@/stores/meta'
 import { globalStore } from '@/stores/global'
@@ -176,7 +177,6 @@ import {
   TabPanel,
   call,
   createListResource,
-  createDocumentResource,
   usePageMeta,
   createResource,
 } from 'frappe-ui'
@@ -198,13 +198,10 @@ const { getDealStatus } = statusesStore()
 const route = useRoute()
 const router = useRouter()
 
-const organization = createDocumentResource({
-  doctype: 'CRM Organization',
-  name: props.organizationId,
-  cache: ['organization', props.organizationId],
-  fields: ['*'],
-  auto: true,
-})
+const { document: organization } = useDocument(
+  'CRM Organization',
+  props.organizationId,
+)
 
 async function updateField(fieldname, value) {
   await organization.setValue.submit({
@@ -298,8 +295,6 @@ function openWebsite() {
   else window.open(organization.doc.website, '_blank')
 }
 
-const _organization = ref({})
-
 const sections = createResource({
   url: 'crm.fcrm.doctype.crm_fields_layout.crm_fields_layout.get_sidepanel_sections',
   cache: ['sidePanelSections', 'CRM Organization'],
@@ -316,7 +311,6 @@ function getParsedSections(_sections) {
           return {
             ...field,
             create: (value, close) => {
-              _organization.value.address = value
               openAddressModal()
               close()
             },
