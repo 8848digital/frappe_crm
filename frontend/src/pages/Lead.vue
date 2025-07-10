@@ -58,6 +58,7 @@
           :tabs="tabs"
           v-model:reload="reload"
           v-model:tabIndex="tabIndex"
+          v-model="lead"
           @beforeSave="saveChanges"
           @afterSave="reloadAssignees"
         />
