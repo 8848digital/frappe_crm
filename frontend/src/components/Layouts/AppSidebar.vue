@@ -188,7 +188,6 @@ import { capture } from '@/telemetry'
 import router from '@/router'
 import { useStorage } from '@vueuse/core'
 import { ref, reactive, computed, h, markRaw, onMounted } from 'vue'
-import LucideLayoutDashboard from '~icons/lucide/layout-dashboard'
 
 const { getPinnedViews, getPublicViews } = viewsStore()
 const { toggle: toggleNotificationPanel } = notificationsStore()
@@ -198,50 +197,51 @@ const isSidebarCollapsed = useStorage('isSidebarCollapsed', false)
 const isFCSite = ref(window.is_fc_site)
 const isDemoSite = ref(window.is_demo_site)
 
-const links = [
-  {
-    label: 'Dashboard',
-    icon: LucideLayoutDashboard,
-    to: 'Dashboard',
-  },
-  {
-    label: 'Leads',
-    icon: LeadsIcon,
-    to: 'Leads',
-  },
-  {
-    label: 'Deals',
-    icon: DealsIcon,
-    to: 'Deals',
-  },
-  {
-    label: 'Contacts',
-    icon: ContactsIcon,
-    to: 'Contacts',
-  },
-  {
-    label: 'Organizations',
-    icon: OrganizationsIcon,
-    to: 'Organizations',
-  },
-  {
-    label: 'Notes',
-    icon: NoteIcon,
-    to: 'Notes',
-  },
-  {
-    label: 'Tasks',
-    icon: TaskIcon,
-    to: 'Tasks',
-  },
-  {
-    label: 'Call Logs',
-    icon: PhoneIcon,
-    to: 'Call Logs',
-  },
-]
-
 const allViews = computed(() => {
+  const links = [
+    {
+      label: 'Dashboard',
+      icon: LucideLayoutDashboard,
+      to: 'Dashboard',
+      condition: () => isManager(),
+    },
+    {
+      label: 'Leads',
+      icon: LeadsIcon,
+      to: 'Leads',
+    },
+    {
+      label: 'Deals',
+      icon: DealsIcon,
+      to: 'Deals',
+    },
+    {
+      label: 'Contacts',
+      icon: ContactsIcon,
+      to: 'Contacts',
+    },
+    {
+      label: 'Organizations',
+      icon: OrganizationsIcon,
+      to: 'Organizations',
+    },
+    {
+      label: 'Notes',
+      icon: NoteIcon,
+      to: 'Notes',
+    },
+    {
+      label: 'Tasks',
+      icon: TaskIcon,
+      to: 'Tasks',
+    },
+    {
+      label: 'Call Logs',
+      icon: PhoneIcon,
+      to: 'Call Logs',
+    },
+  ]
+
   let _views = [
     {
       name: 'All Views',
