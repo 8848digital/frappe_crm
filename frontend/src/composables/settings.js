@@ -8,7 +8,7 @@ createResource({
   cache: 'Is Whatsapp Enabled',
   auto: true,
   onSuccess: (data) => {
-    whatsappEnabled.value = Boolean(data)
+    whatsappEnabled.value = true
   },
 })
 createResource({
@@ -16,7 +16,7 @@ createResource({
   cache: 'Is Whatsapp Installed',
   auto: true,
   onSuccess: (data) => {
-    isWhatsappInstalled.value = Boolean(data)
+    isWhatsappInstalled.value = true
   },
 })
 
