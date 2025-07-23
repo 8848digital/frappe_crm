@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: shariq@frappe.io\n"
-"POT-Creation-Date: 2025-11-09 09:35+0000\n"
-"PO-Revision-Date: 2025-11-10 10:46\n"
+"POT-Creation-Date: 2025-07-20 09:37+0000\n"
+"PO-Revision-Date: 2025-07-23 05:28\n"
 "Last-Translator: shariq@frappe.io\n"
 "Language-Team: Russian\n"
 "MIME-Version: 1.0\n"
@@ -5443,9 +5443,10 @@ msgstr ""
 msgid "Source Name"
 msgstr "Исходное имя"
 
-#: frontend/src/components/Settings/LeadSyncing/LeadSyncSourceForm.vue:46
-msgid "Source Type"
-msgstr ""
+#: frontend/src/components/Dashboard/AddChartModal.vue:68
+#: frontend/src/components/Dashboard/DashboardItem.vue:16
+msgid "Spacer"
+msgstr "Проставка"
 
 #: frontend/src/components/Settings/LeadSyncing/LeadSyncSources.vue:167
 msgid "Source disabled successfully"
@@ -6651,10 +6652,6 @@ msgstr ""
 #: frontend/src/utils/index.js:174
 msgid "{0} hours ago"
 msgstr "{0} несколько часов назад"
-
-#: frontend/src/composables/event.js:163
-msgid "{0} hrs"
-msgstr ""
 
 #: frontend/src/components/Calendar/CalendarEventPanel.vue:309
 #: frontend/src/components/EmailEditor.vue:30
