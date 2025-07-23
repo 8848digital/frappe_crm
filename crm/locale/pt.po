@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: shariq@frappe.io\n"
-"POT-Creation-Date: 2025-11-09 09:35+0000\n"
-"PO-Revision-Date: 2025-11-11 11:49\n"
+"POT-Creation-Date: 2025-07-20 09:37+0000\n"
+"PO-Revision-Date: 2025-07-23 05:28\n"
 "Last-Translator: shariq@frappe.io\n"
 "Language-Team: Portuguese\n"
 "MIME-Version: 1.0\n"
@@ -6672,10 +6672,6 @@ msgstr "{0} é obrigatório"
 #: frontend/src/utils/index.js:119
 msgid "{0} m"
 msgstr "{0} m"
-
-#: frontend/src/composables/event.js:157
-msgid "{0} mins"
-msgstr ""
 
 #: frontend/src/utils/index.js:170
 msgid "{0} minutes ago"
