@@ -62,44 +62,4 @@
 </template>
 
 <script setup>
-import { getSettings } from '@/stores/settings'
-import { Switch, toast } from 'frappe-ui'
-
-const emit = defineEmits(['updateStep'])
-
-const { _settings: settings } = getSettings()
-
-const settingsList = [
-  {
-    name: 'currency-settings',
-    label: 'Currency & Exchange Rate Provider',
-    description:
-      'Configure the currency and exchange rate provider for your CRM',
-  },
-  {
-    name: 'brand-settings',
-    label: 'Brand settings',
-    description: 'Configure your brand name, logo and favicon',
-  },
-  {
-    name: 'home-actions',
-    label: 'Home actions',
-    description: 'Configure actions that appear on the home dropdown',
-  },
-]
-
-function toggleForecasting(value) {
-  settings.doc.enable_forecasting =
-    value !== undefined ? value : !settings.doc.enable_forecasting
-
-  settings.save.submit(null, {
-    onSuccess: () => {
-      toast.success(
-        settings.doc.enable_forecasting
-          ? __('Forecasting enabled successfully')
-          : __('Forecasting disabled successfully'),
-      )
-    },
-  })
-}
 </script>
