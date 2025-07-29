@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: shariq@frappe.io\n"
-"POT-Creation-Date: 2025-07-20 09:37+0000\n"
-"PO-Revision-Date: 2025-07-23 05:28\n"
+"POT-Creation-Date: 2025-07-27 09:38+0000\n"
+"PO-Revision-Date: 2025-07-29 07:01\n"
 "Last-Translator: shariq@frappe.io\n"
 "Language-Team: Chinese Simplified\n"
 "MIME-Version: 1.0\n"
@@ -1249,10 +1249,6 @@ msgstr "点击下面的链接完成注册，并设置新密码"
 msgid "Close"
 msgstr "关闭"
 
-#: frontend/src/components/Calendar/CalendarEventPanel.vue:38
-msgid "Close panel"
-msgstr "关闭面板"
-
 #. Label of the closed_date (Date) field in DocType 'CRM Deal'
 #: crm/fcrm/doctype/crm_deal/crm_deal.json
 msgid "Closed Date"
@@ -1730,7 +1726,7 @@ msgstr "商机状态列表"
 msgid "Deal Value"
 msgstr "商机价值"
 
-#: crm/api/dashboard.py:1019
+#: crm/api/dashboard.py:977
 msgid "Deal generation channel analysis"
 msgstr "商机生成渠道分析"
 
@@ -2026,7 +2022,7 @@ msgstr "文档不存在。"
 msgid "Document not found"
 msgstr "未找到文档"
 
-#: frontend/src/data/document.js:45
+#: frontend/src/data/document.js:24
 msgid "Document updated successfully"
 msgstr "文档更新成功。"
 
@@ -2438,8 +2434,8 @@ msgstr ""
 msgid "Error syncing leads"
 msgstr ""
 
-#: frontend/src/components/Settings/LeadSyncing/LeadSyncSourceForm.vue:226
-msgid "Error updating Lead Sync Source"
+#: frontend/src/data/document.js:27
+msgid "Error updating document"
 msgstr ""
 
 #: frontend/src/pages/Deal.vue:741 frontend/src/pages/Lead.vue:469
@@ -2565,6 +2561,10 @@ msgstr "预期关闭日期"
 msgid "Expected Closure Date is required."
 msgstr "必须填写预期关闭日期。"
 
+#: crm/fcrm/doctype/crm_deal/crm_deal.py:163
+msgid "Expected Closure Date is required."
+msgstr ""
+
 #. Label of the expected_deal_value (Currency) field in DocType 'CRM Deal'
 #: crm/fcrm/doctype/crm_deal/crm_deal.json
 msgid "Expected Deal Value"
@@ -2573,6 +2573,10 @@ msgstr "预期商机价值"
 #: crm/fcrm/doctype/crm_deal/crm_deal.py:171
 msgid "Expected Deal Value is required."
 msgstr "必须填写预期商机价值。"
+
+#: crm/fcrm/doctype/crm_deal/crm_deal.py:161
+msgid "Expected Deal Value is required."
+msgstr ""
 
 #. Option for the 'Status' (Select) field in DocType 'CRM Invitation'
 #: crm/fcrm/doctype/crm_invitation/crm_invitation.json
@@ -2676,11 +2680,7 @@ msgstr ""
 msgid "Failed to delete template"
 msgstr "模板删除失败"
 
-#: crm/fcrm/doctype/fcrm_settings/fcrm_settings.py:205
-msgid "Failed to fetch exchange rate from {0} to {1} on {2}. Please check your internet connection or try again later."
-msgstr "获取{2}当日{0}至{1}的汇率失败。请检查网络连接或稍后重试。"
-
-#: frontend/src/data/script.js:106
+#: frontend/src/data/script.js:110
 msgid "Failed to load form controller: {0}"
 msgstr "表单控制器加载失败：{0}"
 
@@ -3629,11 +3629,11 @@ msgstr "加载中..."
 msgid "Log"
 msgstr "日志"
 
-#: frontend/src/components/Activities/Activities.vue:814
-#: frontend/src/components/Activities/ActivityHeader.vue:133
-#: frontend/src/components/Activities/ActivityHeader.vue:176
+#: frontend/src/components/Activities/Activities.vue:795
+#: frontend/src/components/Activities/ActivityHeader.vue:137
+#: frontend/src/components/Activities/ActivityHeader.vue:180
 msgid "Log a Call"
-msgstr "记录通话"
+msgstr ""
 
 #: frontend/src/composables/frappecloud.js:23
 msgid "Login to Frappe Cloud?"
@@ -3757,7 +3757,7 @@ msgstr "管理邮件账户以直接从CRM系统收发邮件。您可添加多个
 msgid "Manager"
 msgstr "经理"
 
-#: frontend/src/data/document.js:57
+#: frontend/src/data/document.js:35
 msgid "Mandatory field error: {0}"
 msgstr "必填字段错误：{0}"
 
