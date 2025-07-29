@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: shariq@frappe.io\n"
-"POT-Creation-Date: 2025-07-20 09:37+0000\n"
-"PO-Revision-Date: 2025-07-23 05:28\n"
+"POT-Creation-Date: 2025-07-27 09:38+0000\n"
+"PO-Revision-Date: 2025-07-29 07:01\n"
 "Last-Translator: shariq@frappe.io\n"
 "Language-Team: Portuguese\n"
 "MIME-Version: 1.0\n"
@@ -1244,15 +1244,6 @@ msgstr ""
 msgid "Click on the link below to complete your registration and set a new password"
 msgstr ""
 
-#: frontend/src/components/Notifications.vue:26
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleListItem.vue:54
-msgid "Close"
-msgstr ""
-
-#: frontend/src/components/Calendar/CalendarEventPanel.vue:38
-msgid "Close panel"
-msgstr ""
-
 #. Label of the closed_date (Date) field in DocType 'CRM Deal'
 #: crm/fcrm/doctype/crm_deal/crm_deal.json
 msgid "Closed Date"
@@ -1541,7 +1532,7 @@ msgstr ""
 #: frontend/src/pages/Organizations.vue:60 frontend/src/pages/Tasks.vue:13
 #: frontend/src/pages/Tasks.vue:186
 msgid "Create"
-msgstr ""
+msgstr "Criar"
 
 #: frontend/src/components/Modals/DealModal.vue:8
 msgid "Create Deal"
@@ -1730,7 +1721,7 @@ msgstr ""
 msgid "Deal Value"
 msgstr ""
 
-#: crm/api/dashboard.py:1019
+#: crm/api/dashboard.py:977
 msgid "Deal generation channel analysis"
 msgstr ""
 
@@ -2026,7 +2017,7 @@ msgstr ""
 msgid "Document not found"
 msgstr ""
 
-#: frontend/src/data/document.js:45
+#: frontend/src/data/document.js:24
 msgid "Document updated successfully"
 msgstr ""
 
@@ -2438,8 +2429,8 @@ msgstr ""
 msgid "Error syncing leads"
 msgstr ""
 
-#: frontend/src/components/Settings/LeadSyncing/LeadSyncSourceForm.vue:226
-msgid "Error updating Lead Sync Source"
+#: frontend/src/data/document.js:27
+msgid "Error updating document"
 msgstr ""
 
 #: frontend/src/pages/Deal.vue:741 frontend/src/pages/Lead.vue:469
@@ -2561,7 +2552,7 @@ msgstr "Expandir"
 msgid "Expected Closure Date"
 msgstr ""
 
-#: crm/fcrm/doctype/crm_deal/crm_deal.py:173
+#: crm/fcrm/doctype/crm_deal/crm_deal.py:163
 msgid "Expected Closure Date is required."
 msgstr ""
 
@@ -2570,7 +2561,7 @@ msgstr ""
 msgid "Expected Deal Value"
 msgstr ""
 
-#: crm/fcrm/doctype/crm_deal/crm_deal.py:171
+#: crm/fcrm/doctype/crm_deal/crm_deal.py:161
 msgid "Expected Deal Value is required."
 msgstr ""
 
@@ -2676,11 +2667,7 @@ msgstr ""
 msgid "Failed to delete template"
 msgstr ""
 
-#: crm/fcrm/doctype/fcrm_settings/fcrm_settings.py:205
-msgid "Failed to fetch exchange rate from {0} to {1} on {2}. Please check your internet connection or try again later."
-msgstr ""
-
-#: frontend/src/data/script.js:106
+#: frontend/src/data/script.js:110
 msgid "Failed to load form controller: {0}"
 msgstr ""
 
@@ -3629,9 +3616,9 @@ msgstr "A carregar..."
 msgid "Log"
 msgstr "Log"
 
-#: frontend/src/components/Activities/Activities.vue:814
-#: frontend/src/components/Activities/ActivityHeader.vue:133
-#: frontend/src/components/Activities/ActivityHeader.vue:176
+#: frontend/src/components/Activities/Activities.vue:795
+#: frontend/src/components/Activities/ActivityHeader.vue:137
+#: frontend/src/components/Activities/ActivityHeader.vue:180
 msgid "Log a Call"
 msgstr ""
 
@@ -3757,7 +3744,7 @@ msgstr ""
 msgid "Manager"
 msgstr ""
 
-#: frontend/src/data/document.js:57
+#: frontend/src/data/document.js:35
 msgid "Mandatory field error: {0}"
 msgstr ""
 
