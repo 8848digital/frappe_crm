@@ -87,14 +87,14 @@
                           <NestedPopover>
                             <template #target="{ open }">
                               <Button
-                                :label="document.doc[field.fieldname]"
+                                :label="doc[field.fieldname]"
                                 class="dropdown-button flex w-full items-center justify-between rounded border border-gray-100 bg-surface-gray-2 px-2 py-1.5 text-base text-ink-gray-8 placeholder-ink-gray-4 transition-colors hover:border-outline-gray-modals hover:bg-surface-gray-3 focus:border-outline-gray-4 focus:bg-surface-white focus:shadow-sm focus:outline-none focus:ring-0 focus-visible:ring-2 focus-visible:ring-outline-gray-3"
                               >
                                 <div
-                                  v-if="document.doc[field.fieldname]"
+                                  v-if="doc[field.fieldname]"
                                   class="truncate"
                                 >
-                                  {{ document.doc[field.fieldname] }}
+                                  {{ doc[field.fieldname] }}
                                 </div>
                                 <div
                                   v-else
@@ -526,7 +526,7 @@ function isFieldVisible(field) {
 
   return (
     (field.fieldtype == 'Check' ||
-      shouldShowReadOnly ||
+      (field.read_only && doc.value?.[field.fieldname]) ||
       !field.read_only) &&
     (!field.depends_on || field.display_via_depends_on) &&
     !field.hidden
