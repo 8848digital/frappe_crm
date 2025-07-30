@@ -42,7 +42,7 @@
         <Activities
           ref="activities"
           doctype="CRM Deal"
-          :docname="dealId"
+          :docname="doc.name"
           :tabs="tabs"
           v-model:reload="reload"
           v-model:tabIndex="tabIndex"
