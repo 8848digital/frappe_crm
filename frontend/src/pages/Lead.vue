@@ -18,16 +18,9 @@
       />
       <AssignTo v-model="assignees.data" doctype="CRM Lead" :docname="leadId" />
       <Dropdown
-        v-if="document.doc"
-        :options="
-          statusOptions(
-            'lead',
-            document.statuses?.length
-              ? document.statuses
-              : lead.data._customStatuses,
-            triggerStatusChange,
-          )
-        "
+        v-if="doc && document.statuses"
+        :options="statuses"
+        placement="right"
       >
         <template #default="{ open }">
           <Button
@@ -58,7 +51,6 @@
           :tabs="tabs"
           v-model:reload="reload"
           v-model:tabIndex="tabIndex"
-          v-model="lead"
           @beforeSave="saveChanges"
           @afterSave="reloadAssignees"
         />
@@ -306,16 +298,19 @@ const { triggerOnChange, assignees, permissions, document, scripts, error } = us
   props.leadId,
 )
 
-async function triggerStatusChange(value) {
-  await triggerOnChange('status', value)
-  document.save.submit()
-}
+const canDelete = computed(() => permissions.data?.permissions?.delete || false)
 
-const lead = createResource({
-  url: 'crm.fcrm.doctype.crm_lead.api.get_lead',
-  params: { name: props.leadId },
-  cache: ['lead', props.leadId],
-  onSuccess: (data) => {
+const doc = computed(() => document.doc || {})
+
+watch(error, (err) => {
+  if (err) {
+    errorTitle.value = __(
+      err.exc_type == 'DoesNotExistError'
+        ? 'Document not found'
+        : 'Error occurred',
+    )
+    errorMessage.value = __(err.messages?.[0] || 'An error occurred')
+  } else {
     errorTitle.value = ''
     errorMessage.value = ''
   }

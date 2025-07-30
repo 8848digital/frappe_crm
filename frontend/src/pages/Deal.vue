@@ -770,7 +770,10 @@ function setLostReason() {
 }
 
 function beforeStatusChange(data) {
-  if (data?.hasOwnProperty('status') && getDealStatus(data.status).type == 'Lost') {
+  if (
+    data?.hasOwnProperty('status') &&
+    getDealStatus(data.status).type == 'Lost'
+  ) {
     setLostReason()
   } else {
     document.save.submit(null, {
