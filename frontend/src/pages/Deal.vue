@@ -76,54 +76,45 @@
             </div>
           </Tooltip>
           <div class="flex gap-1.5">
-            <Tooltip v-if="callEnabled" :text="__('Make a call')">
-              <div>
-                <Button @click="triggerCall">
-                  <template #icon><PhoneIcon /></template>
-                </Button>
-              </div>
-            </Tooltip>
-            <Tooltip :text="__('Send an email')">
-              <div>
-                <Button
-                  @click="
-                    doc.email ? openEmailBox() : toast.error(__('No email set'))
-                  "
-                >
-                  <template #icon><Email2Icon /></template>
-                </Button>
-              </div>
-            </Tooltip>
-            <Tooltip :text="__('Go to website')">
-              <div>
-                <Button
-                  @click="
-                    doc.website
-                      ? openWebsite(doc.website)
-                      : toast.error(__('No website set'))
-                  "
-                >
-                  <template #icon><LinkIcon /></template>
-                </Button>
-              </div>
-            </Tooltip>
-            <Tooltip :text="__('Attach a file')">
-              <div>
-                <Button @click="showFilesUploader = true">
-                  <template #icon><AttachmentIcon /></template>
-                </Button>
-              </div>
-            </Tooltip>
-            <Tooltip :text="__('Delete')">
-              <div>
-                <Button
-                  @click="deleteDeal"
-                  variant="subtle"
-                  icon="trash-2"
-                  theme="red"
-                />
-              </div>
-            </Tooltip>
+            <Button
+              v-if="callEnabled"
+              :tooltip="__('Make a call')"
+              :icon="PhoneIcon"
+              @click="triggerCall"
+            />
+
+            <Button
+              :tooltip="__('Send an email')"
+              :icon="Email2Icon"
+              @click="
+                doc.email ? openEmailBox() : toast.error(__('No email set'))
+              "
+            />
+
+            <Button
+              :tooltip="__('Go to website')"
+              :icon="LinkIcon"
+              @click="
+                doc.website
+                  ? openWebsite(doc.website)
+                  : toast.error(__('No website set'))
+              "
+            />
+
+            <Button
+              :tooltip="__('Attach a file')"
+              :icon="AttachmentIcon"
+              @click="showFilesUploader = true"
+            />
+
+            <Button
+              v-if="canDelete"
+              :tooltip="__('Delete')"
+              variant="subtle"
+              icon="trash-2"
+              theme="red"
+              @click="deleteDeal"
+            />
           </div>
         </div>
       </div>
