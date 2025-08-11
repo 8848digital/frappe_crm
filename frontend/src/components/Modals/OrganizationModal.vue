@@ -106,8 +106,10 @@ async function createOrganization() {
     },
     {
       onError: (err) => {
-        error.value = err.error?.messages?.[0]
-        loading.value = false
+        if (err.error.exc_type == 'ValidationError') {
+          error.value = err.error?.messages?.[0]
+          loading.value = false
+        }
       },
     },
   )
