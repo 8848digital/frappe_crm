@@ -22,11 +22,7 @@
                   class="w-7 mr-2"
                   :icon="EditIcon"
                   @click="showSidePanelModal = true"
-                >
-                  <template #icon>
-                    <EditIcon />
-                  </template>
-                </Button>
+                />
               </slot>
             </template>
             <slot v-bind="{ section }">
@@ -136,12 +132,9 @@
                                     variant="ghost"
                                     class="w-full !justify-start"
                                     :label="__('Create New')"
+                                    iconLeft="plus"
                                     @click="field.create()"
-                                  >
-                                    <template #prefix>
-                                      <FeatherIcon name="plus" class="h-4" />
-                                    </template>
-                                  </Button>
+                                  />
                                 </div>
                               </div>
                             </template>
