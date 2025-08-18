@@ -6,6 +6,7 @@ msgstr ""
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 "PO-Revision-Date: 2025-08-08 10:07\n"
 =======
 =======
@@ -30,6 +31,9 @@ msgstr ""
 "PO-Revision-Date: 2025-08-11 10:38\n"
 >>>>>>> 2a7c9ef9 (chore: Italian translations)
 >>>>>>> 73d13351 (chore: Italian translations)
+=======
+"PO-Revision-Date: 2025-08-11 10:38\n"
+>>>>>>> 0e2be93e (chore: resolved conflict)
 "Last-Translator: shariq@frappe.io\n"
 "Language-Team: Italian\n"
 "MIME-Version: 1.0\n"
@@ -235,6 +239,7 @@ msgstr "SID dell'Account"
 #: frontend/src/components/Settings/emailConfig.js:165
 msgid "Account name is required"
 <<<<<<< HEAD
+<<<<<<< HEAD
 msgstr "Il nome dell'account è obbligatorio"
 =======
 <<<<<<< HEAD
@@ -243,6 +248,9 @@ msgstr ""
 msgstr "Il nome dell'Account è obbligatorio"
 >>>>>>> cb3f67f2 (chore: Italian translations)
 >>>>>>> 43e8f2a4 (chore: Italian translations)
+=======
+msgstr "Il nome dell'Account è obbligatorio"
+>>>>>>> 0e2be93e (chore: resolved conflict)
 
 #: frontend/src/components/CustomActions.vue:73
 #: frontend/src/components/ViewControls.vue:683
@@ -1134,6 +1142,7 @@ msgstr ""
 #: frontend/src/components/Modals/ChangePasswordModal.vue:18
 msgid "Confirm Password"
 <<<<<<< HEAD
+<<<<<<< HEAD
 msgstr "Conferma Password"
 =======
 <<<<<<< HEAD
@@ -1142,6 +1151,9 @@ msgstr ""
 msgstr "Ripeti Password"
 >>>>>>> 818fd6fc (chore: Italian translations)
 >>>>>>> 14622a00 (chore: Italian translations)
+=======
+msgstr "Ripeti Password"
+>>>>>>> 0e2be93e (chore: resolved conflict)
 
 #: frontend/src/components/Settings/Users.vue:225
 #: frontend/src/components/Settings/Users.vue:228
@@ -1710,6 +1722,7 @@ msgstr ""
 #: crm/fcrm/doctype/crm_view_settings/crm_view_settings.json
 msgid "DocType"
 <<<<<<< HEAD
+<<<<<<< HEAD
 msgstr "Tipo di documento"
 =======
 <<<<<<< HEAD
@@ -1718,6 +1731,9 @@ msgstr ""
 msgstr "Tipo Documento"
 >>>>>>> cb3f67f2 (chore: Italian translations)
 >>>>>>> 43e8f2a4 (chore: Italian translations)
+=======
+msgstr "Tipo Documento"
+>>>>>>> 0e2be93e (chore: resolved conflict)
 
 #. Label of the dt (Link) field in DocType 'CRM Fields Layout'
 #: crm/fcrm/doctype/crm_fields_layout/crm_fields_layout.json
@@ -2150,6 +2166,7 @@ msgstr ""
 #: frontend/src/components/ViewControls.vue:251
 msgid "Export"
 <<<<<<< HEAD
+<<<<<<< HEAD
 msgstr "Esportare"
 =======
 <<<<<<< HEAD
@@ -2158,6 +2175,9 @@ msgstr ""
 msgstr "Esporta"
 >>>>>>> cb3f67f2 (chore: Italian translations)
 >>>>>>> 43e8f2a4 (chore: Italian translations)
+=======
+msgstr "Esporta"
+>>>>>>> 0e2be93e (chore: resolved conflict)
 
 #: frontend/src/components/ViewControls.vue:282
 msgid "Export All {0} Record(s)"
@@ -2286,6 +2306,7 @@ msgstr "Filtri"
 #: frontend/src/components/SortBy.vue:140
 msgid "First Name"
 <<<<<<< HEAD
+<<<<<<< HEAD
 msgstr "Nome di battesimo"
 =======
 <<<<<<< HEAD
@@ -2294,6 +2315,9 @@ msgstr ""
 msgstr "Nome"
 >>>>>>> cb3f67f2 (chore: Italian translations)
 >>>>>>> 43e8f2a4 (chore: Italian translations)
+=======
+msgstr "Nome"
+>>>>>>> 0e2be93e (chore: resolved conflict)
 
 #: frontend/src/components/Modals/LeadModal.vue:135
 msgid "First Name is mandatory"
@@ -2719,6 +2743,7 @@ msgstr ""
 #: crm/fcrm/doctype/crm_view_settings/crm_view_settings.json
 msgid "Is Default"
 <<<<<<< HEAD
+<<<<<<< HEAD
 msgstr "È predefinito"
 =======
 <<<<<<< HEAD
@@ -2727,6 +2752,9 @@ msgstr ""
 msgstr "È Predefinito"
 >>>>>>> cb3f67f2 (chore: Italian translations)
 >>>>>>> 43e8f2a4 (chore: Italian translations)
+=======
+msgstr "È Predefinito"
+>>>>>>> 0e2be93e (chore: resolved conflict)
 
 #. Label of the is_erpnext_in_different_site (Check) field in DocType 'ERPNext
 #. CRM Settings'
