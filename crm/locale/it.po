@@ -31,9 +31,6 @@ msgstr ""
 "PO-Revision-Date: 2025-08-11 10:38\n"
 >>>>>>> 2a7c9ef9 (chore: Italian translations)
 >>>>>>> 73d13351 (chore: Italian translations)
-=======
-"PO-Revision-Date: 2025-08-11 10:38\n"
->>>>>>> 0e2be93e (chore: resolved conflict)
 "Last-Translator: shariq@frappe.io\n"
 "Language-Team: Italian\n"
 "MIME-Version: 1.0\n"
