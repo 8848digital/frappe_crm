@@ -374,13 +374,6 @@ const statuses = computed(() => {
   return statusOptions('lead', customStatuses, triggerStatusChange)
 })
 
-const statuses = computed(() => {
-  let customStatuses = document.statuses?.length
-    ? document.statuses
-    : document._statuses || []
-  return statusOptions('lead', customStatuses, triggerStatusChange)
-})
-
 usePageMeta(() => {
   return { title: title.value, icon: brand.favicon }
 })
