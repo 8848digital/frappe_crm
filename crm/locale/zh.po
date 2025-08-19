@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: shariq@frappe.io\n"
-"POT-Creation-Date: 2025-07-27 09:38+0000\n"
-"PO-Revision-Date: 2025-07-29 07:01\n"
+"POT-Creation-Date: 2025-08-17 09:36+0000\n"
+"PO-Revision-Date: 2025-08-19 12:39\n"
 "Last-Translator: shariq@frappe.io\n"
 "Language-Team: Chinese Simplified\n"
 "MIME-Version: 1.0\n"
@@ -589,25 +589,17 @@ msgstr "是否确认取消{0}个关联项的链接？"
 msgid "Ask your manager to set up the Exchange Rate Provider, as default provider does not support currency conversion for {0} to {1}."
 msgstr "默认汇率服务商不支持{0}至{1}的货币转换，请联络管理员配置汇率服务商。"
 
-#: frontend/src/components/ListBulkActions.vue:186
+#: frontend/src/components/ListBulkActions.vue:184
 #: frontend/src/components/Modals/AssignmentModal.vue:4
 msgid "Assign To"
 msgstr "分配给"
-
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:435
-msgid "Assign condition is required"
-msgstr "必须设置分配条件"
-
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:438
-msgid "Assign conditions are invalid"
-msgstr "分配条件无效。"
 
 #: frontend/src/components/AssignTo.vue:11
 #: frontend/src/components/AssignToBody.vue:5
 msgid "Assign to"
 msgstr "分配至"
 
-#: frontend/src/components/AssignToBody.vue:63
+#: frontend/src/components/AssignToBody.vue:65
 msgid "Assign to me"
 msgstr "自己认领"
 
@@ -1109,9 +1101,8 @@ msgstr "摄像头"
 #: frontend/src/components/Calendar/CalendarEventPanel.vue:620
 #: frontend/src/components/ColumnSettings.vue:123
 #: frontend/src/components/Dashboard/AddChartModal.vue:40
-#: frontend/src/components/DeleteLinkedDocModal.vue:115
+#: frontend/src/components/DeleteLinkedDocModal.vue:114
 #: frontend/src/components/Modals/AssignmentModal.vue:69
-#: frontend/src/components/Modals/EventModal.vue:151
 #: frontend/src/components/Modals/LostReasonModal.vue:43
 #: frontend/src/components/Telephony/TwilioCallUI.vue:73
 #: frontend/src/components/ViewControls.vue:57
@@ -1555,12 +1546,12 @@ msgid "Create New"
 msgstr "新建"
 
 #: frontend/src/components/Activities/Activities.vue:388
-#: frontend/src/components/Modals/NoteModal.vue:6
+#: frontend/src/components/Modals/NoteModal.vue:15
 msgid "Create Note"
 msgstr "创建备注"
 
 #: frontend/src/components/Activities/Activities.vue:403
-#: frontend/src/components/Modals/TaskModal.vue:6
+#: frontend/src/components/Modals/TaskModal.vue:18
 msgid "Create Task"
 msgstr "创建任务"
 
@@ -2443,11 +2434,11 @@ msgstr ""
 msgid "Error updating field"
 msgstr "字段更新失败"
 
-#: crm/fcrm/doctype/erpnext_crm_settings/erpnext_crm_settings.py:279
+#: crm/fcrm/doctype/erpnext_crm_settings/erpnext_crm_settings.py:282
 msgid "Error while creating customer in ERPNext, check error log for more details"
 msgstr "ERPNext创建客户失败，请查看错误日志"
 
-#: crm/fcrm/doctype/erpnext_crm_settings/erpnext_crm_settings.py:191
+#: crm/fcrm/doctype/erpnext_crm_settings/erpnext_crm_settings.py:194
 msgid "Error while creating prospect in ERPNext, check error log for more details"
 msgstr "ERPNext创建潜在客户失败，请查看错误日志"
 
@@ -3012,7 +3003,7 @@ msgstr "John 您好：\\n\\n可否请您就此事项提供更多详细信息..."
 msgid "Hidden"
 msgstr "隐藏"
 
-#: frontend/src/components/Activities/Activities.vue:237
+#: frontend/src/components/Activities/Activities.vue:234
 msgid "Hide"
 msgstr "隐藏"
 
@@ -3353,9 +3344,9 @@ msgid "Job Title"
 msgstr "职位"
 
 #: frontend/src/components/AssignToBody.vue:11
-#: frontend/src/components/Filter.vue:74 frontend/src/components/Filter.vue:107
+#: frontend/src/components/Filter.vue:75 frontend/src/components/Filter.vue:108
 #: frontend/src/components/Modals/AssignmentModal.vue:13
-#: frontend/src/components/Modals/TaskModal.vue:63
+#: frontend/src/components/Modals/TaskModal.vue:76
 #: frontend/src/components/Telephony/TaskPanel.vue:47
 msgid "John Doe"
 msgstr "张三"
@@ -3629,7 +3620,7 @@ msgstr "加载中..."
 msgid "Log"
 msgstr "日志"
 
-#: frontend/src/components/Activities/Activities.vue:795
+#: frontend/src/components/Activities/Activities.vue:808
 #: frontend/src/components/Activities/ActivityHeader.vue:137
 #: frontend/src/components/Activities/ActivityHeader.vue:180
 msgid "Log a Call"
@@ -3700,10 +3691,10 @@ msgstr "设为私有"
 msgid "Make Public"
 msgstr "设为公开"
 
-#: frontend/src/components/Activities/Activities.vue:818
-#: frontend/src/components/Activities/ActivityHeader.vue:138
-#: frontend/src/components/Activities/ActivityHeader.vue:181
-#: frontend/src/pages/Deals.vue:505 frontend/src/pages/Leads.vue:532
+#: frontend/src/components/Activities/Activities.vue:812
+#: frontend/src/components/Activities/ActivityHeader.vue:142
+#: frontend/src/components/Activities/ActivityHeader.vue:185
+#: frontend/src/pages/Deals.vue:504 frontend/src/pages/Leads.vue:531
 msgid "Make a Call"
 msgstr "拨打电话"
 
@@ -3965,8 +3956,8 @@ msgid "New Call Log"
 msgstr "新建通话记录"
 
 #: frontend/src/components/Activities/Activities.vue:398
-#: frontend/src/components/Activities/ActivityHeader.vue:19
-#: frontend/src/components/Activities/ActivityHeader.vue:123
+#: frontend/src/components/Activities/ActivityHeader.vue:27
+#: frontend/src/components/Activities/ActivityHeader.vue:132
 msgid "New Comment"
 msgstr "新建评论"
 
@@ -3975,8 +3966,8 @@ msgid "New Contact"
 msgstr "新建联系人"
 
 #: frontend/src/components/Activities/Activities.vue:393
-#: frontend/src/components/Activities/ActivityHeader.vue:12
-#: frontend/src/components/Activities/ActivityHeader.vue:118
+#: frontend/src/components/Activities/ActivityHeader.vue:17
+#: frontend/src/components/Activities/ActivityHeader.vue:127
 msgid "New Email"
 msgstr "新建邮件"
 
@@ -5362,7 +5353,7 @@ msgstr "请在设置中将汇率服务商配置为'Exchangerate Host'，因默�
 msgid "Setup your password"
 msgstr "设置密码"
 
-#: frontend/src/components/Activities/Activities.vue:237
+#: frontend/src/components/Activities/Activities.vue:234
 msgid "Show"
 msgstr "显示"
 
@@ -5405,24 +5396,16 @@ msgstr "侧边栏项"
 msgid "Simple Python Expression, Example: doc.status == 'Open' and doc.lead_source == 'Ads'"
 msgstr "简单Python表达式，示例：doc.status == '开放' and doc.lead_source == '广告'"
 
-#: frontend/src/components/AssignTo.vue:83
+#: frontend/src/components/AssignTo.vue:84
 msgid "Since you removed {0} from the assignee, the {0} has also been removed."
-msgstr "由于您已将{0}从负责人中移除，对应的{0}也已同步移除。"
+msgstr ""
 
-#: frontend/src/components/AssignTo.vue:76
+#: frontend/src/components/AssignTo.vue:77
 msgid "Since you removed {0} from the assignee, the {0} has been changed to the next available assignee {1}."
-msgstr "由于您已将{0}从负责人中移除，系统已将{0}自动分配给下一可用负责人{1}。"
+msgstr ""
 
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:735
-msgid "Some error occurred while renaming assignment rule"
-msgstr "重命名分配规则时发生错误"
-
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:720
-msgid "Some error occurred while updating assignment rule"
-msgstr "更新分配规则时发生错误"
-
-#: frontend/src/components/SortBy.vue:10 frontend/src/components/SortBy.vue:24
-#: frontend/src/components/SortBy.vue:232
+#: frontend/src/components/SortBy.vue:10 frontend/src/components/SortBy.vue:22
+#: frontend/src/components/SortBy.vue:240
 msgid "Sort"
 msgstr "排序"
 
@@ -6038,7 +6021,7 @@ msgstr "未保存的修改"
 msgid "Untitled"
 msgstr "未命名"
 
-#: frontend/src/components/ColumnSettings.vue:129
+#: frontend/src/components/ColumnSettings.vue:138
 #: frontend/src/components/Modals/AssignmentModal.vue:79
 #: frontend/src/components/Modals/ChangePasswordModal.vue:45
 #: frontend/src/components/Modals/EventModal.vue:156
@@ -6070,8 +6053,8 @@ msgid "Upload"
 msgstr "上传"
 
 #: frontend/src/components/Activities/Activities.vue:408
-#: frontend/src/components/Activities/ActivityHeader.vue:55
-#: frontend/src/components/Activities/ActivityHeader.vue:154
+#: frontend/src/components/Activities/ActivityHeader.vue:62
+#: frontend/src/components/Activities/ActivityHeader.vue:158
 msgid "Upload Attachment"
 msgstr "上传附件"
 
@@ -6298,14 +6281,6 @@ msgstr "您无权访问本文档"
 msgid "You need to be in developer mode to edit a Standard Form Script"
 msgstr "需进入开发者模式才能编辑标准表单脚本"
 
-#: frontend/src/components/Settings/AssignmentRules/AssigneeSearch.vue:150
-msgid "You will be redirected to invite user page, unsaved changes will be lost."
-msgstr "系统将跳转至邀请用户页面，未保存的修改将会丢失"
-
-#: frontend/src/components/Settings/LeadSyncing/leadSyncSourceConfig.js:9
-msgid "You will need a Meta developer account and an access token to sync leads from Facebook. Read more "
-msgstr ""
-
 #: crm/api/todo.py:100
 msgid "Your assignment on task {0} has been removed by {1}"
 msgstr "{1}移除了您在任务{0}的分配"
@@ -6355,7 +6330,7 @@ msgstr "黑色"
 msgid "blue"
 msgstr "蓝色"
 
-#: frontend/src/components/Activities/Activities.vue:239
+#: frontend/src/components/Activities/Activities.vue:236
 msgid "changes from"
 msgstr "来自的更改"
 
