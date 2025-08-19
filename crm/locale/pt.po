@@ -2,8 +2,13 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: shariq@frappe.io\n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2025-07-27 09:38+0000\n"
 "PO-Revision-Date: 2025-07-29 07:01\n"
+=======
+"POT-Creation-Date: 2025-08-17 09:36+0000\n"
+"PO-Revision-Date: 2025-08-19 12:39\n"
+>>>>>>> 8e86a068 (chore: Portuguese translations)
 "Last-Translator: shariq@frappe.io\n"
 "Language-Team: Portuguese\n"
 "MIME-Version: 1.0\n"
@@ -589,11 +594,16 @@ msgstr ""
 msgid "Ask your manager to set up the Exchange Rate Provider, as default provider does not support currency conversion for {0} to {1}."
 msgstr ""
 
+<<<<<<< HEAD
 #: frontend/src/components/ListBulkActions.vue:186
+=======
+#: frontend/src/components/ListBulkActions.vue:184
+>>>>>>> 8e86a068 (chore: Portuguese translations)
 #: frontend/src/components/Modals/AssignmentModal.vue:4
 msgid "Assign To"
 msgstr "Atribuir a"
 
+<<<<<<< HEAD
 #: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:435
 msgid "Assign condition is required"
 msgstr ""
@@ -602,14 +612,22 @@ msgstr ""
 msgid "Assign conditions are invalid"
 msgstr ""
 
+=======
+>>>>>>> 8e86a068 (chore: Portuguese translations)
 #: frontend/src/components/AssignTo.vue:11
 #: frontend/src/components/AssignToBody.vue:5
 msgid "Assign to"
 msgstr "Atribuir a"
 
+<<<<<<< HEAD
 #: frontend/src/components/AssignToBody.vue:63
 msgid "Assign to me"
 msgstr "Atribuir a mim"
+=======
+#: frontend/src/components/AssignToBody.vue:65
+msgid "Assign to me"
+msgstr ""
+>>>>>>> 8e86a068 (chore: Portuguese translations)
 
 #. Label of the assigned_to (Link) field in DocType 'CRM Task'
 #: crm/fcrm/doctype/crm_task/crm_task.json
@@ -1109,9 +1127,14 @@ msgstr "Câmera"
 #: frontend/src/components/Calendar/CalendarEventPanel.vue:620
 #: frontend/src/components/ColumnSettings.vue:123
 #: frontend/src/components/Dashboard/AddChartModal.vue:40
+<<<<<<< HEAD
 #: frontend/src/components/DeleteLinkedDocModal.vue:115
 #: frontend/src/components/Modals/AssignmentModal.vue:69
 #: frontend/src/components/Modals/EventModal.vue:151
+=======
+#: frontend/src/components/DeleteLinkedDocModal.vue:114
+#: frontend/src/components/Modals/AssignmentModal.vue:69
+>>>>>>> 8e86a068 (chore: Portuguese translations)
 #: frontend/src/components/Modals/LostReasonModal.vue:43
 #: frontend/src/components/Telephony/TwilioCallUI.vue:73
 #: frontend/src/components/ViewControls.vue:57
@@ -1550,12 +1573,20 @@ msgid "Create New"
 msgstr "Criar Novo"
 
 #: frontend/src/components/Activities/Activities.vue:388
+<<<<<<< HEAD
 #: frontend/src/components/Modals/NoteModal.vue:6
+=======
+#: frontend/src/components/Modals/NoteModal.vue:15
+>>>>>>> 8e86a068 (chore: Portuguese translations)
 msgid "Create Note"
 msgstr ""
 
 #: frontend/src/components/Activities/Activities.vue:403
+<<<<<<< HEAD
 #: frontend/src/components/Modals/TaskModal.vue:6
+=======
+#: frontend/src/components/Modals/TaskModal.vue:18
+>>>>>>> 8e86a068 (chore: Portuguese translations)
 msgid "Create Task"
 msgstr ""
 
@@ -2438,11 +2469,19 @@ msgstr ""
 msgid "Error updating field"
 msgstr ""
 
+<<<<<<< HEAD
 #: crm/fcrm/doctype/erpnext_crm_settings/erpnext_crm_settings.py:279
 msgid "Error while creating customer in ERPNext, check error log for more details"
 msgstr ""
 
 #: crm/fcrm/doctype/erpnext_crm_settings/erpnext_crm_settings.py:191
+=======
+#: crm/fcrm/doctype/erpnext_crm_settings/erpnext_crm_settings.py:282
+msgid "Error while creating customer in ERPNext, check error log for more details"
+msgstr ""
+
+#: crm/fcrm/doctype/erpnext_crm_settings/erpnext_crm_settings.py:194
+>>>>>>> 8e86a068 (chore: Portuguese translations)
 msgid "Error while creating prospect in ERPNext, check error log for more details"
 msgstr ""
 
@@ -2999,7 +3038,11 @@ msgstr "Olá John, \\n\\nPode fornecer mais detalhes sobre isto..."
 msgid "Hidden"
 msgstr "Oculto"
 
+<<<<<<< HEAD
 #: frontend/src/components/Activities/Activities.vue:237
+=======
+#: frontend/src/components/Activities/Activities.vue:234
+>>>>>>> 8e86a068 (chore: Portuguese translations)
 msgid "Hide"
 msgstr "Ocultar"
 
@@ -3340,9 +3383,15 @@ msgid "Job Title"
 msgstr ""
 
 #: frontend/src/components/AssignToBody.vue:11
+<<<<<<< HEAD
 #: frontend/src/components/Filter.vue:74 frontend/src/components/Filter.vue:107
 #: frontend/src/components/Modals/AssignmentModal.vue:13
 #: frontend/src/components/Modals/TaskModal.vue:63
+=======
+#: frontend/src/components/Filter.vue:75 frontend/src/components/Filter.vue:108
+#: frontend/src/components/Modals/AssignmentModal.vue:13
+#: frontend/src/components/Modals/TaskModal.vue:76
+>>>>>>> 8e86a068 (chore: Portuguese translations)
 #: frontend/src/components/Telephony/TaskPanel.vue:47
 msgid "John Doe"
 msgstr "John Doe"
@@ -3616,7 +3665,11 @@ msgstr "A carregar..."
 msgid "Log"
 msgstr "Log"
 
+<<<<<<< HEAD
 #: frontend/src/components/Activities/Activities.vue:795
+=======
+#: frontend/src/components/Activities/Activities.vue:808
+>>>>>>> 8e86a068 (chore: Portuguese translations)
 #: frontend/src/components/Activities/ActivityHeader.vue:137
 #: frontend/src/components/Activities/ActivityHeader.vue:180
 msgid "Log a Call"
@@ -3687,10 +3740,17 @@ msgstr "Tornar privado"
 msgid "Make Public"
 msgstr "Tornar público"
 
+<<<<<<< HEAD
 #: frontend/src/components/Activities/Activities.vue:818
 #: frontend/src/components/Activities/ActivityHeader.vue:138
 #: frontend/src/components/Activities/ActivityHeader.vue:181
 #: frontend/src/pages/Deals.vue:505 frontend/src/pages/Leads.vue:532
+=======
+#: frontend/src/components/Activities/Activities.vue:812
+#: frontend/src/components/Activities/ActivityHeader.vue:142
+#: frontend/src/components/Activities/ActivityHeader.vue:185
+#: frontend/src/pages/Deals.vue:504 frontend/src/pages/Leads.vue:531
+>>>>>>> 8e86a068 (chore: Portuguese translations)
 msgid "Make a Call"
 msgstr "Fazer uma chamada"
 
@@ -3952,8 +4012,13 @@ msgid "New Call Log"
 msgstr ""
 
 #: frontend/src/components/Activities/Activities.vue:398
+<<<<<<< HEAD
 #: frontend/src/components/Activities/ActivityHeader.vue:19
 #: frontend/src/components/Activities/ActivityHeader.vue:123
+=======
+#: frontend/src/components/Activities/ActivityHeader.vue:27
+#: frontend/src/components/Activities/ActivityHeader.vue:132
+>>>>>>> 8e86a068 (chore: Portuguese translations)
 msgid "New Comment"
 msgstr "Novo comentário"
 
@@ -3962,8 +4027,13 @@ msgid "New Contact"
 msgstr "Novo contacto"
 
 #: frontend/src/components/Activities/Activities.vue:393
+<<<<<<< HEAD
 #: frontend/src/components/Activities/ActivityHeader.vue:12
 #: frontend/src/components/Activities/ActivityHeader.vue:118
+=======
+#: frontend/src/components/Activities/ActivityHeader.vue:17
+#: frontend/src/components/Activities/ActivityHeader.vue:127
+>>>>>>> 8e86a068 (chore: Portuguese translations)
 msgid "New Email"
 msgstr "Novo e-mail"
 
@@ -5349,7 +5419,11 @@ msgstr ""
 msgid "Setup your password"
 msgstr ""
 
+<<<<<<< HEAD
 #: frontend/src/components/Activities/Activities.vue:237
+=======
+#: frontend/src/components/Activities/Activities.vue:234
+>>>>>>> 8e86a068 (chore: Portuguese translations)
 msgid "Show"
 msgstr "Mostrar"
 
@@ -5392,6 +5466,7 @@ msgstr "Itens da Barra Lateral"
 msgid "Simple Python Expression, Example: doc.status == 'Open' and doc.lead_source == 'Ads'"
 msgstr ""
 
+<<<<<<< HEAD
 #: frontend/src/components/AssignTo.vue:83
 msgid "Since you removed {0} from the assignee, the {0} has also been removed."
 msgstr ""
@@ -5410,6 +5485,18 @@ msgstr ""
 
 #: frontend/src/components/SortBy.vue:10 frontend/src/components/SortBy.vue:24
 #: frontend/src/components/SortBy.vue:232
+=======
+#: frontend/src/components/AssignTo.vue:84
+msgid "Since you removed {0} from the assignee, the {0} has also been removed."
+msgstr ""
+
+#: frontend/src/components/AssignTo.vue:77
+msgid "Since you removed {0} from the assignee, the {0} has been changed to the next available assignee {1}."
+msgstr ""
+
+#: frontend/src/components/SortBy.vue:10 frontend/src/components/SortBy.vue:22
+#: frontend/src/components/SortBy.vue:240
+>>>>>>> 8e86a068 (chore: Portuguese translations)
 msgid "Sort"
 msgstr "Ordenar"
 
@@ -6025,7 +6112,11 @@ msgstr ""
 msgid "Untitled"
 msgstr "Sem título"
 
+<<<<<<< HEAD
 #: frontend/src/components/ColumnSettings.vue:129
+=======
+#: frontend/src/components/ColumnSettings.vue:138
+>>>>>>> 8e86a068 (chore: Portuguese translations)
 #: frontend/src/components/Modals/AssignmentModal.vue:79
 #: frontend/src/components/Modals/ChangePasswordModal.vue:45
 #: frontend/src/components/Modals/EventModal.vue:156
@@ -6057,8 +6148,13 @@ msgid "Upload"
 msgstr "Carregar"
 
 #: frontend/src/components/Activities/Activities.vue:408
+<<<<<<< HEAD
 #: frontend/src/components/Activities/ActivityHeader.vue:55
 #: frontend/src/components/Activities/ActivityHeader.vue:154
+=======
+#: frontend/src/components/Activities/ActivityHeader.vue:62
+#: frontend/src/components/Activities/ActivityHeader.vue:158
+>>>>>>> 8e86a068 (chore: Portuguese translations)
 msgid "Upload Attachment"
 msgstr "Carregar anexo"
 
@@ -6285,6 +6381,7 @@ msgstr ""
 msgid "You need to be in developer mode to edit a Standard Form Script"
 msgstr ""
 
+<<<<<<< HEAD
 #: frontend/src/components/Settings/AssignmentRules/AssigneeSearch.vue:150
 msgid "You will be redirected to invite user page, unsaved changes will be lost."
 msgstr ""
@@ -6293,6 +6390,8 @@ msgstr ""
 msgid "You will need a Meta developer account and an access token to sync leads from Facebook. Read more "
 msgstr ""
 
+=======
+>>>>>>> 8e86a068 (chore: Portuguese translations)
 #: crm/api/todo.py:100
 msgid "Your assignment on task {0} has been removed by {1}"
 msgstr ""
@@ -6342,7 +6441,11 @@ msgstr "preto"
 msgid "blue"
 msgstr "azul"
 
+<<<<<<< HEAD
 #: frontend/src/components/Activities/Activities.vue:239
+=======
+#: frontend/src/components/Activities/Activities.vue:236
+>>>>>>> 8e86a068 (chore: Portuguese translations)
 msgid "changes from"
 msgstr ""
 
