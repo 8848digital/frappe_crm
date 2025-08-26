@@ -2435,6 +2435,7 @@ msgid "Edit Grid Row Fields Layout"
 msgstr ""
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: frontend/src/components/Modals/NoteModal.vue:6
 =======
 <<<<<<< HEAD
@@ -2443,6 +2444,9 @@ msgstr ""
 #: frontend/src/components/Modals/NoteModal.vue:6
 >>>>>>> bf63bd54 (chore: update POT file)
 >>>>>>> fbaca7f1 (chore: update POT file)
+=======
+#: frontend/src/components/Modals/NoteModal.vue:6
+>>>>>>> 2ccae25b (chore: Fix merge conflict in main.pot)
 msgid "Edit Note"
 msgstr ""
 
