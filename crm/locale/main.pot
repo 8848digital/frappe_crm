@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Frappe CRM VERSION\n"
 "Report-Msgid-Bugs-To: shariq@frappe.io\n"
-"POT-Creation-Date: 2025-08-24 09:35+0000\n"
-"PO-Revision-Date: 2025-08-24 09:35+0000\n"
+"POT-Creation-Date: 2025-08-31 09:35+0000\n"
+"PO-Revision-Date: 2025-08-31 09:35+0000\n"
 "Last-Translator: shariq@frappe.io\n"
 "Language-Team: shariq@frappe.io\n"
 "MIME-Version: 1.0\n"
@@ -2075,8 +2075,8 @@ msgstr ""
 #: frontend/src/components/ListBulkActions.vue:177
 #: frontend/src/components/Settings/EmailTemplate/EmailTemplates.vue:235
 #: frontend/src/components/Settings/EmailTemplate/EmailTemplates.vue:238
-#: frontend/src/components/ViewControls.vue:1161
-#: frontend/src/components/ViewControls.vue:1172
+#: frontend/src/components/ViewControls.vue:1116
+#: frontend/src/components/ViewControls.vue:1127
 #: frontend/src/pages/Contact.vue:100 frontend/src/pages/Deal.vue:111
 >>>>>>> fbaca7f1 (chore: update POT file)
 #: frontend/src/pages/Lead.vue:157 frontend/src/pages/MobileContact.vue:79
@@ -2317,8 +2317,7 @@ msgstr ""
 #: frontend/src/components/Settings/EmailTemplate/EmailTemplates.vue:225
 #: frontend/src/components/Settings/EmailTemplate/EmailTemplates.vue:228
 #: frontend/src/components/Settings/EmailTemplate/NewEmailTemplate.vue:19
-#: frontend/src/components/ViewControls.vue:1113
->>>>>>> fbaca7f1 (chore: update POT file)
+#: frontend/src/components/ViewControls.vue:1068
 msgid "Duplicate"
 msgstr ""
 
@@ -2404,8 +2403,7 @@ msgstr ""
 #: frontend/src/components/ViewControls.vue:1086
 =======
 #: frontend/src/components/ListBulkActions.vue:170
-#: frontend/src/components/ViewControls.vue:1131
->>>>>>> fbaca7f1 (chore: update POT file)
+#: frontend/src/components/ViewControls.vue:1086
 #: frontend/src/pages/Dashboard.vue:16
 msgid "Edit"
 msgstr ""
@@ -6826,14 +6824,6 @@ msgstr ""
 msgid "Unpin View"
 msgstr ""
 
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:22
-msgid "Unsaved"
-msgstr ""
-
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:575
-msgid "Unsaved changes"
-msgstr ""
-
 #: frontend/src/components/FieldLayoutEditor.vue:26
 #: frontend/src/components/Modals/AddressModal.vue:8
 #: frontend/src/components/Modals/CallLogModal.vue:8
@@ -6874,10 +6864,6 @@ msgstr ""
 #: frontend/src/components/Settings/SettingsPage.vue:20
 #: frontend/src/components/Settings/TelephonySettings.vue:23
 #: frontend/src/components/Telephony/ExotelCallUI.vue:210
-<<<<<<< HEAD
-=======
-#: frontend/src/components/ViewControls.vue:980
->>>>>>> fbaca7f1 (chore: update POT file)
 msgid "Update"
 msgstr ""
 
