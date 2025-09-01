@@ -154,9 +154,7 @@
         <div class="flex items-center justify-between gap-6">
           <span class="text-p-sm text-ink-gray-6">
             {{
-              __('Choose which {0} are affected by this assignment rule.', [
-                documentType,
-              ])
+              __('Choose which tickets are affected by this assignment rule.')
             }}
             <a
               class="font-medium underline"
@@ -233,9 +231,9 @@
         <div class="flex items-center justify-between gap-6">
           <span class="text-p-sm text-ink-gray-6">
             {{
-              __('Choose which {0} are affected by this un-assignment rule.', [
-                documentType,
-              ])
+              __(
+                'Choose which tickets are affected by this un-assignment rule.',
+              )
             }}
             <a
               class="font-medium underline"
@@ -342,15 +340,7 @@ import {
   Switch,
   toast,
 } from 'frappe-ui'
-import {
-  onMounted,
-  onUnmounted,
-  ref,
-  inject,
-  watch,
-  provide,
-  computed,
-} from 'vue'
+import { onMounted, onUnmounted, ref, inject, watch, provide } from 'vue'
 import AssignmentRulesSection from './AssignmentRulesSection.vue'
 import AssignmentSchedule from './AssignmentSchedule.vue'
 import AssigneeRules from './AssigneeRules.vue'
@@ -374,11 +364,6 @@ const showConfirmDialog = ref({
 })
 const useNewUI = ref(true)
 const isOldSla = ref(false)
-const documentType = computed(() =>
-  assignmentRuleData.value.documentType == 'CRM Lead'
-    ? __('leads')
-    : __('deals'),
-)
 const deskUrl = `${window.location.origin}/app/assignment-rule/${step.value.data?.name}`
 
 const defaultAssignmentDays = [

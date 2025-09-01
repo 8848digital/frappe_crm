@@ -3,6 +3,7 @@
     v-model="showSettings"
     :options="{ size: '5xl' }"
     @close="activeSettingsPage = ''"
+    :disableOutsideClickToClose="disableSettingModalOutsideClick"
   >
     <template #body>
       <div class="flex h-[calc(100vh_-_8rem)]">
@@ -54,8 +55,11 @@ import ERPNextIcon from '@/components/Icons/ERPNextIcon.vue'
 import PhoneIcon from '@/components/Icons/PhoneIcon.vue'
 import InviteIcon from '@/components/Icons/InviteIcon.vue'
 import Email2Icon from '@/components/Icons/Email2Icon.vue'
-import GeneralSettings from '@/components/Settings/GeneralSettings.vue'
-import InviteMemberPage from '@/components/Settings/InviteMemberPage.vue'
+import EmailTemplateIcon from '@/components/Icons/EmailTemplateIcon.vue'
+import SettingsIcon2 from '@/components/Icons/SettingsIcon2.vue'
+import Users from '@/components/Settings/Users.vue'
+import GeneralSettingsPage from '@/components/Settings/General/GeneralSettingsPage.vue'
+import InviteUserPage from '@/components/Settings/InviteUserPage.vue'
 import ProfileSettings from '@/components/Settings/ProfileSettings.vue'
 import WhatsAppSettings from '@/components/Settings/WhatsAppSettings.vue'
 import ERPNextSettings from '@/components/Settings/ERPNextSettings.vue'
@@ -67,9 +71,11 @@ import {
   isWhatsappInstalled,
   showSettings,
   activeSettingsPage,
+  disableSettingModalOutsideClick,
 } from '@/composables/settings'
 import { Dialog, Button, Avatar } from 'frappe-ui'
 import { ref, markRaw, computed, watch, h } from 'vue'
+import AssignmentRulePage from './AssignmentRules/AssignmentRulePage.vue'
 
 const { isManager, isAgent, getUser } = usersStore()
 
@@ -108,6 +114,16 @@ const tabs = computed(() => {
           icon: Email2Icon,
           component: markRaw(EmailConfig),
           condition: () => isManager(),
+        },
+        {
+          label: __('Email Templates'),
+          icon: EmailTemplateIcon,
+          component: markRaw(EmailTemplatePage),
+        },
+        {
+          label: __('Assignment rules'),
+          icon: markRaw(h(SettingsIcon2, { class: 'rotate-90' })),
+          component: markRaw(AssignmentRulePage),
         },
       ],
     },

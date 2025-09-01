@@ -7,8 +7,7 @@
       <span class="text-p-sm text-ink-gray-6">
         {{
           __(
-            'Define who receives the {0} and how they’re distributed among agents.',
-            [documentType],
+            'Define who receives the tickets and how they’re distributed among agents.',
           )
         }}
       </span>
@@ -16,19 +15,11 @@
     <div class="mt-8 flex items-center justify-between gap-2">
       <div>
         <div class="text-base font-medium text-ink-gray-8">
-          {{
-            __('{0} Routing', [
-              assignmentRuleData.documentType == 'CRM Lead'
-                ? __('Lead')
-                : __('Deal'),
-            ])
-          }}
+          {{ __('Ticket Routing') }}
         </div>
         <div class="text-p-sm text-ink-gray-6 mt-1">
           {{
-            __('Choose how {0} are distributed among selected assignees.', [
-              documentType,
-            ])
+            __('Choose how tickets are distributed among selected assignees.')
           }}
         </div>
       </div>
@@ -41,7 +32,7 @@
             >
               <div>
                 {{
-                  documentRoutingOptions.find(
+                  ticketRoutingOptions.find(
                     (option) => option.value == assignmentRuleData.rule,
                   )?.label
                 }}
@@ -54,7 +45,7 @@
               class="p-1 text-ink-gray-7 mt-1 w-48 bg-white shadow-xl rounded"
             >
               <div
-                v-for="option in documentRoutingOptions"
+                v-for="option in ticketRoutingOptions"
                 :key="option.value"
                 class="p-2 cursor-pointer hover:bg-gray-50 text-sm flex items-center justify-between rounded"
                 @click="
@@ -84,7 +75,7 @@
           {{ __('Assignees') }}
         </div>
         <div class="text-p-sm text-ink-gray-6 mt-1">
-          {{ __('Choose who receives the {0}.', [documentType]) }}
+          {{ __('Choose who receives the tickets.') }}
         </div>
       </div>
       <AssigneeSearch @addAssignee="validateAssignmentRule('users')" />
@@ -128,13 +119,8 @@ const { getUser } = usersStore()
 const assignmentRuleData = inject('assignmentRuleData')
 const assignmentRuleErrors = inject('assignmentRuleErrors')
 const validateAssignmentRule = inject('validateAssignmentRule')
-const documentType = computed(() =>
-  assignmentRuleData.value.documentType == 'CRM Lead'
-    ? __('leads')
-    : __('deals'),
-)
 
-const documentRoutingOptions = [
+const ticketRoutingOptions = [
   {
     label: 'Auto-rotate',
     value: 'Round Robin',
