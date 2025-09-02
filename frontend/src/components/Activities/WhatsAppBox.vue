@@ -123,18 +123,18 @@ async function sendWhatsAppMessage() {
     url: 'crm.api.whatsapp.create_whatsapp_message',
     params: args,
     auto: true,
-    onSuccess: () => {
-      refreshChat()
-    }
+    // onSuccess: () => {
+    //   refreshChat()
+    // }
   })
 }
 
-function refreshChat() {
-  window.location.reload();
-  // setTimeout(()=>{
-  //   window.location.reload();
-  // },100)
-}
+// function refreshChat() {
+//   window.location.reload();
+//   setTimeout(()=>{
+//     window.location.reload();
+//   },100)
+// }
 
 function uploadOptions(openFileSelector) {
   return [
