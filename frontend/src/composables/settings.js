@@ -32,7 +32,7 @@ createResource({
     twilioEnabled.value = Boolean(data.twilio_enabled)
     exotelEnabled.value = Boolean(data.exotel_enabled)
     defaultCallingMedium.value = data.default_calling_medium
-    callEnabled.value = twilioEnabled.value || exotelEnabled.value
+    callEnabled.value = true
   },
 })
 
