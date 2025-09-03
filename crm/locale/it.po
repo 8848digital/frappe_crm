@@ -2,40 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: shariq@frappe.io\n"
-<<<<<<< HEAD
-"POT-Creation-Date: 2025-08-03 09:38+0000\n"
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-"PO-Revision-Date: 2025-08-08 10:07\n"
-=======
-=======
->>>>>>> 43e8f2a4 (chore: Italian translations)
-=======
->>>>>>> 73d13351 (chore: Italian translations)
-<<<<<<< HEAD
-"PO-Revision-Date: 2025-08-04 08:34\n"
-=======
-"PO-Revision-Date: 2025-08-09 10:05\n"
->>>>>>> 818fd6fc (chore: Italian translations)
-<<<<<<< HEAD
->>>>>>> 14622a00 (chore: Italian translations)
-=======
-=======
-"PO-Revision-Date: 2025-08-10 10:38\n"
->>>>>>> cb3f67f2 (chore: Italian translations)
-<<<<<<< HEAD
->>>>>>> 43e8f2a4 (chore: Italian translations)
-=======
-=======
-"PO-Revision-Date: 2025-08-11 10:38\n"
->>>>>>> 2a7c9ef9 (chore: Italian translations)
->>>>>>> 73d13351 (chore: Italian translations)
-=======
-"POT-Creation-Date: 2025-08-24 09:35+0000\n"
-"PO-Revision-Date: 2025-08-26 13:50\n"
->>>>>>> 13e72bf7 (chore: Italian translations)
+"POT-Creation-Date: 2025-08-31 09:35+0000\n"
+"PO-Revision-Date: 2025-09-03 16:18\n"
 "Last-Translator: shariq@frappe.io\n"
 "Language-Team: Italian\n"
 "MIME-Version: 1.0\n"
@@ -50,7 +18,7 @@ msgstr ""
 "X-Crowdin-File-ID: 97\n"
 "Language: it_IT\n"
 
-#: frontend/src/components/ViewControls.vue:1217
+#: frontend/src/components/ViewControls.vue:1172
 msgid " (New)"
 msgstr " (Nuovo)"
 
@@ -268,7 +236,7 @@ msgstr "Il nome dell'Account è obbligatorio"
 
 #: frontend/src/components/CustomActions.vue:69
 #: frontend/src/components/ViewControls.vue:683
-#: frontend/src/components/ViewControls.vue:1109
+#: frontend/src/components/ViewControls.vue:1064
 msgid "Actions"
 msgstr ""
 
@@ -1645,8 +1613,8 @@ msgstr ""
 #: frontend/src/components/ListBulkActions.vue:177
 #: frontend/src/components/Settings/EmailTemplate/EmailTemplates.vue:235
 #: frontend/src/components/Settings/EmailTemplate/EmailTemplates.vue:238
-#: frontend/src/components/ViewControls.vue:1161
-#: frontend/src/components/ViewControls.vue:1172
+#: frontend/src/components/ViewControls.vue:1116
+#: frontend/src/components/ViewControls.vue:1127
 #: frontend/src/pages/Contact.vue:100 frontend/src/pages/Deal.vue:111
 #: frontend/src/pages/Lead.vue:157 frontend/src/pages/MobileContact.vue:79
 #: frontend/src/pages/MobileContact.vue:263
@@ -1666,8 +1634,8 @@ msgstr ""
 msgid "Delete Task"
 msgstr ""
 
-#: frontend/src/components/ViewControls.vue:1157
-#: frontend/src/components/ViewControls.vue:1165
+#: frontend/src/components/ViewControls.vue:1112
+#: frontend/src/components/ViewControls.vue:1120
 msgid "Delete View"
 msgstr ""
 
@@ -1848,7 +1816,7 @@ msgstr ""
 #: frontend/src/components/Settings/EmailTemplate/EmailTemplates.vue:225
 #: frontend/src/components/Settings/EmailTemplate/EmailTemplates.vue:228
 #: frontend/src/components/Settings/EmailTemplate/NewEmailTemplate.vue:19
-#: frontend/src/components/ViewControls.vue:1113
+#: frontend/src/components/ViewControls.vue:1068
 msgid "Duplicate"
 msgstr "Duplica"
 
@@ -1910,7 +1878,7 @@ msgstr ""
 #: frontend/src/components/FieldLayoutEditor.vue:313
 #: frontend/src/components/FieldLayoutEditor.vue:339
 #: frontend/src/components/ListBulkActions.vue:170
-#: frontend/src/components/ViewControls.vue:1131
+#: frontend/src/components/ViewControls.vue:1086
 #: frontend/src/pages/Dashboard.vue:16
 msgid "Edit"
 msgstr "Modifica"
@@ -3250,11 +3218,11 @@ msgstr "Bassa"
 msgid "Make Call"
 msgstr ""
 
-#: frontend/src/components/ViewControls.vue:1146
+#: frontend/src/components/ViewControls.vue:1101
 msgid "Make Private"
 msgstr ""
 
-#: frontend/src/components/ViewControls.vue:1146
+#: frontend/src/components/ViewControls.vue:1101
 msgid "Make Public"
 msgstr ""
 
@@ -4033,7 +4001,7 @@ msgstr "Telefono"
 msgid "Phone Numbers"
 msgstr ""
 
-#: frontend/src/components/ViewControls.vue:1138
+#: frontend/src/components/ViewControls.vue:1093
 msgid "Pin View"
 msgstr ""
 
@@ -4724,7 +4692,7 @@ msgstr ""
 msgid "Set as Primary Contact"
 msgstr ""
 
-#: frontend/src/components/ViewControls.vue:1123
+#: frontend/src/components/ViewControls.vue:1078
 msgid "Set as default"
 msgstr ""
 
@@ -5362,12 +5330,8 @@ msgstr ""
 msgid "Unlink {0} item(s)"
 msgstr ""
 
-#: frontend/src/components/ViewControls.vue:1138
+#: frontend/src/components/ViewControls.vue:1093
 msgid "Unpin View"
-msgstr ""
-
-#: frontend/src/components/ViewControls.vue:975
-msgid "Unsaved Changes"
 msgstr ""
 
 #: frontend/src/components/FieldLayoutEditor.vue:26
@@ -5397,7 +5361,6 @@ msgstr ""
 #: frontend/src/components/Settings/SettingsPage.vue:20
 #: frontend/src/components/Settings/TelephonySettings.vue:23
 #: frontend/src/components/Telephony/ExotelCallUI.vue:210
-#: frontend/src/components/ViewControls.vue:980
 msgid "Update"
 msgstr ""
 
@@ -5625,10 +5588,6 @@ msgstr ""
 
 #: frontend/src/data/document.js:32
 msgid "You do not have permission to access this document"
-msgstr ""
-
-#: frontend/src/components/ViewControls.vue:976
-msgid "You have unsaved changes. Do you want to save them?"
 msgstr ""
 
 #: crm/fcrm/doctype/crm_form_script/crm_form_script.py:24
