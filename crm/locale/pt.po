@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: shariq@frappe.io\n"
 "POT-Creation-Date: 2025-08-31 09:35+0000\n"
-"PO-Revision-Date: 2025-09-03 16:19\n"
+"PO-Revision-Date: 2025-09-04 16:59\n"
 "Last-Translator: shariq@frappe.io\n"
 "Language-Team: Portuguese\n"
 "MIME-Version: 1.0\n"
@@ -38,10 +38,6 @@ msgstr "01/04/2024 23:30"
 #: frontend/src/utils/index.js:172
 msgid "1 hour ago"
 msgstr "há 1 hora atrás"
-
-#: frontend/src/composables/event.js:163
-msgid "1 hr"
-msgstr "1 hora"
 
 #: frontend/src/utils/index.js:168
 msgid "1 minute ago"
