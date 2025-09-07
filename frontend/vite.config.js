@@ -135,6 +135,7 @@ export default defineConfig({
       'prosemirror-state',
       'prosemirror-view',
       'lowlight',
+      'interactjs'
     ],
   },
 })
