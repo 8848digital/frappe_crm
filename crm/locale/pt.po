@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: shariq@frappe.io\n"
 "POT-Creation-Date: 2025-09-07 09:35+0000\n"
-"PO-Revision-Date: 2025-09-07 17:34\n"
+"PO-Revision-Date: 2025-09-13 19:19\n"
 "Last-Translator: shariq@frappe.io\n"
 "Language-Team: Portuguese\n"
 "MIME-Version: 1.0\n"
@@ -37,7 +37,7 @@ msgstr "há 1 hora atrás"
 
 #: frontend/src/composables/event.js:163
 msgid "1 hr"
-msgstr ""
+msgstr "1 hora"
 
 #: frontend/src/utils/index.js:168
 msgid "1 minute ago"
@@ -154,8 +154,7 @@ msgstr "Foi criada uma nova conta para si em {0}"
 =======
 #: crm/templates/emails/helpdesk_invitation.html:5
 msgid "A new account has been created for you at {0}"
-msgstr ""
->>>>>>> 867da93a (chore: Portuguese translations)
+msgstr "Foi criada uma nova conta para si em {0}"
 
 #. Label of the api_key (Data) field in DocType 'CRM Exotel Settings'
 #. Label of the api_key (Data) field in DocType 'CRM Twilio Settings'
@@ -196,11 +195,7 @@ msgstr "Aceitar Convite"
 
 #: frontend/src/components/Telephony/TwilioCallUI.vue:155
 msgid "Accept call"
-<<<<<<< HEAD
 msgstr "Aceitar chamada"
-=======
-msgstr ""
->>>>>>> 867da93a (chore: Portuguese translations)
 
 #. Option for the 'Status' (Select) field in DocType 'CRM Invitation'
 #: crm/fcrm/doctype/crm_invitation/crm_invitation.json
@@ -262,12 +257,6 @@ msgstr "SID da conta"
 msgid "Account name is required"
 msgstr "O nome da conta é obrigatório"
 
-#: frontend/src/components/CustomActions.vue:69
-#: frontend/src/components/ViewControls.vue:683
-#: frontend/src/components/ViewControls.vue:1064
-msgid "Actions"
-msgstr ""
-
 <<<<<<< HEAD
 #: frontend/src/pages/Deal.vue:537 frontend/src/pages/Lead.vue:384
 =======
@@ -285,11 +274,11 @@ msgstr ""
 #: frontend/src/components/Dashboard/AddChartModal.vue:41
 #: frontend/src/components/Modals/AddExistingUserModal.vue:55
 msgid "Add"
-msgstr ""
+msgstr "Adicionar"
 
 #: frontend/src/components/Settings/EmailAccountList.vue:19
 msgid "Add Account"
-msgstr ""
+msgstr "Adicionar conta"
 
 #: frontend/src/components/Settings/AssignmentRules/AssigneeSearch.vue:9
 msgid "Add Assignee"
@@ -350,15 +339,15 @@ msgstr ""
 #: frontend/src/components/Telephony/ExotelCallUI.vue:183
 #: frontend/src/components/Telephony/TwilioCallUI.vue:57
 msgid "Add a note"
-msgstr ""
+msgstr "Adicionar uma nota"
 
 #: frontend/src/components/Telephony/ExotelCallUI.vue:191
 msgid "Add a task"
-msgstr ""
+msgstr "Adicionar uma tarefa"
 
 #: frontend/src/components/Dashboard/AddChartModal.vue:4
 msgid "Add chart"
-msgstr ""
+msgstr "Adicionar gráfico"
 
 >>>>>>> 867da93a (chore: Portuguese translations)
 #: frontend/src/components/FieldLayoutEditor.vue:420
@@ -426,10 +415,6 @@ msgstr "Adicione o seu primeiro comentário"
 #: frontend/src/components/Settings/EmailTemplate/EmailTemplates.vue:11
 msgid "Add, edit, and manage email templates for various CRM communications"
 msgstr "Adicione, edite e gerencie modelos de e-mail para diversas comunicações de CRM"
-
-#: frontend/src/components/Settings/LeadSyncing/LeadSyncSources.vue:12
-msgid "Add, edit, and manage sources for automatic lead syncing to your CRM"
-msgstr ""
 
 #. Label of the address (Link) field in DocType 'CRM Organization'
 #: crm/fcrm/doctype/crm_organization/crm_organization.json
@@ -577,7 +562,7 @@ msgstr "Tem a certeza de que pretende eliminar esta tarefa?"
 
 #: frontend/src/components/DeleteLinkedDocModal.vue:231
 msgid "Are you sure you want to delete {0} linked item(s)?"
-msgstr ""
+msgstr "Tem a certeza de que deseja eliminar {0} item(ns) associados?"
 
 #: frontend/src/components/Calendar/CalendarEventPanel.vue:615
 msgid "Are you sure you want to discard unsaved changes to this event?"
@@ -636,8 +621,7 @@ msgstr "Atribuir a mim"
 #: frontend/src/components/AssignToBody.vue:63
 >>>>>>> 867da93a (chore: Portuguese translations)
 msgid "Assign to me"
-msgstr ""
->>>>>>> 8e86a068 (chore: Portuguese translations)
+msgstr "Atribuir a mim"
 
 #. Label of the assigned_to (Link) field in DocType 'CRM Task'
 #: crm/fcrm/doctype/crm_task/crm_task.json
@@ -735,7 +719,7 @@ msgstr "Anexos"
 
 #: frontend/src/components/Modals/EventModal.vue:120
 msgid "Attendees"
-msgstr ""
+msgstr "Participantes"
 
 #. Label of the auth_token (Password) field in DocType 'CRM Twilio Settings'
 #: crm/fcrm/doctype/crm_twilio_settings/crm_twilio_settings.json
