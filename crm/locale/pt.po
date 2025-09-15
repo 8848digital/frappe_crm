@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: shariq@frappe.io\n"
 "POT-Creation-Date: 2025-09-07 09:35+0000\n"
-"PO-Revision-Date: 2025-09-13 19:19\n"
+"PO-Revision-Date: 2025-09-15 19:46\n"
 "Last-Translator: shariq@frappe.io\n"
 "Language-Team: Portuguese\n"
 "MIME-Version: 1.0\n"
@@ -24,7 +24,7 @@ msgstr " (Novo)"
 
 #: frontend/src/components/Calendar/CalendarEventPanel.vue:58
 msgid "(No title)"
-msgstr ""
+msgstr "(Sem título)"
 
 #: frontend/src/components/Modals/TaskModal.vue:87
 #: frontend/src/components/Telephony/TaskPanel.vue:70
@@ -216,15 +216,6 @@ msgstr "Chave de Acesso"
 msgid "Access Key is required for Service Provider: {0}"
 msgstr "A Chave de Acesso é necessária para o Provedor de Serviço: {0}"
 
-#. Label of the access_token (Small Text) field in DocType 'Facebook Page'
-#. Label of the access_token (Password) field in DocType 'Lead Sync Source'
-#: crm/lead_syncing/doctype/facebook_page/facebook_page.json
-#: crm/lead_syncing/doctype/lead_sync_source/lead_sync_source.json
-#: frontend/src/components/Settings/LeadSyncing/LeadSyncSourceForm.vue:87
-#: frontend/src/components/Settings/LeadSyncing/leadSyncSourceConfig.js:28
-msgid "Access Token"
-msgstr ""
-
 #: frontend/src/components/Settings/CurrencySettings.vue:90
 msgid "Access key"
 msgstr "Chave de acesso"
@@ -232,15 +223,6 @@ msgstr "Chave de acesso"
 #: frontend/src/components/Settings/CurrencySettings.vue:94
 msgid "Access key for Exchangerate Host. Required for fetching exchange rates."
 msgstr "Chave de acesso do Exchangerate Host. Obrigatória para obter taxas de câmbio."
-
-#: crm/lead_syncing/doctype/lead_sync_source/facebook.py:133
-msgid "Access token is required"
-msgstr ""
-
-#. Label of the account_id (Data) field in DocType 'Facebook Page'
-#: crm/lead_syncing/doctype/facebook_page/facebook_page.json
-msgid "Account ID"
-msgstr ""
 
 #: frontend/src/components/Settings/emailConfig.js:13
 msgid "Account Name"
@@ -282,7 +264,7 @@ msgstr "Adicionar conta"
 
 #: frontend/src/components/Settings/AssignmentRules/AssigneeSearch.vue:9
 msgid "Add Assignee"
-msgstr ""
+msgstr "Adicionar Responsável"
 
 #: frontend/src/components/ColumnSettings.vue:68
 #: frontend/src/components/Kanban/KanbanView.vue:157
