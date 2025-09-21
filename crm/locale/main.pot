@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Frappe CRM VERSION\n"
 "Report-Msgid-Bugs-To: shariq@frappe.io\n"
-"POT-Creation-Date: 2025-09-14 09:35+0000\n"
-"PO-Revision-Date: 2025-09-14 09:35+0000\n"
+"POT-Creation-Date: 2025-09-21 09:35+0000\n"
+"PO-Revision-Date: 2025-09-21 09:35+0000\n"
 "Last-Translator: shariq@frappe.io\n"
 "Language-Team: shariq@frappe.io\n"
 "MIME-Version: 1.0\n"
@@ -203,15 +203,6 @@ msgstr ""
 
 #: crm/fcrm/doctype/fcrm_settings/fcrm_settings.py:156
 msgid "Access Key is required for Service Provider: {0}"
-msgstr ""
-
-#. Label of the access_token (Small Text) field in DocType 'Facebook Page'
-#. Label of the access_token (Password) field in DocType 'Lead Sync Source'
-#: crm/lead_syncing/doctype/facebook_page/facebook_page.json
-#: crm/lead_syncing/doctype/lead_sync_source/lead_sync_source.json
-#: frontend/src/components/Settings/LeadSyncing/LeadSyncSourceForm.vue:87
-#: frontend/src/components/Settings/LeadSyncing/leadSyncSourceConfig.js:28
-msgid "Access Token"
 msgstr ""
 
 #: frontend/src/components/Settings/CurrencySettings.vue:90
@@ -411,13 +402,13 @@ msgid "Address"
 msgstr ""
 
 #: frontend/src/components/Modals/AddExistingUserModal.vue:94
-#: frontend/src/components/Settings/InviteUserPage.vue:169
-#: frontend/src/components/Settings/InviteUserPage.vue:176
+#: frontend/src/components/Settings/InviteUserPage.vue:158
+#: frontend/src/components/Settings/InviteUserPage.vue:165
 #: frontend/src/components/Settings/Users.vue:86
 #: frontend/src/components/Settings/Users.vue:126
 #: frontend/src/components/Settings/Users.vue:192
-#: frontend/src/components/Settings/Users.vue:252
-#: frontend/src/components/Settings/Users.vue:255
+#: frontend/src/components/Settings/Users.vue:242
+#: frontend/src/components/Settings/Users.vue:245
 msgid "Admin"
 msgstr ""
 
@@ -518,7 +509,7 @@ msgstr ""
 msgid "Apply To"
 msgstr ""
 
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:132
+#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:125
 msgid "Apply on"
 msgstr ""
 
@@ -555,7 +546,7 @@ msgstr ""
 msgid "Are you sure you want to discard unsaved changes to this event?"
 msgstr ""
 
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:561
+#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:576
 msgid "Are you sure you want to go back? Unsaved changes will be lost."
 msgstr ""
 
@@ -584,11 +575,11 @@ msgstr ""
 msgid "Assign To"
 msgstr ""
 
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:420
+#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:435
 msgid "Assign condition is required"
 msgstr ""
 
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:423
+#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:438
 msgid "Assign conditions are invalid"
 msgstr ""
 
@@ -618,7 +609,7 @@ msgstr ""
 msgid "Assignee Rules"
 msgstr ""
 
-#: frontend/src/components/Settings/AssignmentRules/AssigneeRules.vue:75
+#: frontend/src/components/Settings/AssignmentRules/AssigneeRules.vue:81
 msgid "Assignees"
 msgstr ""
 
@@ -632,11 +623,7 @@ msgstr ""
 msgid "Assignment Rule"
 msgstr ""
 
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRules.vue:10
-msgid "Assignment Rules automatically route tickets to the right team members based on predefined conditions."
-msgstr ""
-
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:304
+#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:302
 msgid "Assignment Schedule"
 msgstr ""
 
@@ -644,11 +631,11 @@ msgstr ""
 msgid "Assignment cleared successfully"
 msgstr ""
 
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:152
+#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:145
 msgid "Assignment condition"
 msgstr ""
 
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:456
+#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:471
 msgid "Assignment days are required"
 msgstr ""
 
@@ -657,29 +644,33 @@ msgstr ""
 msgid "Assignment rule"
 msgstr ""
 
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:652
+#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:667
 msgid "Assignment rule created"
 msgstr ""
 
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleListItem.vue:112
+#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleListItem.vue:111
 msgid "Assignment rule deleted"
 msgstr ""
 
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleListItem.vue:167
+#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleListItem.vue:156
 msgid "Assignment rule duplicated"
 msgstr ""
 
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:734
+#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:749
 msgid "Assignment rule updated"
 msgstr ""
 
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleListItem.vue:199
+#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleListItem.vue:188
 msgid "Assignment rule {0} updated"
 msgstr ""
 
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRules.vue:6
-#: frontend/src/components/Settings/Settings.vue:124
+#: frontend/src/components/Settings/AssignmentRules/AssignmentRules.vue:7
+#: frontend/src/components/Settings/Settings.vue:163
 msgid "Assignment rules"
+msgstr ""
+
+#: frontend/src/components/Settings/AssignmentRules/AssignmentRules.vue:11
+msgid "Assignment rules automatically assign lead/deal to the right sales user based on predefined conditions"
 msgstr ""
 
 #: frontend/src/components/Controls/GridFieldsEditorModal.vue:173
@@ -737,11 +728,11 @@ msgstr ""
 msgid "Automatically update \"Expected Deal Value\" based on the total value of associated products in a deal"
 msgstr ""
 
-#: frontend/src/components/Settings/Settings.vue:161
+#: frontend/src/components/Settings/Settings.vue:160
 msgid "Automation & Rules"
 msgstr ""
 
-#: crm/api/dashboard.py:250
+#: crm/api/dashboard.py:238
 msgid "Average deal value of non won/lost deals"
 msgstr ""
 
@@ -838,7 +829,7 @@ msgstr ""
 msgid "Between"
 msgstr ""
 
-#: frontend/src/components/Settings/Settings.vue:119
+#: frontend/src/components/Settings/Settings.vue:118
 msgid "Brand Settings"
 msgstr ""
 
@@ -1134,7 +1125,7 @@ msgstr ""
 msgid "Cannot delete standard items {0}"
 msgstr ""
 
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleListItem.vue:182
+#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleListItem.vue:171
 msgid "Cannot enable rule without adding users in it"
 msgstr ""
 
@@ -1146,6 +1137,7 @@ msgstr ""
 msgid "Capturing leads"
 msgstr ""
 
+#: frontend/src/components/Controls/ImageUploader.vue:19
 #: frontend/src/components/Layouts/AppSidebar.vue:490
 msgid "Change"
 msgstr ""
@@ -1198,11 +1190,11 @@ msgstr ""
 msgid "Choose Existing Organization"
 msgstr ""
 
-#: frontend/src/components/Settings/AssignmentRules/AssigneeRules.vue:22
-msgid "Choose how tickets are distributed among selected assignees."
+#: frontend/src/components/Settings/AssignmentRules/AssigneeRules.vue:9
+msgid "Choose how {0} are assigned among salespeople."
 msgstr ""
 
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:308
+#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:306
 msgid "Choose the days of the week when this rule should be active."
 msgstr ""
 
@@ -1210,16 +1202,8 @@ msgstr ""
 msgid "Choose the email service provider you want to configure."
 msgstr ""
 
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:157
-msgid "Choose which tickets are affected by this assignment rule."
-msgstr ""
-
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:234
-msgid "Choose which tickets are affected by this un-assignment rule."
-msgstr ""
-
-#: frontend/src/components/Settings/AssignmentRules/AssigneeRules.vue:78
-msgid "Choose who receives the tickets."
+#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:229
+msgid "Choose which {0} are affected by this un-assignment rule."
 msgstr ""
 
 #: frontend/src/components/Controls/Link.vue:59
@@ -1347,13 +1331,17 @@ msgstr ""
 msgid "Condition"
 msgstr ""
 
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:193
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:274
+#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:188
+#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:272
 msgid "Conditions for this rule were created from"
 msgstr ""
 
-#: frontend/src/components/Settings/General/GeneralSettings.vue:8
-msgid "Configure general settings for your CRM"
+#: frontend/src/components/Settings/HomeActions.vue:10
+msgid "Configure actions that appear on the home dropdown"
+msgstr ""
+
+#: frontend/src/components/Settings/ForecastingSettings.vue:9
+msgid "Configure forecasting feature to help predict sales performance and growth"
 msgstr ""
 
 #: frontend/src/components/Settings/TelephonySettings.vue:17
@@ -1376,10 +1364,8 @@ msgstr ""
 msgid "Confirm"
 msgstr ""
 
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleListItem.vue:145
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleListItem.vue:148
-#: frontend/src/components/Settings/EmailTemplate/EmailTemplates.vue:250
-#: frontend/src/components/Settings/EmailTemplate/EmailTemplates.vue:253
+#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleListItem.vue:139
+#: frontend/src/components/Settings/EmailTemplate/EmailTemplates.vue:239
 msgid "Confirm Delete"
 msgstr ""
 
@@ -1387,12 +1373,11 @@ msgstr ""
 msgid "Confirm Password"
 msgstr ""
 
-#: frontend/src/components/Settings/Users.vue:233
-#: frontend/src/components/Settings/Users.vue:236
+#: frontend/src/components/Settings/Users.vue:228
 msgid "Confirm Remove"
 msgstr ""
 
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:594
+#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:609
 msgid "Confirm overwrite"
 msgstr ""
 
@@ -1480,17 +1465,10 @@ msgstr ""
 #. Label of the content (Text Editor) field in DocType 'FCRM Note'
 #: crm/fcrm/doctype/fcrm_note/fcrm_note.json
 #: frontend/src/components/Modals/NoteModal.vue:33
-<<<<<<< HEAD
 #: frontend/src/components/Settings/EmailTemplate/EditEmailTemplate.vue:89
 #: frontend/src/components/Settings/EmailTemplate/EditEmailTemplate.vue:102
 #: frontend/src/components/Settings/EmailTemplate/NewEmailTemplate.vue:89
 #: frontend/src/components/Settings/EmailTemplate/NewEmailTemplate.vue:102
-=======
-#: frontend/src/components/Settings/EmailTemplate/EditEmailTemplate.vue:92
-#: frontend/src/components/Settings/EmailTemplate/EditEmailTemplate.vue:105
-#: frontend/src/components/Settings/EmailTemplate/NewEmailTemplate.vue:92
-#: frontend/src/components/Settings/EmailTemplate/NewEmailTemplate.vue:105
->>>>>>> fbaca7f1 (chore: update POT file)
 msgid "Content"
 msgstr ""
 
@@ -1499,8 +1477,8 @@ msgstr ""
 msgid "Content Type"
 msgstr ""
 
-#: frontend/src/components/Settings/EmailTemplate/EditEmailTemplate.vue:159
-#: frontend/src/components/Settings/EmailTemplate/EditEmailTemplate.vue:163
+#: frontend/src/components/Settings/EmailTemplate/EditEmailTemplate.vue:160
+#: frontend/src/components/Settings/EmailTemplate/EditEmailTemplate.vue:164
 #: frontend/src/components/Settings/EmailTemplate/NewEmailTemplate.vue:162
 #: frontend/src/components/Settings/EmailTemplate/NewEmailTemplate.vue:166
 msgid "Content is required"
@@ -1556,7 +1534,7 @@ msgstr ""
 #: frontend/src/components/Modals/TaskModal.vue:106
 #: frontend/src/components/Modals/ViewModal.vue:43
 #: frontend/src/components/Settings/EmailAdd.vue:85
-#: frontend/src/components/Settings/EmailTemplate/NewEmailTemplate.vue:19
+#: frontend/src/components/Settings/EmailTemplate/NewEmailTemplate.vue:23
 #: frontend/src/pages/Calendar.vue:10 frontend/src/pages/CallLogs.vue:13
 #: frontend/src/pages/Contacts.vue:13 frontend/src/pages/Contacts.vue:60
 #: frontend/src/pages/Deals.vue:13 frontend/src/pages/Deals.vue:236
@@ -1618,10 +1596,6 @@ msgstr ""
 msgid "Create lead"
 msgstr ""
 
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRules.vue:17
-msgid "Create new"
-msgstr ""
-
 #: frontend/src/components/Layouts/AppSidebar.vue:349
 msgid "Create your first lead"
 msgstr ""
@@ -1645,7 +1619,7 @@ msgstr ""
 msgid "Currency"
 msgstr ""
 
-#: frontend/src/components/Settings/Settings.vue:114
+#: frontend/src/components/Settings/Settings.vue:113
 msgid "Currency & Exchange Rate"
 msgstr ""
 
@@ -1686,6 +1660,7 @@ msgid "Customer created successfully"
 msgstr ""
 
 #: frontend/src/components/Layouts/AppSidebar.vue:587
+#: frontend/src/components/Settings/Settings.vue:170
 msgid "Customization"
 msgstr ""
 
@@ -1728,12 +1703,12 @@ msgstr ""
 #: frontend/src/components/Calendar/CalendarEventPanel.vue:267
 #: frontend/src/components/Calendar/CalendarEventPanel.vue:288
 #: frontend/src/components/Layouts/AppSidebar.vue:551
-#: frontend/src/components/Settings/EmailTemplate/EditEmailTemplate.vue:54
-#: frontend/src/components/Settings/EmailTemplate/EditEmailTemplate.vue:62
+#: frontend/src/components/Settings/AssignmentRules/AssigneeRules.vue:20
+#: frontend/src/components/Settings/EmailTemplate/EditEmailTemplate.vue:51
+#: frontend/src/components/Settings/EmailTemplate/EditEmailTemplate.vue:59
 #: frontend/src/components/Settings/EmailTemplate/EmailTemplates.vue:78
-#: frontend/src/components/Settings/EmailTemplate/NewEmailTemplate.vue:54
-#: frontend/src/components/Settings/EmailTemplate/NewEmailTemplate.vue:62
->>>>>>> fbaca7f1 (chore: update POT file)
+#: frontend/src/components/Settings/EmailTemplate/NewEmailTemplate.vue:51
+#: frontend/src/components/Settings/EmailTemplate/NewEmailTemplate.vue:59
 #: frontend/src/components/Telephony/ExotelCallUI.vue:200
 #: frontend/src/pages/Tasks.vue:132
 msgid "Deal"
@@ -1872,10 +1847,6 @@ msgstr ""
 msgid "Default statuses, custom fields and layouts restored successfully."
 msgstr ""
 
-#: frontend/src/components/Settings/AssignmentRules/AssigneeRules.vue:9
-msgid "Define who receives the tickets and how they’re distributed among agents."
-msgstr ""
-
 #: frontend/src/components/Activities/AttachmentArea.vue:131
 #: frontend/src/components/Activities/NoteArea.vue:12
 #: frontend/src/components/Activities/TaskArea.vue:55
@@ -1892,10 +1863,8 @@ msgstr ""
 #: frontend/src/components/Modals/EventModal.vue:407
 #: frontend/src/components/Modals/EventModal.vue:411
 #: frontend/src/components/PrimaryDropdownItem.vue:42
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleListItem.vue:130
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleListItem.vue:133
-#: frontend/src/components/Settings/EmailTemplate/EmailTemplates.vue:235
-#: frontend/src/components/Settings/EmailTemplate/EmailTemplates.vue:238
+#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleListItem.vue:129
+#: frontend/src/components/Settings/EmailTemplate/EmailTemplates.vue:229
 #: frontend/src/components/ViewControls.vue:1116
 #: frontend/src/components/ViewControls.vue:1127
 #: frontend/src/pages/Calendar.vue:299 frontend/src/pages/Calendar.vue:303
@@ -1945,7 +1914,7 @@ msgstr ""
 msgid "Delete event"
 msgstr ""
 
-#: frontend/src/components/Settings/InviteUserPage.vue:84
+#: frontend/src/components/Settings/InviteUserPage.vue:79
 msgid "Delete invitation"
 msgstr ""
 
@@ -1984,12 +1953,12 @@ msgstr ""
 #: frontend/src/components/Calendar/CalendarEventPanel.vue:152
 #: frontend/src/components/Modals/EventModal.vue:134
 #: frontend/src/components/Modals/TaskModal.vue:36
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:119
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:120
+#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:112
+#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:113
 msgid "Description"
 msgstr ""
 
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:411
+#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:426
 msgid "Description is required"
 msgstr ""
 
@@ -2109,10 +2078,9 @@ msgstr ""
 #: frontend/src/components/Modals/EventModal.vue:158
 #: frontend/src/components/Modals/ViewModal.vue:42
 #: frontend/src/components/Settings/AssignmentRules/AssignmentRuleListItem.vue:57
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleListItem.vue:120
-#: frontend/src/components/Settings/EmailTemplate/EmailTemplates.vue:225
-#: frontend/src/components/Settings/EmailTemplate/EmailTemplates.vue:228
-#: frontend/src/components/Settings/EmailTemplate/NewEmailTemplate.vue:19
+#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleListItem.vue:119
+#: frontend/src/components/Settings/EmailTemplate/EmailTemplates.vue:224
+#: frontend/src/components/Settings/EmailTemplate/NewEmailTemplate.vue:23
 #: frontend/src/components/ViewControls.vue:1068
 msgid "Duplicate"
 msgstr ""
@@ -2147,7 +2115,7 @@ msgid "Duration"
 msgstr ""
 
 #: frontend/src/components/Layouts/AppSidebar.vue:604
-#: frontend/src/components/Settings/Settings.vue:146
+#: frontend/src/components/Settings/Settings.vue:196
 msgid "ERPNext"
 msgstr ""
 
@@ -2308,7 +2276,7 @@ msgstr ""
 msgid "Email"
 msgstr ""
 
-#: frontend/src/components/Settings/Settings.vue:113
+#: frontend/src/components/Settings/Settings.vue:147
 msgid "Email Accounts"
 msgstr ""
 
@@ -2321,12 +2289,12 @@ msgstr ""
 msgid "Email Sent At"
 msgstr ""
 
-#: frontend/src/components/Settings/Settings.vue:145
+#: frontend/src/components/Settings/Settings.vue:144
 msgid "Email Settings"
 msgstr ""
 
 #: frontend/src/components/Modals/EmailTemplateSelectorModal.vue:4
-#: frontend/src/components/Settings/Settings.vue:119
+#: frontend/src/components/Settings/Settings.vue:153
 msgid "Email Templates"
 msgstr ""
 
@@ -2408,14 +2376,11 @@ msgstr ""
 #: crm/fcrm/doctype/crm_twilio_settings/crm_twilio_settings.json
 #: crm/fcrm/doctype/erpnext_crm_settings/erpnext_crm_settings.json
 #: crm/fcrm/doctype/helpdesk_crm_settings/helpdesk_crm_settings.json
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:38
+#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:32
 #: frontend/src/components/Settings/AssignmentRules/AssignmentRulesList.vue:21
-#: frontend/src/components/Settings/EmailTemplate/EditEmailTemplate.vue:33
->>>>>>> fbaca7f1 (chore: update POT file)
+#: frontend/src/components/Settings/EmailTemplate/EditEmailTemplate.vue:18
 #: frontend/src/components/Settings/EmailTemplate/EmailTemplates.vue:85
 #: frontend/src/components/Settings/EmailTemplate/NewEmailTemplate.vue:20
-#: frontend/src/components/Settings/LeadSyncing/LeadSyncSourceForm.vue:18
-#: frontend/src/components/Settings/LeadSyncing/LeadSyncSources.vue:61
 msgid "Enabled"
 msgstr ""
 
@@ -2442,8 +2407,12 @@ msgstr ""
 msgid "End time should be after start time"
 msgstr ""
 
-#: frontend/src/components/Settings/General/CurrencySettings.vue:122
+#: frontend/src/components/Settings/CurrencySettings.vue:115
 msgid "Enter access key"
+msgstr ""
+
+#: frontend/src/components/Settings/BrandSettings.vue:33
+msgid "Enter brand name"
 msgstr ""
 
 #: frontend/src/components/FieldLayout/Field.vue:339
@@ -2668,10 +2637,6 @@ msgstr ""
 msgid "Failed to create template"
 msgstr ""
 
-#: frontend/src/components/Settings/LeadSyncing/LeadSyncSources.vue:186
-msgid "Failed to delete Lead Sync Source"
-msgstr ""
-
 #: frontend/src/components/Settings/EmailTemplate/EmailTemplates.vue:216
 msgid "Failed to delete template"
 msgstr ""
@@ -2684,7 +2649,7 @@ msgstr ""
 msgid "Failed to load form controller: {0}"
 msgstr ""
 
-#: frontend/src/components/Settings/EmailTemplate/EditEmailTemplate.vue:242
+#: frontend/src/components/Settings/EmailTemplate/EditEmailTemplate.vue:243
 msgid "Failed to rename template"
 msgstr ""
 
@@ -2704,11 +2669,7 @@ msgstr ""
 msgid "Failed to update profile"
 msgstr ""
 
-#: frontend/src/components/Settings/LeadSyncing/LeadSyncSources.vue:171
-msgid "Failed to update source"
-msgstr ""
-
-#: frontend/src/components/Settings/EmailTemplate/EditEmailTemplate.vue:208
+#: frontend/src/components/Settings/EmailTemplate/EditEmailTemplate.vue:209
 #: frontend/src/components/Settings/EmailTemplate/EmailTemplates.vue:201
 msgid "Failed to update template"
 msgstr ""
@@ -2815,7 +2776,7 @@ msgid "Forecasted revenue"
 msgstr ""
 
 #: frontend/src/components/Settings/ForecastingSettings.vue:5
-#: frontend/src/components/Settings/Settings.vue:109
+#: frontend/src/components/Settings/Settings.vue:108
 msgid "Forecasting"
 msgstr ""
 
@@ -2913,14 +2874,6 @@ msgstr ""
 msgid "Gender"
 msgstr ""
 
-<<<<<<< HEAD
-#: crm/api/dashboard.py:1065
-=======
-#: frontend/src/components/Settings/General/GeneralSettings.vue:5
-#: frontend/src/components/Settings/Settings.vue:95
-msgid "General"
-msgstr ""
-
 #: crm/api/dashboard.py:1020
 >>>>>>> fbaca7f1 (chore: update POT file)
 msgid "Geographic distribution of deals and revenue"
@@ -2930,7 +2883,7 @@ msgstr ""
 msgid "GitHub Repository"
 msgstr ""
 
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:567
+#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:582
 msgid "Go back"
 msgstr ""
 
@@ -2975,7 +2928,7 @@ msgstr ""
 msgid "Help"
 msgstr ""
 
-#: frontend/src/components/Settings/Settings.vue:152
+#: frontend/src/components/Settings/Settings.vue:202
 msgid "Helpdesk"
 msgstr ""
 
@@ -3071,14 +3024,17 @@ msgstr ""
 msgid "Holidays"
 msgstr ""
 
+#: frontend/src/components/Settings/Settings.vue:173
+msgid "Home Actions"
+msgstr ""
+
 #: frontend/src/components/Layouts/AppSidebar.vue:542
-#: frontend/src/components/Settings/General/HomeActions.vue:9
->>>>>>> fbaca7f1 (chore: update POT file)
+#: frontend/src/components/Settings/HomeActions.vue:7
 msgid "Home actions"
 msgstr ""
 
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:204
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:285
+#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:199
+#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:283
 msgid "I understand, add conditions"
 msgstr ""
 
@@ -3201,7 +3157,7 @@ msgstr ""
 msgid "Integration Not Enabled"
 msgstr ""
 
-#: frontend/src/components/Settings/Settings.vue:131
+#: frontend/src/components/Settings/Settings.vue:181
 msgctxt "FCRM"
 msgid "Integrations"
 msgstr ""
@@ -3240,7 +3196,7 @@ msgstr ""
 msgid "Invalid email ID"
 msgstr ""
 
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:586
+#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:601
 msgid "Invalid fields, check if all are filled in and values are correct."
 msgstr ""
 
@@ -3256,7 +3212,7 @@ msgstr ""
 msgid "Invite New User"
 msgstr ""
 
-#: frontend/src/components/Settings/Settings.vue:107
+#: frontend/src/components/Settings/Settings.vue:135
 msgid "Invite User"
 msgstr ""
 
@@ -3265,15 +3221,8 @@ msgstr ""
 msgid "Invite agent"
 msgstr ""
 
-#: frontend/src/components/Settings/InviteUserPage.vue:56
+#: frontend/src/components/Settings/InviteUserPage.vue:51
 msgid "Invite as"
-msgstr ""
-
-<<<<<<< HEAD
-#: frontend/src/components/Layouts/AppSidebar.vue:543
-=======
-#: frontend/src/components/Settings/InviteUserPage.vue:29
-msgid "Invite by email"
 msgstr ""
 
 #: frontend/src/components/Layouts/AppSidebar.vue:543
@@ -3420,7 +3369,7 @@ msgstr ""
 msgid "Label"
 msgstr ""
 
-#: frontend/src/components/Settings/AssignmentRules/AssigneeRules.vue:102
+#: frontend/src/components/Settings/AssignmentRules/AssigneeRules.vue:108
 msgid "Last"
 msgstr ""
 
@@ -3478,7 +3427,7 @@ msgstr ""
 msgid "Last name"
 msgstr ""
 
-#: frontend/src/components/Settings/AssignmentRules/AssigneeRules.vue:95
+#: frontend/src/components/Settings/AssignmentRules/AssigneeRules.vue:101
 msgid "Last user assigned by this rule"
 msgstr ""
 
@@ -3494,10 +3443,10 @@ msgstr ""
 #: frontend/src/components/Calendar/CalendarEventPanel.vue:263
 #: frontend/src/components/Calendar/CalendarEventPanel.vue:288
 #: frontend/src/components/Layouts/AppSidebar.vue:550
-#: frontend/src/components/Settings/EmailTemplate/EditEmailTemplate.vue:58
+#: frontend/src/components/Settings/AssignmentRules/AssigneeRules.vue:19
+#: frontend/src/components/Settings/EmailTemplate/EditEmailTemplate.vue:55
 #: frontend/src/components/Settings/EmailTemplate/EmailTemplates.vue:77
-#: frontend/src/components/Settings/EmailTemplate/NewEmailTemplate.vue:58
->>>>>>> fbaca7f1 (chore: update POT file)
+#: frontend/src/components/Settings/EmailTemplate/NewEmailTemplate.vue:55
 #: frontend/src/components/Telephony/ExotelCallUI.vue:200
 #: frontend/src/pages/Tasks.vue:133
 msgid "Lead"
@@ -3582,8 +3531,8 @@ msgstr ""
 msgid "Leads by source"
 msgstr ""
 
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:163
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:242
+#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:158
+#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:238
 msgid "Learn about conditions"
 msgstr ""
 
@@ -3773,13 +3722,12 @@ msgid "Manage your email accounts to send and receive emails directly from CRM. 
 msgstr ""
 
 #: frontend/src/components/Modals/AddExistingUserModal.vue:93
-#: frontend/src/components/Settings/InviteUserPage.vue:168
-#: frontend/src/components/Settings/InviteUserPage.vue:175
->>>>>>> fbaca7f1 (chore: update POT file)
+#: frontend/src/components/Settings/InviteUserPage.vue:157
+#: frontend/src/components/Settings/InviteUserPage.vue:164
 #: frontend/src/components/Settings/Users.vue:87
 #: frontend/src/components/Settings/Users.vue:193
-#: frontend/src/components/Settings/Users.vue:264
-#: frontend/src/components/Settings/Users.vue:267
+#: frontend/src/components/Settings/Users.vue:253
+#: frontend/src/components/Settings/Users.vue:256
 msgid "Manager"
 msgstr ""
 
@@ -3931,19 +3879,19 @@ msgstr ""
 #: crm/fcrm/doctype/crm_dashboard/crm_dashboard.json
 #: crm/fcrm/doctype/crm_dropdown_item/crm_dropdown_item.json
 #: crm/fcrm/doctype/fcrm_settings/fcrm_settings.json
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:58
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:59
-#: frontend/src/components/Settings/EmailTemplate/EditEmailTemplate.vue:42
-#: frontend/src/components/Settings/EmailTemplate/NewEmailTemplate.vue:42
+#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:51
+#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:52
+#: frontend/src/components/Settings/EmailTemplate/EditEmailTemplate.vue:39
+#: frontend/src/components/Settings/EmailTemplate/NewEmailTemplate.vue:39
 #: frontend/src/components/ViewControls.vue:779
 #: frontend/src/pages/MobileOrganization.vue:485
 #: frontend/src/pages/Organization.vue:506
 msgid "Name"
 msgstr ""
 
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:402
-#: frontend/src/components/Settings/EmailTemplate/EditEmailTemplate.vue:155
-#: frontend/src/components/Settings/EmailTemplate/NewEmailTemplate.vue:157
+#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:417
+#: frontend/src/components/Settings/EmailTemplate/EditEmailTemplate.vue:152
+#: frontend/src/components/Settings/EmailTemplate/NewEmailTemplate.vue:154
 msgid "Name is required"
 msgstr ""
 
@@ -3971,6 +3919,7 @@ msgid "Net Total"
 msgstr ""
 
 #: frontend/src/components/Activities/ActivityHeader.vue:76
+#: frontend/src/components/Settings/AssignmentRules/AssignmentRules.vue:19
 #: frontend/src/components/Settings/EmailTemplate/EmailTemplates.vue:19
 #: frontend/src/components/Settings/LeadSyncing/LeadSyncSources.vue:20
 #: frontend/src/components/Settings/Users.vue:30
@@ -3981,7 +3930,7 @@ msgstr ""
 msgid "New Address"
 msgstr ""
 
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:18
+#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:12
 msgid "New Assignment Rule"
 msgstr ""
 
@@ -4266,10 +4215,6 @@ msgstr ""
 msgid "Not Saved"
 msgstr ""
 
-#: frontend/src/components/Settings/LeadSyncing/LeadSyncSourceForm.vue:133
-msgid "Not Synced"
-msgstr ""
-
 #: crm/fcrm/doctype/crm_deal/crm_deal.py:272
 msgid "Not allowed to add contact to Deal"
 msgstr ""
@@ -4349,8 +4294,8 @@ msgstr ""
 msgid "Number of deals and total value per salesperson"
 msgstr ""
 
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:172
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:253
+#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:167
+#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:251
 msgid "Old Condition"
 msgstr ""
 
@@ -4562,7 +4507,7 @@ msgstr ""
 msgid "Person"
 msgstr ""
 
-#: frontend/src/components/Settings/Settings.vue:90
+#: frontend/src/components/Settings/Settings.vue:89
 msgid "Personal Settings"
 msgstr ""
 
@@ -4710,7 +4655,7 @@ msgstr ""
 #. Label of the priority (Select) field in DocType 'CRM Task'
 #: crm/fcrm/doctype/crm_service_level_priority/crm_service_level_priority.json
 #: crm/fcrm/doctype/crm_task/crm_task.json
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:71
+#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:64
 #: frontend/src/components/Settings/AssignmentRules/AssignmentRulesList.vue:20
 msgid "Priority"
 msgstr ""
@@ -4755,7 +4700,7 @@ msgid "Products"
 msgstr ""
 
 #: frontend/src/components/Layouts/AppSidebar.vue:540
-#: frontend/src/components/Settings/Settings.vue:85
+#: frontend/src/components/Settings/Settings.vue:93
 msgid "Profile"
 msgstr ""
 
@@ -4886,10 +4831,9 @@ msgstr ""
 msgid "Reject call"
 msgstr ""
 
-#: frontend/src/components/ConditionsFilter/CFCondition.vue:193
-#: frontend/src/components/ConditionsFilter/CFCondition.vue:196
+#: frontend/src/components/ConditionsFilter/CFCondition.vue:192
+#: frontend/src/components/Controls/ImageUploader.vue:25
 #: frontend/src/components/Settings/Users.vue:218
-#: frontend/src/components/Settings/Users.vue:221
 #: frontend/src/pages/Deal.vue:618
 msgid "Remove"
 msgstr ""
@@ -4906,8 +4850,7 @@ msgstr ""
 msgid "Remove column"
 msgstr ""
 
-#: frontend/src/components/ConditionsFilter/CFCondition.vue:208
-#: frontend/src/components/ConditionsFilter/CFCondition.vue:211
+#: frontend/src/components/ConditionsFilter/CFCondition.vue:200
 msgid "Remove group"
 msgstr ""
 
@@ -5142,13 +5085,12 @@ msgstr ""
 #: crm/fcrm/doctype/crm_view_settings/crm_view_settings.json
 #: crm/fcrm/doctype/fcrm_note/fcrm_note.json
 #: frontend/src/components/Modals/AddExistingUserModal.vue:92
-#: frontend/src/components/Settings/InviteUserPage.vue:167
-#: frontend/src/components/Settings/InviteUserPage.vue:174
->>>>>>> fbaca7f1 (chore: update POT file)
+#: frontend/src/components/Settings/InviteUserPage.vue:156
+#: frontend/src/components/Settings/InviteUserPage.vue:163
 #: frontend/src/components/Settings/Users.vue:88
 #: frontend/src/components/Settings/Users.vue:194
-#: frontend/src/components/Settings/Users.vue:276
-#: frontend/src/components/Settings/Users.vue:279
+#: frontend/src/components/Settings/Users.vue:264
+#: frontend/src/components/Settings/Users.vue:267
 msgid "Sales User"
 msgstr ""
 
@@ -5189,9 +5131,8 @@ msgstr ""
 #: frontend/src/components/Modals/QuickEntryModal.vue:26
 #: frontend/src/components/Modals/SidePanelModal.vue:26
 #: frontend/src/components/PrimaryDropdownItem.vue:21
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:42
-#: frontend/src/components/Settings/General/CurrencySettings.vue:182
->>>>>>> fbaca7f1 (chore: update POT file)
+#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:36
+#: frontend/src/components/Settings/CurrencySettings.vue:173
 #: frontend/src/components/Telephony/ExotelCallUI.vue:222
 #: frontend/src/components/ViewControls.vue:125
 #: frontend/src/pages/Dashboard.vue:36
@@ -5254,16 +5195,16 @@ msgstr ""
 msgid "Select Range"
 msgstr ""
 
-#: frontend/src/components/Settings/LeadSyncing/LeadSyncSourceForm.vue:47
-msgid "Select Source Type"
-msgstr ""
-
 #: frontend/src/components/Settings/CurrencySettings.vue:51
 msgid "Select currency"
 msgstr ""
 
 #: frontend/src/components/Settings/CurrencySettings.vue:75
 msgid "Select provider"
+msgstr ""
+
+#: frontend/src/components/Settings/AssignmentRules/AssigneeRules.vue:84
+msgid "Select the assignees for {0}."
 msgstr ""
 
 #: frontend/src/components/FieldLayout/Field.vue:337
@@ -5393,7 +5334,6 @@ msgstr ""
 #: crm/fcrm/doctype/fcrm_settings/fcrm_settings.json
 #: frontend/src/components/Layouts/AppSidebar.vue:537
 #: frontend/src/components/Settings/Settings.vue:12
-#: frontend/src/components/Settings/Settings.vue:81
 msgid "Settings"
 msgstr ""
 
@@ -5462,11 +5402,11 @@ msgstr ""
 msgid "Since you removed {0} from the assignee, the {0} has been changed to the next available assignee {1}."
 msgstr ""
 
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:720
+#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:735
 msgid "Some error occurred while renaming assignment rule"
 msgstr ""
 
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:705
+#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:720
 msgid "Some error occurred while updating assignment rule"
 msgstr ""
 
@@ -5615,7 +5555,7 @@ msgstr ""
 msgid "Subject"
 msgstr ""
 
-#: frontend/src/components/Settings/EmailTemplate/EditEmailTemplate.vue:155
+#: frontend/src/components/Settings/EmailTemplate/EditEmailTemplate.vue:156
 #: frontend/src/components/Settings/EmailTemplate/NewEmailTemplate.vue:158
 msgid "Subject is required"
 msgstr ""
@@ -5648,16 +5588,7 @@ msgstr ""
 msgid "Sync your contacts,email and calenders"
 msgstr ""
 
-#. Label of the syncing_tab (Tab Break) field in DocType 'CRM Lead'
-#: crm/fcrm/doctype/crm_lead/crm_lead.json
-msgid "Syncing"
-msgstr ""
-
-#: frontend/src/components/Settings/LeadSyncing/LeadSyncSourceForm.vue:359
-msgid "Syncing started in background"
-msgstr ""
-
-#: frontend/src/components/Settings/Settings.vue:106
+#: frontend/src/components/Settings/Settings.vue:105
 msgid "System Configuration"
 msgstr ""
 
@@ -5711,7 +5642,7 @@ msgstr ""
 msgid "Telegram Channel"
 msgstr ""
 
-#: frontend/src/components/Settings/Settings.vue:134
+#: frontend/src/components/Settings/Settings.vue:184
 msgid "Telephony"
 msgstr ""
 
@@ -5744,11 +5675,11 @@ msgstr ""
 msgid "Template name"
 msgstr ""
 
-#: frontend/src/components/Settings/EmailTemplate/EditEmailTemplate.vue:239
+#: frontend/src/components/Settings/EmailTemplate/EditEmailTemplate.vue:240
 msgid "Template renamed successfully"
 msgstr ""
 
-#: frontend/src/components/Settings/EmailTemplate/EditEmailTemplate.vue:204
+#: frontend/src/components/Settings/EmailTemplate/EditEmailTemplate.vue:205
 msgid "Template updated successfully"
 msgstr ""
 
@@ -5841,10 +5772,6 @@ msgstr ""
 #: crm/fcrm/doctype/crm_holiday_list/crm_holiday_list.json
 #: crm/fcrm/doctype/crm_service_day/crm_service_day.json
 msgid "Thursday"
-msgstr ""
-
-#: frontend/src/components/Settings/AssignmentRules/AssigneeRules.vue:18
-msgid "Ticket Routing"
 msgstr ""
 
 #: frontend/src/components/Calendar/CalendarEventPanel.vue:227
@@ -5975,7 +5902,7 @@ msgstr ""
 msgid "Tuesday"
 msgstr ""
 
-#: frontend/src/components/ConditionsFilter/CFCondition.vue:174
+#: frontend/src/components/ConditionsFilter/CFCondition.vue:173
 msgid "Turn into a group"
 msgstr ""
 
@@ -6041,19 +5968,15 @@ msgstr ""
 msgid "Type an email address to add attendee"
 msgstr ""
 
-#: frontend/src/components/Settings/InviteUserPage.vue:43
-msgid "Type an email address to invite"
-msgstr ""
-
 #: frontend/src/components/Activities/WhatsAppBox.vue:85
 msgid "Type your message here..."
 msgstr ""
 
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:439
+#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:454
 msgid "Unassign conditions are invalid"
 msgstr ""
 
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:229
+#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:224
 msgid "Unassignment condition"
 msgstr ""
 
@@ -6065,7 +5988,7 @@ msgstr ""
 msgid "Uncollapsible"
 msgstr ""
 
-#: frontend/src/components/ConditionsFilter/CFCondition.vue:184
+#: frontend/src/components/ConditionsFilter/CFCondition.vue:183
 msgid "Ungroup conditions"
 msgstr ""
 
@@ -6102,11 +6025,11 @@ msgstr ""
 msgid "Unpin View"
 msgstr ""
 
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:28
+#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:22
 msgid "Unsaved"
 msgstr ""
 
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:560
+#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:575
 msgid "Unsaved changes"
 msgstr ""
 
@@ -6127,11 +6050,10 @@ msgstr ""
 #: frontend/src/components/Modals/EventModal.vue:156
 #: frontend/src/components/Modals/NoteModal.vue:52
 #: frontend/src/components/Modals/TaskModal.vue:106
-#: frontend/src/components/Settings/EmailTemplate/EditEmailTemplate.vue:17
-#: frontend/src/components/Settings/General/BrandSettings.vue:23
-#: frontend/src/components/Settings/General/CurrencySettings.vue:23
-#: frontend/src/components/Settings/General/HomeActions.vue:17
->>>>>>> fbaca7f1 (chore: update POT file)
+#: frontend/src/components/Settings/BrandSettings.vue:15
+#: frontend/src/components/Settings/CurrencySettings.vue:17
+#: frontend/src/components/Settings/EmailTemplate/EditEmailTemplate.vue:21
+#: frontend/src/components/Settings/HomeActions.vue:15
 #: frontend/src/components/Settings/ProfileSettings.vue:95
 #: frontend/src/components/Settings/SettingsPage.vue:20
 #: frontend/src/components/Settings/TelephonySettings.vue:23
@@ -6147,10 +6069,7 @@ msgstr ""
 msgid "Update {0} Records"
 msgstr ""
 
-<<<<<<< HEAD
 #: frontend/src/components/Controls/ImageUploader.vue:20
-=======
->>>>>>> fbaca7f1 (chore: update POT file)
 #: frontend/src/components/FilesUploader/FilesUploader.vue:83
 msgid "Upload"
 msgstr ""
@@ -6198,7 +6117,7 @@ msgstr ""
 msgid "User"
 msgstr ""
 
-#: frontend/src/components/Settings/Settings.vue:127
+#: frontend/src/components/Settings/Settings.vue:126
 msgid "User Management"
 msgstr ""
 
@@ -6207,12 +6126,12 @@ msgstr ""
 msgid "User Name"
 msgstr ""
 
-#: frontend/src/components/Settings/Users.vue:309
+#: frontend/src/components/Settings/Users.vue:296
 msgid "User {0} has been removed"
 msgstr ""
 
 #: frontend/src/components/Modals/AddExistingUserModal.vue:20
-#: frontend/src/components/Settings/Settings.vue:101
+#: frontend/src/components/Settings/Settings.vue:129
 #: frontend/src/components/Settings/Users.vue:7
 msgid "Users"
 msgstr ""
@@ -6221,7 +6140,7 @@ msgstr ""
 msgid "Users added successfully"
 msgstr ""
 
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:450
+#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:465
 msgid "Users are required"
 msgstr ""
 
@@ -6296,7 +6215,7 @@ msgstr ""
 #. Option for the 'Type' (Select) field in DocType 'CRM Notification'
 #: crm/fcrm/doctype/crm_notification/crm_notification.json
 #: frontend/src/components/Layouts/AppSidebar.vue:603
-#: frontend/src/components/Settings/Settings.vue:140
+#: frontend/src/components/Settings/Settings.vue:190
 #: frontend/src/pages/Deal.vue:572 frontend/src/pages/Lead.vue:429
 #: frontend/src/pages/MobileDeal.vue:471 frontend/src/pages/MobileLead.vue:378
 >>>>>>> fbaca7f1 (chore: update POT file)
@@ -6405,7 +6324,7 @@ msgstr ""
 msgid "Your login id is"
 msgstr ""
 
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:595
+#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:610
 msgid "Your old condition will be overwritten. Are you sure you want to save?"
 msgstr ""
 
@@ -6462,8 +6381,13 @@ msgstr ""
 msgid "cyan"
 msgstr ""
 
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:195
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:276
+#: frontend/src/components/Settings/AssignmentRules/AssigneeRules.vue:131
+#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:380
+msgid "deals"
+msgstr ""
+
+#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:190
+#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:274
 msgid "desk"
 msgstr ""
 
@@ -6686,8 +6610,8 @@ msgstr ""
 msgid "violet"
 msgstr ""
 
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:198
-#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:279
+#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:193
+#: frontend/src/components/Settings/AssignmentRules/AssignmentRuleView.vue:277
 msgid "which are not compatible with this UI, you will need to recreate the conditions here if you want to manage and add new conditions from this UI."
 msgstr ""
 
@@ -6726,7 +6650,7 @@ msgstr ""
 msgid "{0} h"
 msgstr ""
 
-#: frontend/src/components/Settings/Users.vue:299
+#: frontend/src/components/Settings/Users.vue:286
 msgid "{0} has been granted {1} access"
 msgstr ""
 
@@ -6744,7 +6668,6 @@ msgstr ""
 #: frontend/src/components/EmailEditor.vue:80
 #: frontend/src/components/Modals/AddExistingUserModal.vue:37
 #: frontend/src/components/Modals/EventModal.vue:127
-#: frontend/src/components/Settings/InviteUserPage.vue:41
 msgid "{0} is an invalid email address"
 msgstr ""
 
