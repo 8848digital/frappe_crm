@@ -15,7 +15,7 @@
           </div>
         </div>
         <div>
-          <div class="text-ink-gray-5">
+          <div class="text-ink-gray-5 text-base">
             {{
               __('Are you sure you want to delete {0} items?', [
                 props.items?.length,
@@ -60,7 +60,7 @@
           </div>
         </div>
         <div>
-          <div class="text-ink-gray-5">
+          <div class="text-ink-gray-5 text-base">
             {{
               confirmDeleteInfo.delete
                 ? __(
