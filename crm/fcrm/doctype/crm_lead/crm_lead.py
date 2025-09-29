@@ -14,8 +14,6 @@ from crm.fcrm.doctype.crm_status_change_log.crm_status_change_log import (
 
 
 class CRMLead(Document):
-<<<<<<< HEAD
-=======
 	# begin: auto-generated types
 	# This code is auto-generated. Do not modify anything in this block.
 
@@ -23,7 +21,6 @@ class CRMLead(Document):
 
 	if TYPE_CHECKING:
 		from crm.fcrm.doctype.crm_products.crm_products import CRMProducts
-		from crm.fcrm.doctype.crm_rolling_response_time.crm_rolling_response_time import CRMRollingResponseTime
 		from crm.fcrm.doctype.crm_status_change_log.crm_status_change_log import CRMStatusChangeLog
 		from frappe.types import DF
 
@@ -31,7 +28,6 @@ class CRMLead(Document):
 		communication_status: DF.Link | None
 		converted: DF.Check
 		email: DF.Data | None
-		facebook_form_id: DF.Data | None
 		facebook_lead_id: DF.Data | None
 		first_name: DF.Data
 		first_responded_on: DF.Datetime | None
@@ -41,8 +37,6 @@ class CRMLead(Document):
 		industry: DF.Link | None
 		job_title: DF.Data | None
 		last_name: DF.Data | None
-		last_responded_on: DF.Datetime | None
-		last_response_time: DF.Duration | None
 		lead_name: DF.Data | None
 		lead_owner: DF.Link | None
 		middle_name: DF.Data | None
@@ -54,11 +48,10 @@ class CRMLead(Document):
 		phone: DF.Data | None
 		products: DF.Table[CRMProducts]
 		response_by: DF.Datetime | None
-		rolling_responses: DF.Table[CRMRollingResponseTime]
 		salutation: DF.Link | None
 		sla: DF.Link | None
 		sla_creation: DF.Datetime | None
-		sla_status: DF.Literal["", "First Response Due", "Rolling Response Due", "Failed", "Fulfilled"]
+		sla_status: DF.Literal["", "First Response Due", "Failed", "Fulfilled"]
 		source: DF.Link | None
 		status: DF.Link
 		status_change_log: DF.Table[CRMStatusChangeLog]
@@ -67,7 +60,6 @@ class CRMLead(Document):
 		website: DF.Data | None
 	# end: auto-generated types
 
->>>>>>> 5f12d1c0 (fix: created rolling response time child table to capture multiple response cycle and added in lead & deal)
 	def before_validate(self):
 		self.set_sla()
 
