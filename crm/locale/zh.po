@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: shariq@frappe.io\n"
-"POT-Creation-Date: 2025-09-21 09:35+0000\n"
-"PO-Revision-Date: 2025-09-22 20:42\n"
+"POT-Creation-Date: 2025-09-28 09:35+0000\n"
+"PO-Revision-Date: 2025-10-01 08:38\n"
 "Last-Translator: shariq@frappe.io\n"
 "Language-Team: Chinese Simplified\n"
 "MIME-Version: 1.0\n"
@@ -2001,7 +2001,7 @@ msgstr "文档不存在。"
 msgid "Document not found"
 msgstr "未找到文档"
 
-#: frontend/src/data/document.js:24
+#: frontend/src/data/document.js:45
 msgid "Document updated successfully"
 msgstr "文档更新成功。"
 
@@ -3679,13 +3679,13 @@ msgstr "管理邮件账户以直接从CRM系统收发邮件。您可添加多个
 msgid "Manager"
 msgstr "经理"
 
-#: frontend/src/data/document.js:35
+#: frontend/src/data/document.js:57
 msgid "Mandatory field error: {0}"
-msgstr "必填字段错误：{0}"
+msgstr ""
 
-#: frontend/src/data/document.js:187 frontend/src/data/document.js:190
+#: frontend/src/data/document.js:186 frontend/src/data/document.js:189
 msgid "Mandatory fields required: {0}"
-msgstr "必须填写以下字段：{0}"
+msgstr ""
 
 #. Option for the 'Telephony Medium' (Select) field in DocType 'CRM Call Log'
 #: crm/fcrm/doctype/crm_call_log/crm_call_log.json
