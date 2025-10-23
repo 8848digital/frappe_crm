@@ -464,7 +464,7 @@ function isFieldVisible(field) {
 
   return (
     (field.fieldtype == 'Check' ||
-      (field.read_only && doc.value?.[field.fieldname]) ||
+      shouldShowReadOnly ||
       !field.read_only) &&
     (!field.depends_on || field.display_via_depends_on) &&
     !field.hidden
