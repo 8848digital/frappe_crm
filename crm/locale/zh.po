@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: shariq@frappe.io\n"
-"POT-Creation-Date: 2025-09-28 09:35+0000\n"
-"PO-Revision-Date: 2025-11-02 19:21\n"
+"POT-Creation-Date: 2025-11-02 09:34+0000\n"
+"PO-Revision-Date: 2025-11-03 19:22\n"
 "Last-Translator: shariq@frappe.io\n"
 "Language-Team: Chinese Simplified\n"
 "MIME-Version: 1.0\n"
@@ -428,9 +428,9 @@ msgstr "全天"
 
 #. Label of the amount (Currency) field in DocType 'CRM Products'
 #: crm/fcrm/doctype/crm_products/crm_products.json
-#: frontend/src/pages/Contact.vue:499 frontend/src/pages/MobileContact.vue:507
+#: frontend/src/pages/Contact.vue:507 frontend/src/pages/MobileContact.vue:507
 #: frontend/src/pages/MobileOrganization.vue:451
-#: frontend/src/pages/Organization.vue:472
+#: frontend/src/pages/Organization.vue:481
 msgid "Amount"
 msgstr "金额"
 
@@ -670,7 +670,7 @@ msgid "Attach a file"
 msgstr "附加文件"
 
 #: frontend/src/pages/Deal.vue:567 frontend/src/pages/Lead.vue:424
-#: frontend/src/pages/MobileDeal.vue:466 frontend/src/pages/MobileLead.vue:373
+#: frontend/src/pages/MobileDeal.vue:466 frontend/src/pages/MobileLead.vue:372
 msgid "Attachments"
 msgstr "附件"
 
@@ -712,23 +712,23 @@ msgstr "根据商机中关联产品的总价值自动更新“预期商机价值
 msgid "Automation & Rules"
 msgstr "自动化与规则"
 
-#: crm/api/dashboard.py:238
+#: crm/api/dashboard.py:250
 msgid "Average deal value of non won/lost deals"
 msgstr "非赢单/输单商机的平均价值"
 
-#: crm/api/dashboard.py:411
+#: crm/api/dashboard.py:429
 msgid "Average deal value of ongoing & won deals"
 msgstr "进行中及赢单商机的平均价值"
 
-#: crm/api/dashboard.py:354
+#: crm/api/dashboard.py:370
 msgid "Average deal value of won deals"
 msgstr "赢单商机的平均价值"
 
-#: crm/api/dashboard.py:518
+#: crm/api/dashboard.py:534
 msgid "Average time taken from deal creation to deal closure"
 msgstr "商机创建至关闭的平均耗时"
 
-#: crm/api/dashboard.py:464
+#: crm/api/dashboard.py:481
 msgid "Average time taken from lead creation to deal closure"
 msgstr "线索创建至商机关闭的平均耗时"
 
@@ -1133,7 +1133,7 @@ msgid "Change deal status"
 msgstr "变更商机状态"
 
 #: frontend/src/components/Settings/ProfileSettings.vue:26
-#: frontend/src/pages/Contact.vue:41 frontend/src/pages/Lead.vue:88
+#: frontend/src/pages/Contact.vue:47 frontend/src/pages/Lead.vue:88
 #: frontend/src/pages/MobileContact.vue:37
 #: frontend/src/pages/MobileOrganization.vue:37
 #: frontend/src/pages/Organization.vue:47
@@ -1395,7 +1395,7 @@ msgstr "联系人已存在"
 msgid "Contact already exists with {0}"
 msgstr "联系人{0}已存在"
 
-#: frontend/src/pages/Contact.vue:279 frontend/src/pages/MobileContact.vue:252
+#: frontend/src/pages/Contact.vue:287 frontend/src/pages/MobileContact.vue:252
 msgid "Contact image updated"
 msgstr "联系人图片已更新"
 
@@ -1403,8 +1403,8 @@ msgstr "联系人图片已更新"
 msgid "Contact removed"
 msgstr "联系人已移除"
 
-#: frontend/src/pages/Contact.vue:424 frontend/src/pages/Contact.vue:437
-#: frontend/src/pages/Contact.vue:450 frontend/src/pages/Contact.vue:460
+#: frontend/src/pages/Contact.vue:432 frontend/src/pages/Contact.vue:445
+#: frontend/src/pages/Contact.vue:458 frontend/src/pages/Contact.vue:468
 #: frontend/src/pages/MobileContact.vue:432
 #: frontend/src/pages/MobileContact.vue:445
 #: frontend/src/pages/MobileContact.vue:458
@@ -1417,7 +1417,7 @@ msgstr "联系方式已更新"
 #. Label of a shortcut in the Frappe CRM Workspace
 #: crm/fcrm/doctype/crm_deal/crm_deal.json
 #: crm/fcrm/workspace/frappe_crm/frappe_crm.json
-#: frontend/src/pages/Contact.vue:234 frontend/src/pages/MobileContact.vue:212
+#: frontend/src/pages/Contact.vue:242 frontend/src/pages/MobileContact.vue:212
 #: frontend/src/pages/MobileOrganization.vue:331
 msgid "Contacts"
 msgstr "联系人"
@@ -1627,12 +1627,6 @@ msgstr "定制"
 msgid "Customize quick filters"
 msgstr "自定义快速筛选"
 
-#. Option for the 'Background Sync Frequency' (Select) field in DocType 'Lead
-#. Sync Source'
-#: crm/lead_syncing/doctype/lead_sync_source/lead_sync_source.json
-msgid "Daily"
-msgstr "每天"
-
 #: crm/api/dashboard.py:618
 msgid "Daily performance of leads, deals, and wins"
 msgstr "线索、商机及赢单的每日表现"
@@ -1650,7 +1644,7 @@ msgid "Data Fields"
 msgstr "数据字段"
 
 #. Label of the date (Date) field in DocType 'CRM Holiday'
-#: crm/api/dashboard.py:601 crm/fcrm/doctype/crm_holiday/crm_holiday.json
+#: crm/api/dashboard.py:620 crm/fcrm/doctype/crm_holiday/crm_holiday.json
 #: frontend/src/components/Calendar/CalendarEventPanel.vue:202
 msgid "Date"
 msgstr "日期"
@@ -1693,13 +1687,13 @@ msgstr "商机状态列表"
 msgid "Deal Value"
 msgstr "商机价值"
 
-#: crm/api/dashboard.py:977
+#: crm/api/dashboard.py:1019
 msgid "Deal generation channel analysis"
 msgstr "商机生成渠道分析"
 
-#: frontend/src/pages/Contact.vue:520 frontend/src/pages/MobileContact.vue:528
+#: frontend/src/pages/Contact.vue:528 frontend/src/pages/MobileContact.vue:528
 #: frontend/src/pages/MobileOrganization.vue:472
-#: frontend/src/pages/Organization.vue:493
+#: frontend/src/pages/Organization.vue:502
 msgid "Deal owner"
 msgstr "商机负责人"
 
@@ -1827,13 +1821,13 @@ msgstr "默认状态、自定义字段及布局已成功恢复。"
 #: frontend/src/components/ViewControls.vue:1116
 #: frontend/src/components/ViewControls.vue:1127
 #: frontend/src/pages/Calendar.vue:299 frontend/src/pages/Calendar.vue:303
-#: frontend/src/pages/Contact.vue:100 frontend/src/pages/Deal.vue:111
+#: frontend/src/pages/Contact.vue:106 frontend/src/pages/Deal.vue:111
 #: frontend/src/pages/Lead.vue:157 frontend/src/pages/MobileContact.vue:79
 #: frontend/src/pages/MobileContact.vue:263
 #: frontend/src/pages/MobileDeal.vue:515
 #: frontend/src/pages/MobileOrganization.vue:72
 #: frontend/src/pages/MobileOrganization.vue:264
-#: frontend/src/pages/Notes.vue:43 frontend/src/pages/Organization.vue:83
+#: frontend/src/pages/Notes.vue:43 frontend/src/pages/Organization.vue:89
 #: frontend/src/pages/Tasks.vue:371
 msgid "Delete"
 msgstr "删除"
@@ -2209,12 +2203,12 @@ msgstr "正在编辑事件"
 #. Label of the email (Data) field in DocType 'CRM Lead'
 #: crm/fcrm/doctype/crm_contacts/crm_contacts.json
 #: crm/fcrm/doctype/crm_invitation/crm_invitation.json
-#: crm/fcrm/doctype/crm_lead/crm_lead.json frontend/src/pages/Contact.vue:510
+#: crm/fcrm/doctype/crm_lead/crm_lead.json frontend/src/pages/Contact.vue:518
 #: frontend/src/pages/MobileContact.vue:518
 #: frontend/src/pages/MobileOrganization.vue:462
 #: frontend/src/pages/MobileOrganization.vue:490
-#: frontend/src/pages/Organization.vue:483
-#: frontend/src/pages/Organization.vue:511
+#: frontend/src/pages/Organization.vue:492
+#: frontend/src/pages/Organization.vue:520
 msgid "Email"
 msgstr "电子邮件"
 
@@ -2357,7 +2351,7 @@ msgstr "请输入访问密钥"
 msgid "Enter brand name"
 msgstr "请输入品牌名称"
 
-#: frontend/src/components/FieldLayout/Field.vue:339
+#: frontend/src/components/FieldLayout/Field.vue:347
 msgid "Enter {0}"
 msgstr "输入{0}"
 
@@ -2376,7 +2370,7 @@ msgid "Error converting to deal: {0}"
 msgstr "转换为商机时出错：{0}"
 
 #: frontend/src/pages/Deal.vue:731 frontend/src/pages/Lead.vue:469
-#: frontend/src/pages/MobileDeal.vue:612 frontend/src/pages/MobileLead.vue:413
+#: frontend/src/pages/MobileDeal.vue:612 frontend/src/pages/MobileLead.vue:412
 msgid "Error updating field"
 msgstr "字段更新失败"
 
@@ -2810,7 +2804,7 @@ msgstr "GMT+5:30"
 msgid "Gender"
 msgstr "性别"
 
-#: crm/api/dashboard.py:1020
+#: crm/api/dashboard.py:1065
 msgid "Geographic distribution of deals and revenue"
 msgstr "商机与收入的地理分布"
 
@@ -3115,7 +3109,7 @@ msgstr "无效的电子邮件"
 msgid "Invalid Exotel Number"
 msgstr "无效的Exotel号码"
 
-#: crm/api/dashboard.py:73
+#: crm/api/dashboard.py:77
 msgid "Invalid chart name"
 msgstr "图表名称无效"
 
@@ -3322,11 +3316,11 @@ msgstr "上周"
 msgid "Last Year"
 msgstr "去年"
 
-#: frontend/src/pages/Contact.vue:525 frontend/src/pages/MobileContact.vue:533
+#: frontend/src/pages/Contact.vue:533 frontend/src/pages/MobileContact.vue:533
 #: frontend/src/pages/MobileOrganization.vue:477
 #: frontend/src/pages/MobileOrganization.vue:505
-#: frontend/src/pages/Organization.vue:498
-#: frontend/src/pages/Organization.vue:526
+#: frontend/src/pages/Organization.vue:507
+#: frontend/src/pages/Organization.vue:535
 msgid "Last modified"
 msgstr "最后修改"
 
@@ -3393,28 +3387,11 @@ msgstr "线索来源"
 msgid "Lead Statuses"
 msgstr "线索状态"
 
-#. Name of a DocType
-#: crm/lead_syncing/doctype/lead_sync_source/lead_sync_source.json
-msgid "Lead Sync Source"
-msgstr ""
-
-#: frontend/src/components/Settings/LeadSyncing/LeadSyncSourceForm.vue:240
-msgid "Lead Sync Source created successfully"
-msgstr ""
-
-#: frontend/src/components/Settings/LeadSyncing/LeadSyncSources.vue:183
-msgid "Lead Sync Source deleted successfully"
-msgstr ""
-
-#: frontend/src/components/Settings/Settings.vue:209
-msgid "Lead Syncing"
-msgstr ""
-
 #: crm/api/dashboard.py:974
 msgid "Lead generation channel analysis"
 msgstr "线索生成渠道分析"
 
-#: crm/api/dashboard.py:729
+#: crm/api/dashboard.py:756
 msgid "Lead to deal conversion pipeline"
 msgstr "线索至商机转化管道"
 
@@ -3712,9 +3689,9 @@ msgstr "手机号码缺失"
 msgid "Mobile app installation"
 msgstr "移动端应用安装"
 
-#: frontend/src/pages/Contact.vue:515 frontend/src/pages/MobileContact.vue:523
+#: frontend/src/pages/Contact.vue:523 frontend/src/pages/MobileContact.vue:523
 #: frontend/src/pages/MobileOrganization.vue:467
-#: frontend/src/pages/Organization.vue:488
+#: frontend/src/pages/Organization.vue:497
 msgid "Mobile no"
 msgstr "手机号"
 
@@ -3765,7 +3742,7 @@ msgstr "我负责的开放商机"
 #: frontend/src/components/Settings/EmailTemplate/NewEmailTemplate.vue:39
 #: frontend/src/components/ViewControls.vue:779
 #: frontend/src/pages/MobileOrganization.vue:485
-#: frontend/src/pages/Organization.vue:506
+#: frontend/src/pages/Organization.vue:515
 msgid "Name"
 msgstr "名称"
 
@@ -4005,7 +3982,7 @@ msgid "No users found"
 msgstr "未找到用户"
 
 #: frontend/src/pages/MobileOrganization.vue:281
-#: frontend/src/pages/Organization.vue:309
+#: frontend/src/pages/Organization.vue:318
 msgid "No website found"
 msgstr "未找到网站"
 
@@ -4017,11 +3994,11 @@ msgstr "未设置网站"
 msgid "No {0} Available"
 msgstr "无可用{0}"
 
-#: frontend/src/pages/CallLogs.vue:59 frontend/src/pages/Contact.vue:156
+#: frontend/src/pages/CallLogs.vue:59 frontend/src/pages/Contact.vue:162
 #: frontend/src/pages/Contacts.vue:58 frontend/src/pages/Deals.vue:234
 #: frontend/src/pages/Leads.vue:260 frontend/src/pages/MobileContact.vue:147
 #: frontend/src/pages/MobileOrganization.vue:139
-#: frontend/src/pages/Notes.vue:95 frontend/src/pages/Organization.vue:152
+#: frontend/src/pages/Notes.vue:95 frontend/src/pages/Organization.vue:158
 #: frontend/src/pages/Organizations.vue:58 frontend/src/pages/Tasks.vue:184
 msgid "No {0} Found"
 msgstr "未找到{0}"
@@ -4100,7 +4077,7 @@ msgid "Note"
 msgstr "备注"
 
 #: frontend/src/pages/Deal.vue:562 frontend/src/pages/Lead.vue:419
-#: frontend/src/pages/MobileDeal.vue:461 frontend/src/pages/MobileLead.vue:368
+#: frontend/src/pages/MobileDeal.vue:461 frontend/src/pages/MobileLead.vue:367
 msgid "Notes"
 msgstr "备注"
 
@@ -4218,7 +4195,7 @@ msgstr "新窗口打开"
 msgid "Open nested conditions"
 msgstr "展开嵌套条件"
 
-#: frontend/src/pages/Organization.vue:90
+#: frontend/src/pages/Organization.vue:96
 msgid "Open website"
 msgstr "打开网站"
 
@@ -4245,12 +4222,12 @@ msgstr "排序依据"
 #: crm/fcrm/doctype/crm_lead/crm_lead.json
 #: frontend/src/components/Layouts/AppSidebar.vue:553
 #: frontend/src/components/Modals/ConvertToDealModal.vue:25
-#: frontend/src/pages/Contact.vue:494 frontend/src/pages/MobileContact.vue:502
+#: frontend/src/pages/Contact.vue:502 frontend/src/pages/MobileContact.vue:502
 #: frontend/src/pages/MobileLead.vue:118
 #: frontend/src/pages/MobileOrganization.vue:446
 #: frontend/src/pages/MobileOrganization.vue:500
-#: frontend/src/pages/Organization.vue:467
-#: frontend/src/pages/Organization.vue:521
+#: frontend/src/pages/Organization.vue:476
+#: frontend/src/pages/Organization.vue:530
 msgid "Organization"
 msgstr "组织"
 
@@ -4280,7 +4257,7 @@ msgstr "组织徽标"
 #. Label of a shortcut in the Frappe CRM Workspace
 #: crm/fcrm/workspace/frappe_crm/frappe_crm.json
 #: frontend/src/pages/MobileOrganization.vue:205
-#: frontend/src/pages/Organization.vue:234
+#: frontend/src/pages/Organization.vue:243
 msgid "Organizations"
 msgstr "组织"
 
@@ -4378,7 +4355,7 @@ msgstr "个人设置"
 #: crm/fcrm/doctype/crm_lead/crm_lead.json
 #: crm/fcrm/doctype/crm_telephony_agent/crm_telephony_agent.json
 #: frontend/src/pages/MobileOrganization.vue:495
-#: frontend/src/pages/Organization.vue:516
+#: frontend/src/pages/Organization.vue:525
 msgid "Phone"
 msgstr "电话"
 
@@ -4433,12 +4410,12 @@ msgid "Please select a currency before saving."
 msgstr "保存前请选择货币"
 
 #: frontend/src/components/Modals/ConvertToDealModal.vue:136
-#: frontend/src/pages/MobileLead.vue:432
+#: frontend/src/pages/MobileLead.vue:431
 msgid "Please select an existing contact"
 msgstr "请选择现有联系人"
 
 #: frontend/src/components/Modals/ConvertToDealModal.vue:141
-#: frontend/src/pages/MobileLead.vue:437
+#: frontend/src/pages/MobileLead.vue:436
 msgid "Please select an existing organization"
 msgstr "请选择现有组织"
 
@@ -4698,7 +4675,7 @@ msgid "Remove group"
 msgstr "移除分组"
 
 #: frontend/src/components/Settings/ProfileSettings.vue:32
-#: frontend/src/pages/Contact.vue:47 frontend/src/pages/Lead.vue:94
+#: frontend/src/pages/Contact.vue:53 frontend/src/pages/Lead.vue:94
 #: frontend/src/pages/MobileContact.vue:43
 #: frontend/src/pages/MobileOrganization.vue:43
 #: frontend/src/pages/Organization.vue:53
@@ -5046,7 +5023,7 @@ msgstr "选择服务商"
 msgid "Select the assignees for {0}."
 msgstr "请选择{0}的负责人。"
 
-#: frontend/src/components/FieldLayout/Field.vue:337
+#: frontend/src/components/FieldLayout/Field.vue:345
 msgid "Select {0}"
 msgstr "选择{0}"
 
@@ -5337,10 +5314,10 @@ msgstr "从10条示例线索开始"
 #: crm/fcrm/doctype/crm_invitation/crm_invitation.json
 #: crm/fcrm/doctype/crm_lead/crm_lead.json
 #: crm/fcrm/doctype/crm_lead_status/crm_lead_status.json
-#: crm/fcrm/doctype/crm_task/crm_task.json frontend/src/pages/Contact.vue:505
+#: crm/fcrm/doctype/crm_task/crm_task.json frontend/src/pages/Contact.vue:513
 #: frontend/src/pages/MobileContact.vue:513
 #: frontend/src/pages/MobileOrganization.vue:457
-#: frontend/src/pages/Organization.vue:478
+#: frontend/src/pages/Organization.vue:487
 msgid "Status"
 msgstr "状态"
 
@@ -5437,7 +5414,7 @@ msgid "Task"
 msgstr "任务"
 
 #: frontend/src/pages/Deal.vue:557 frontend/src/pages/Lead.vue:414
-#: frontend/src/pages/MobileDeal.vue:456 frontend/src/pages/MobileLead.vue:363
+#: frontend/src/pages/MobileDeal.vue:456 frontend/src/pages/MobileLead.vue:362
 msgid "Tasks"
 msgstr "任务"
 
@@ -5889,7 +5866,7 @@ msgid "Upload Video"
 msgstr "上传视频"
 
 #: frontend/src/components/Settings/ProfileSettings.vue:27
-#: frontend/src/pages/Contact.vue:42 frontend/src/pages/Lead.vue:89
+#: frontend/src/pages/Contact.vue:48 frontend/src/pages/Lead.vue:89
 #: frontend/src/pages/MobileContact.vue:38
 #: frontend/src/pages/MobileOrganization.vue:38
 #: frontend/src/pages/Organization.vue:48
@@ -6009,7 +5986,7 @@ msgstr "欢迎{0}，现在开始添加您的首条线索"
 #: frontend/src/components/Layouts/AppSidebar.vue:603
 #: frontend/src/components/Settings/Settings.vue:190
 #: frontend/src/pages/Deal.vue:572 frontend/src/pages/Lead.vue:429
-#: frontend/src/pages/MobileDeal.vue:471 frontend/src/pages/MobileLead.vue:378
+#: frontend/src/pages/MobileDeal.vue:471 frontend/src/pages/MobileLead.vue:377
 msgid "WhatsApp"
 msgstr "WhatsApp"
 
