@@ -10,7 +10,7 @@ const controllersCache = {}
 const assigneesCache = {}
 const permissionsCache = {}
 
-export function useDocument(doctype, docname) {
+export function useDocument(doctype, docname, resourceOverrides = {}) {
   const { setupScript, scripts } = getScript(doctype)
 
   documentsCache[doctype] = documentsCache[doctype] || {}
@@ -67,6 +67,7 @@ export function useDocument(doctype, docname) {
             console.error(err)
           },
         },
+        ...resourceOverrides
       })
     } else {
       documentsCache[doctype][''] = reactive({
