@@ -43,27 +43,13 @@ def update_deals_email_mobile_no(doc):
 
 @frappe.whitelist()
 def get_contact(name):
-	Contact = frappe.qb.DocType("Contact")
+	contact = frappe.get_doc("Contact", name)
+	contact.check_permission("read")
+	contact = contact.as_dict()
 
-	query = (
-		frappe.qb.from_(Contact)
-		.select("*")
-		.where(Contact.name == name)
-		.limit(1)
-	)
-
-	contact = query.run(as_dict=True)
 	if not len(contact):
 		frappe.throw(_("Contact not found"), frappe.DoesNotExistError)
-	contact = contact.pop()
-
-	contact["doctype"] = "Contact"
-	contact["email_ids"] = frappe.get_all(
-		"Contact Email", filters={"parent": name}, fields=["name", "email_id", "is_primary"]
-	)
-	contact["phone_nos"] = frappe.get_all(
-		"Contact Phone", filters={"parent": name}, fields=["name", "phone", "is_primary_mobile_no"]
-	)
+	
 	return contact
 
 @frappe.whitelist()
