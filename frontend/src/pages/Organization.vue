@@ -86,6 +86,7 @@
               </div>
               <div class="flex gap-1.5">
                 <Button
+                  v-if="canDelete"
                   :label="__('Delete')"
                   theme="red"
                   size="sm"
@@ -213,6 +214,7 @@ import {
 } from 'frappe-ui'
 import { h, computed, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useDocumentPermissions } from '@/composables/permissions'
 
 const props = defineProps({
   organizationId: {
@@ -221,6 +223,7 @@ const props = defineProps({
   },
 })
 
+const canDelete = useDocumentPermissions('CRM Organization', props.organizationId)
 const { brand } = getSettings()
 const { $dialog, $socket } = globalStore()
 const { getUser } = usersStore()
