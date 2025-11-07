@@ -38,7 +38,7 @@ class ERPNextCRMSettings(Document):
 
 	def create_custom_fields(self):
 		if not self.is_erpnext_in_different_site:
-			from erpnext.crm.frappe_crm_api import create_custom_fields_for_frappe_crm
+			from erpnext.frappe_crm_api import create_custom_fields_for_frappe_crm
 
 			create_custom_fields_for_frappe_crm()
 		else:
@@ -47,7 +47,7 @@ class ERPNextCRMSettings(Document):
 	def create_custom_fields_in_remote_site(self):
 		client = get_erpnext_site_client(self)
 		try:
-			client.post_api("erpnext.crm.frappe_crm_api.create_custom_fields_for_frappe_crm")
+			client.post_api("erpnext.frappe_crm_api.create_custom_fields_for_frappe_crm")
 		except Exception:
 			frappe.log_error(
 				frappe.get_traceback(),
@@ -149,7 +149,7 @@ def create_prospect_in_remote_site(crm_deal, erpnext_crm_settings):
 			address = address.as_dict()
 
 		return client.post_api(
-			"erpnext.crm.frappe_crm_api.create_prospect_against_crm_deal",
+			"erpnext.frappe_crm_api.create_prospect_against_crm_deal",
 			{
 				"organization": doc.organization,
 				"lead_name": doc.lead_name,
@@ -241,9 +241,10 @@ def create_customer_in_erpnext(doc, method):
 		"crm_deal": doc.name,
 		"contacts": json.dumps(contacts),
 		"address": json.dumps(address) if address else None,
+		"custom_business_vertical": doc.business_vertical
 	}
 	if not erpnext_crm_settings.is_erpnext_in_different_site:
-		from erpnext.crm.frappe_crm_api import create_customer
+		from erpnext.frappe_crm_api import create_customer
 
 		create_customer(customer)
 	else:
@@ -255,7 +256,7 @@ def create_customer_in_erpnext(doc, method):
 def create_customer_in_remote_site(customer, erpnext_crm_settings):
 	client = get_erpnext_site_client(erpnext_crm_settings)
 	try:
-		client.post_api("erpnext.crm.frappe_crm_api.create_customer", customer)
+		client.post_api("erpnext.frappe_crm_api.create_customer", customer)
 	except Exception:
 		frappe.log_error(frappe.get_traceback(), "Error while creating customer in remote site")
 		frappe.throw(_("Error while creating customer in ERPNext, check error log for more details"))

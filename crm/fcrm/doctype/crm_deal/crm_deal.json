@@ -43,6 +43,8 @@
   "mobile_no",
   "phone",
   "gender",
+  "section_break_kkbg",
+  "business_vertical",
   "sla_tab",
   "sla",
   "sla_creation",
@@ -334,11 +336,22 @@
    "fieldtype": "Link",
    "label": "Currency",
    "options": "Currency"
+  },
+  {
+   "fieldname": "section_break_kkbg",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fetch_from": "lead.business_vertical",
+   "fieldname": "business_vertical",
+   "fieldtype": "Link",
+   "label": "Business Vertical",
+   "options": "Business Verticals"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-12-11 14:31:41.058895",
+ "modified": "2025-03-25 12:33:05.195896",
  "modified_by": "Administrator",
  "module": "FCRM",
  "name": "CRM Deal",

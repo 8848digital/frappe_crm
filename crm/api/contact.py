@@ -49,12 +49,7 @@ def get_contact(name):
 
 	if not len(contact):
 		frappe.throw(_("Contact not found"), frappe.DoesNotExistError)
-<<<<<<< HEAD
-	
-=======
-
->>>>>>> 8282e099 (fix: contact page not loading)
-	return contact
+		return contact
 
 @frappe.whitelist()
 def get_linked_deals(contact):
