@@ -203,7 +203,9 @@
                   label: __('Export'),
                   icon: () => h(ExportIcon, { class: 'h-4 w-4' }),
                   onClick: () => (showExportDialog = true),
-                  condition: () => !options.hideColumnsButton && route.params.viewType !== 'kanban',
+                  condition: () =>
+                    !options.hideColumnsButton &&
+                    route.params.viewType !== 'kanban',
                 },
                 {
                   label: __('Customize quick filters'),
@@ -535,6 +537,7 @@ onMounted(() => useDebounceFn(reload, 100)())
 const isLoading = computed(() => list.value?.loading)
 
 function reload() {
+  if (isLoading.value) return
   list.value.params = getParams()
   list.value.reload()
 }
@@ -542,6 +545,11 @@ function reload() {
 const showExportDialog = ref(false)
 const export_type = ref('Excel')
 const export_all = ref(false)
+const selectedRows = ref([])
+
+function updateSelections(selections) {
+  selectedRows.value = Array.from(selections)
+}
 
 async function exportRows() {
   let fields = JSON.stringify(list.value.data.columns.map((f) => f.key))
@@ -557,7 +565,15 @@ async function exportRows() {
     page_length = list.value.data.total_count
   }
 
-  window.location.href = `/api/method/frappe.desk.reportview.export_query?file_format_type=${export_type.value}&title=${props.doctype}&doctype=${props.doctype}&fields=${fields}&filters=${filters}&order_by=${order_by}&page_length=${page_length}&start=0&view=Report&with_comment_count=1`
+  let url = `/api/method/frappe.desk.reportview.export_query?file_format_type=${export_type.value}&title=${props.doctype}&doctype=${props.doctype}&fields=${fields}&filters=${filters}&order_by=${order_by}&page_length=${page_length}&start=0&view=Report&with_comment_count=1`
+
+  // Add selected items parameter if rows are selected
+  if (selectedRows.value?.length && !export_all.value) {
+    url += `&selected_items=${JSON.stringify(selectedRows.value)}`
+  }
+
+  window.location.href = url
+
   showExportDialog.value = false
   export_all.value = false
   export_type.value = 'Excel'
@@ -808,17 +824,14 @@ const quickFilters = createResource({
   },
 })
 
-function setupNewQuickFilters(filters) {
-  if (!Array.isArray(filters)) {
-    console.warn("Expected an array, but got:", filters);
-    filters = []; // Default to empty array
-  }
+if (!quickFilters.data) quickFilters.fetch()
 
+function setupNewQuickFilters(filters) {
   newQuickFilters.value = filters.map((f) => ({
-    label: f.label || '',
-    fieldname: f.fieldname || '',
-    fieldtype: f.fieldtype || 'Data',
-  }));
+    label: f.label,
+    fieldname: f.fieldname,
+    fieldtype: f.fieldtype,
+  }))
 }
 
 function applyQuickFilter(filter, value) {
@@ -1336,6 +1349,7 @@ defineExpose({
   viewActions,
   viewsDropdownOptions,
   currentView,
+  updateSelections,
 })
 
 // Watchers

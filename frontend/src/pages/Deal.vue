@@ -62,7 +62,7 @@
             <Avatar
               size="3xl"
               class="size-12"
-              :label="organization.data?.name || __('Untitled')"
+              :label="title"
               :image="organization.data?.organization_logo"
             />
           </div>
@@ -70,43 +70,51 @@
         <div class="flex flex-col gap-2.5 truncate text-ink-gray-9">
           <Tooltip :text="organization.data?.name || __('Set an organization')">
             <div class="truncate text-2xl font-medium">
-              {{ organization.data?.name || __('Untitled') }}
+              {{ title }}
             </div>
           </Tooltip>
           <div class="flex gap-1.5">
             <Tooltip v-if="callEnabled" :text="__('Make a call')">
-              <Button class="h-7 w-7" @click="triggerCall">
-                <PhoneIcon class="h-4 w-4" />
-              </Button>
+              <div>
+                <Button class="h-7 w-7" @click="triggerCall">
+                  <PhoneIcon class="h-4 w-4" />
+                </Button>
+              </div>
             </Tooltip>
             <Tooltip :text="__('Send an email')">
-              <Button class="h-7 w-7">
-                <Email2Icon
-                  class="h-4 w-4"
-                  @click="
-                    deal.data.email
-                      ? openEmailBox()
-                      : errorMessage(__('No email set'))
-                  "
-                />
-              </Button>
+              <div>
+                <Button class="h-7 w-7">
+                  <Email2Icon
+                    class="h-4 w-4"
+                    @click="
+                      deal.data.email
+                        ? openEmailBox()
+                        : _errorMessage(__('No email set'))
+                    "
+                  />
+                </Button>
+              </div>
             </Tooltip>
             <Tooltip :text="__('Go to website')">
-              <Button class="h-7 w-7">
-                <LinkIcon
-                  class="h-4 w-4"
-                  @click="
-                    deal.data.website
-                      ? openWebsite(deal.data.website)
-                      : errorMessage(__('No website set'))
-                  "
-                />
-              </Button>
+              <div>
+                <Button class="h-7 w-7">
+                  <LinkIcon
+                    class="h-4 w-4"
+                    @click="
+                      deal.data.website
+                        ? openWebsite(deal.data.website)
+                        : _errorMessage(__('No website set'))
+                    "
+                  />
+                </Button>
+              </div>
             </Tooltip>
             <Tooltip :text="__('Attach a file')">
-              <Button class="size-7" @click="showFilesUploader = true">
-                <AttachmentIcon class="size-4" />
-              </Button>
+              <div>
+                <Button class="size-7" @click="showFilesUploader = true">
+                  <AttachmentIcon class="size-4" />
+                </Button>
+              </div>
             </Tooltip>
           </div>
         </div>
@@ -121,10 +129,10 @@
         class="flex flex-1 flex-col justify-between overflow-hidden"
       >
         <SidePanelLayout
-          v-model="deal.data"
           :sections="sections.data"
           :addContact="addContact"
           doctype="CRM Deal"
+          :docname="lead.data.name"
           @update="updateField"
           @reload="sections.reload"
         >
@@ -259,6 +267,11 @@
       </div>
     </Resizer>
   </div>
+   <ErrorPage
+    v-else-if="errorTitle"
+    :errorTitle="errorTitle"
+    :errorMessage="errorMessage"
+  />
   <OrganizationModal
     v-model="showOrganizationModal"
     v-model:organization="_organization"
@@ -289,6 +302,7 @@
   />
 </template>
 <script setup>
+import ErrorPage from '@/components/ErrorPage.vue'
 import Icon from '@/components/Icon.vue'
 import Resizer from '@/components/Resizer.vue'
 import LoadingIndicator from '@/components/Icons/LoadingIndicator.vue'
@@ -322,13 +336,14 @@ import {
   createToast,
   setupAssignees,
   setupCustomizations,
-  errorMessage,
+  errorMessage as _errorMessage,
   copyToClipboard,
 } from '@/utils'
 import { getView } from '@/utils/view'
 import { getSettings } from '@/stores/settings'
 import { globalStore } from '@/stores/global'
 import { statusesStore } from '@/stores/statuses'
+import { getMeta } from '@/stores/meta'
 import { whatsappEnabled, callEnabled } from '@/composables/settings'
 import {
   createResource,
@@ -340,6 +355,7 @@ import {
   call,
   usePageMeta,
 } from 'frappe-ui'
+import { useOnboarding } from 'frappe-ui/frappe'
 import { ref, computed, h, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useActiveTabManager } from '@/composables/useActiveTabManager'
@@ -347,6 +363,11 @@ import { useActiveTabManager } from '@/composables/useActiveTabManager'
 const { brand } = getSettings()
 const { $dialog, $socket, makeCall } = globalStore()
 const { statusOptions, getDealStatus } = statusesStore()
+const { doctypeMeta } = getMeta('CRM Deal')
+
+const { updateOnboardingStep, isOnboardingStepsCompleted } =
+  useOnboarding('frappecrm')
+
 const route = useRoute()
 const router = useRouter()
 
@@ -357,11 +378,17 @@ const props = defineProps({
   },
 })
 
+const errorTitle = ref('')
+const errorMessage = ref('')
+
 const deal = createResource({
   url: 'crm.fcrm.doctype.crm_deal.api.get_deal',
   params: { name: props.dealId },
   cache: ['deal', props.dealId],
   onSuccess: (data) => {
+    errorTitle.value = ''
+    errorMessage.value = ''
+
     if (data.organization) {
       organization.update({
         params: { doctype: 'CRM Organization', name: data.organization },
@@ -385,6 +412,14 @@ const deal = createResource({
       },
       call,
     })
+  },
+  onError: (err) => {
+    if (err.messages?.[0]) {
+      errorTitle.value = __('Not permitted')
+      errorMessage.value = __(err.messages?.[0])
+    } else {
+      router.push({ name: 'Deals' })
+    }
   },
 })
 
@@ -486,15 +521,20 @@ const breadcrumbs = computed(() => {
   }
 
   items.push({
-    label: organization.data?.name || __('Untitled'),
+    label: title.value,
     route: { name: 'Deal', params: { dealId: deal.data.name } },
   })
   return items
 })
 
+const title = computed(() => {
+  let t = doctypeMeta['CRM Deal']?.title_field || 'name'
+  return deal.data?.[t] || props.dealId
+})
+
 usePageMeta(() => {
   return {
-    title: organization.data?.name || deal.data?.name,
+    title: title.value,
     icon: brand.favicon,
   }
 })
@@ -525,7 +565,6 @@ const tabs = computed(() => {
       name: 'Calls',
       label: __('Calls'),
       icon: PhoneIcon,
-      condition: () => callEnabled.value,
     },
     {
       name: 'Tasks',
@@ -557,9 +596,10 @@ const sections = createResource({
   url: 'crm.fcrm.doctype.crm_fields_layout.crm_fields_layout.get_sidepanel_sections',
   cache: ['sidePanelSections', 'CRM Deal'],
   params: { doctype: 'CRM Deal' },
-  auto: true,
   transform: (data) => getParsedSections(data),
 })
+
+if (!sections.data) sections.fetch()
 
 function getParsedSections(_sections) {
   _sections.forEach((section) => {
@@ -663,7 +703,6 @@ const dealContacts = createResource({
   url: 'crm.fcrm.doctype.crm_deal.api.get_deal_contacts',
   params: { name: props.dealId },
   cache: ['deal_contacts', props.dealId],
-  auto: true,
   transform: (data) => {
     data.forEach((contact) => {
       contact.opened = false
@@ -672,17 +711,19 @@ const dealContacts = createResource({
   },
 })
 
+if (!dealContacts.data) dealContacts.fetch()
+
 function triggerCall() {
   let primaryContact = dealContacts.data?.find((c) => c.is_primary)
   let mobile_no = primaryContact.mobile_no || null
 
   if (!primaryContact) {
-    errorMessage(__('No primary contact set'))
+    _errorMessage(__('No primary contact set'))
     return
   }
 
   if (!mobile_no) {
-    errorMessage(__('No mobile number set'))
+    _errorMessage(__('No mobile number set'))
     return
   }
 
@@ -690,6 +731,10 @@ function triggerCall() {
 }
 
 function updateField(name, value, callback) {
+  if (name == 'status' && !isOnboardingStepsCompleted.value) {
+    updateOnboardingStep('change_deal_status')
+  }
+
   updateDeal(name, value, () => {
     deal.data[name] = value
     callback?.()

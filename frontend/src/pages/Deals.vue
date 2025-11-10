@@ -223,6 +223,9 @@
     @applyFilter="(data) => viewControls.applyFilter(data)"
     @applyLikeFilter="(data) => viewControls.applyLikeFilter(data)"
     @likeDoc="(data) => viewControls.likeDoc(data)"
+    @selectionsChanged="
+       (selections) => viewControls.updateSelections(selections)
+    "
   />
   <div v-else-if="deals.data" class="flex h-full items-center justify-center">
     <div
@@ -350,7 +353,9 @@ function getGroupedByRows(listRows, groupByField, columns) {
     if (!option) {
       filteredRows = listRows.filter((row) => !row[groupByField.fieldname])
     } else {
-      filteredRows = listRows.filter((row) => row[groupByField.fieldname] == option)
+      filteredRows = listRows.filter(
+        (row) => row[groupByField.fieldname] == option,
+      )
     }
 
     let groupDetail = {
@@ -382,14 +387,18 @@ function getKanbanRows(data, columns) {
 }
 
 function parseRows(rows, columns = []) {
+  let view_type = deals.value.data.view_type
+  let key = view_type === 'kanban' ? 'fieldname' : 'key'
+  let type = view_type === 'kanban' ? 'fieldtype' : 'type'
+
   return rows.map((deal) => {
     let _rows = {}
     deals.value.data.rows.forEach((row) => {
       _rows[row] = deal[row]
 
-      let fieldType = columns?.find(
-        (col) => (col.key || col.value) == row,
-      )?.type
+      let fieldType = columns?.find((col) => (col[key] || col.value) == row)?.[
+        type
+      ]
 
       if (
         fieldType &&
@@ -451,9 +460,6 @@ function parseRows(rows, columns = []) {
         }
       } else if (row == '_assign') {
         let assignees = JSON.parse(deal._assign || '[]')
-        if (!assignees.length && deal.deal_owner) {
-          assignees = [deal.deal_owner]
-        }
         _rows[row] = assignees.map((user) => ({
           name: user,
           image: getUser(user).user_image,

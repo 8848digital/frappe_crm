@@ -12,7 +12,10 @@
       >
     </div>
     <FormControl
-      v-if="field.read_only && field.fieldtype !== 'Check'"
+      v-if="
+        field.read_only &&
+        !['Float', 'Currency', 'Check'].includes(field.fieldtype)
+      "
       type="text"
       :placeholder="getPlaceholder(field)"
       v-model="data[field.fieldname]"
@@ -23,6 +26,7 @@
       v-model="data[field.fieldname]"
       :doctype="field.options"
       :parentDoctype="doctype"
+      :parentFieldname="field.fieldname"
     />
     <FormControl
       v-else-if="field.fieldtype === 'Select'"
@@ -31,6 +35,7 @@
       :class="field.prefix ? 'prefix' : ''"
       :options="field.options"
       v-model="data[field.fieldname]"
+      @change="(e) => fieldChange(e.target.value, field)"
       :placeholder="getPlaceholder(field)"
     >
       <template v-if="field.prefix" #prefix>
@@ -42,7 +47,7 @@
         class="form-control"
         type="checkbox"
         v-model="data[field.fieldname]"
-        @change="(e) => (data[field.fieldname] = e.target.checked)"
+        @change="(e) => fieldChange(e.target.checked, field)"
         :disabled="Boolean(field.read_only)"
       />
       <label
@@ -59,13 +64,18 @@
         <span class="text-ink-red-3" v-if="field.mandatory">*</span>
       </label>
     </div>
-    <div class="flex gap-1" v-else-if="field.fieldtype === 'Link'">
+    <div
+      class="flex gap-1"
+      v-else-if="['Link', 'Dynamic Link'].includes(field.fieldtype)"
+    >
       <Link
         class="form-control flex-1 truncate"
         :value="data[field.fieldname]"
-        :doctype="field.options"
+        :doctype="
+          field.fieldtype == 'Link' ? field.options : data[field.options]
+        "
         :filters="field.filters"
-        @change="(v) => (data[field.fieldname] = v)"
+        @change="(v) => fieldChange(v, field)"
         :placeholder="getPlaceholder(field)"
         :onCreate="field.create"
       />
@@ -85,6 +95,7 @@
       v-else-if="field.fieldtype === 'Table MultiSelect'"
       v-model="data[field.fieldname]"
       :doctype="field.options"
+      @change="(v) => fieldChange(v, field)"
     />
 
     <Link
@@ -93,7 +104,7 @@
       :value="data[field.fieldname] && getUser(data[field.fieldname]).full_name"
       :doctype="field.options"
       :filters="field.filters"
-      @change="(v) => (data[field.fieldname] = v)"
+      @change="(v) => fieldChange(v, field)"
       :placeholder="getPlaceholder(field)"
       :hideMe="true"
     >
@@ -118,19 +129,21 @@
     </Link>
     <DateTimePicker
       v-else-if="field.fieldtype === 'Datetime'"
-      v-model="data[field.fieldname]"
+      :value="data[field.fieldname]"
       icon-left=""
       :formatter="(date) => getFormat(date, '', true, true)"
       :placeholder="getPlaceholder(field)"
       input-class="border-none"
+      @change="(v) => fieldChange(v, field)"
     />
     <DatePicker
       v-else-if="field.fieldtype === 'Date'"
       icon-left=""
-      v-model="data[field.fieldname]"
+      :value="data[field.fieldname]"
       :formatter="(date) => getFormat(date, '', true)"
       :placeholder="getPlaceholder(field)"
       input-class="border-none"
+      @change="(v) => fieldChange(v, field)"
     />
     <FormControl
       v-else-if="
@@ -138,13 +151,15 @@
       "
       type="textarea"
       :placeholder="getPlaceholder(field)"
-      v-model="data[field.fieldname]"
+      :value="data[field.fieldname]"
+      @change="fieldChange($event.target.value, field)"
     />
     <FormControl
       v-else-if="['Int'].includes(field.fieldtype)"
       type="number"
       :placeholder="getPlaceholder(field)"
-      v-model="data[field.fieldname]"
+      :value="data[field.fieldname]"
+      @change="fieldChange($event.target.value, field)"
     />
     <FormControl
       v-else-if="field.fieldtype === 'Percent'"
@@ -152,7 +167,7 @@
       :value="getFormattedPercent(field.fieldname, data)"
       :placeholder="getPlaceholder(field)"
       :disabled="Boolean(field.read_only)"
-      @change="data[field.fieldname] = flt($event.target.value)"
+      @change="fieldChange(flt($event.target.value), field)"
     />
     <FormControl
       v-else-if="field.fieldtype === 'Float'"
@@ -160,7 +175,7 @@
       :value="getFormattedFloat(field.fieldname, data)"
       :placeholder="getPlaceholder(field)"
       :disabled="Boolean(field.read_only)"
-      @change="data[field.fieldname] = flt($event.target.value)"
+      @change="fieldChange(flt($event.target.value), field)"
     />
     <FormControl
       v-else-if="field.fieldtype === 'Currency'"
@@ -168,14 +183,15 @@
       :value="getFormattedCurrency(field.fieldname, data)"
       :placeholder="getPlaceholder(field)"
       :disabled="Boolean(field.read_only)"
-      @change="data[field.fieldname] = flt($event.target.value)"
+      @change="fieldChange(flt($event.target.value), field)"
     />
     <FormControl
       v-else
       type="text"
       :placeholder="getPlaceholder(field)"
-      v-model="data[field.fieldname]"
+      :value="data[field.fieldname]"
       :disabled="Boolean(field.read_only)"
+      @change="fieldChange($event.target.value, field)"
     />
   </div>
 </template>
@@ -190,8 +206,9 @@ import { getFormat, evaluateDependsOnValue } from '@/utils'
 import { flt } from '@/utils/numberFormat.js'
 import { getMeta } from '@/stores/meta'
 import { usersStore } from '@/stores/users'
+import { useDocument } from '@/data/document'
 import { Tooltip, DatePicker, DateTimePicker } from 'frappe-ui'
-import { computed, inject } from 'vue'
+import { computed, provide, inject } from 'vue'
 
 const props = defineProps({
   field: Object,
@@ -200,10 +217,29 @@ const props = defineProps({
 const data = inject('data')
 const doctype = inject('doctype')
 const preview = inject('preview')
+const isGridRow = inject('isGridRow')
 
 const { getFormattedPercent, getFormattedFloat, getFormattedCurrency } =
   getMeta(doctype)
+
 const { getUser } = usersStore()
+
+let triggerOnChange
+
+if (!isGridRow) {
+  const {
+    triggerOnChange: trigger,
+    triggerOnRowAdd,
+    triggerOnRowRemove,
+  } = useDocument(doctype, data.value.name)
+  triggerOnChange = trigger
+
+  provide('triggerOnChange', triggerOnChange)
+  provide('triggerOnRowAdd', triggerOnRowAdd)
+  provide('triggerOnRowRemove', triggerOnRowRemove)
+} else {
+  triggerOnChange = inject('triggerOnChange')
+}
 
 const field = computed(() => {
   let field = props.field
@@ -258,6 +294,16 @@ const getPlaceholder = (field) => {
     return __('Select {0}', [__(field.label)])
   } else {
     return __('Enter {0}', [__(field.label)])
+  }
+}
+
+function fieldChange(value, df) {
+  data.value[df.fieldname] = value
+
+  if (isGridRow) {
+    triggerOnChange(df.fieldname, data.value)
+  } else {
+    triggerOnChange(df.fieldname)
   }
 }
 </script>

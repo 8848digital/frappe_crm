@@ -71,7 +71,7 @@
               <Avatar
                 size="3xl"
                 class="size-12"
-                :label="lead.data.first_name || __('Untitled')"
+                :label="title"
                 :image="lead.data.image"
               />
               <component
@@ -112,51 +112,59 @@
             <div class="flex flex-col gap-2.5 truncate">
               <Tooltip :text="lead.data.lead_name || __('Set first name')">
                 <div class="truncate text-2xl font-medium text-ink-gray-9">
-                  {{ lead.data.lead_name || __('Untitled') }}
+                  {{ title }}
                 </div>
               </Tooltip>
               <div class="flex gap-1.5">
                 <Tooltip v-if="callEnabled" :text="__('Make a call')">
-                  <Button
-                    class="h-7 w-7"
-                    @click="
-                      () =>
-                        lead.data.mobile_no
-                          ? makeCall(lead.data.mobile_no)
-                          : errorMessage(__('No phone number set'))
-                    "
-                  >
-                    <PhoneIcon class="h-4 w-4" />
-                  </Button>
+                  <div>
+                    <Button
+                      class="h-7 w-7"
+                      @click="
+                        () =>
+                          lead.data.mobile_no
+                            ? makeCall(lead.data.mobile_no)
+                            : _errorMessage(__('No phone number set'))
+                      "
+                    >
+                      <PhoneIcon class="h-4 w-4" />
+                    </Button>
+                  </div>
                 </Tooltip>
                 <Tooltip :text="__('Send an email')">
-                  <Button class="h-7 w-7">
-                    <Email2Icon
-                      class="h-4 w-4"
-                      @click="
-                        lead.data.email
-                          ? openEmailBox()
-                          : errorMessage(__('No email set'))
-                      "
-                    />
-                  </Button>
+                  <div>
+                    <Button class="h-7 w-7">
+                      <Email2Icon
+                        class="h-4 w-4"
+                        @click="
+                          lead.data.email
+                            ? openEmailBox()
+                            : _errorMessage(__('No email set'))
+                        "
+                      />
+                    </Button>
+                  </div>
                 </Tooltip>
                 <Tooltip :text="__('Go to website')">
-                  <Button class="h-7 w-7">
-                    <LinkIcon
-                      class="h-4 w-4"
-                      @click="
-                        lead.data.website
-                          ? openWebsite(lead.data.website)
-                          : errorMessage(__('No website set'))
-                      "
-                    />
-                  </Button>
+                  <div>
+                    <Button class="h-7 w-7">
+                      <LinkIcon
+                        class="h-4 w-4"
+                        @click="
+                          lead.data.website
+                            ? openWebsite(lead.data.website)
+                            : _errorMessage(__('No website set'))
+                        "
+                      />
+                    </Button>
+                  </div>
                 </Tooltip>
                 <Tooltip :text="__('Attach a file')">
-                  <Button class="h-7 w-7" @click="showFilesUploader = true">
-                    <AttachmentIcon class="h-4 w-4" />
-                  </Button>
+                  <div>
+                    <Button class="h-7 w-7" @click="showFilesUploader = true">
+                      <AttachmentIcon class="h-4 w-4" />
+                    </Button>
+                  </div>
                 </Tooltip>
               </div>
               <ErrorMessage :message="__(error)" />
@@ -174,15 +182,20 @@
         class="flex flex-1 flex-col justify-between overflow-hidden"
       >
         <SidePanelLayout
-          v-model="lead.data"
           :sections="sections.data"
           doctype="CRM Lead"
+          :docname="lead.data.name"
           @update="updateField"
           @reload="sections.reload"
         />
       </div>
     </Resizer>
   </div>
+  <ErrorPage
+    v-else-if="errorTitle"
+    :errorTitle="errorTitle"
+    :errorMessage="errorMessage"
+  />
   <Dialog
     v-model="showConvertToDealModal"
     :options="{
@@ -301,6 +314,7 @@
   />
 </template>
 <script setup>
+import ErrorPage from '@/components/ErrorPage.vue'
 import Icon from '@/components/Icon.vue'
 import Resizer from '@/components/Resizer.vue'
 import ActivityIcon from '@/components/Icons/ActivityIcon.vue'
@@ -334,15 +348,15 @@ import {
   createToast,
   setupAssignees,
   setupCustomizations,
-  errorMessage,
+  errorMessage as _errorMessage,
   copyToClipboard,
 } from '@/utils'
 import { getView } from '@/utils/view'
 import { getSettings } from '@/stores/settings'
 import { usersStore } from '@/stores/users'
 import { globalStore } from '@/stores/global'
-import { contactsStore } from '@/stores/contacts'
 import { statusesStore } from '@/stores/statuses'
+import { getMeta } from '@/stores/meta'
 import {
   whatsappEnabled,
   callEnabled,
@@ -361,6 +375,7 @@ import {
   call,
   usePageMeta,
 } from 'frappe-ui'
+import { useOnboarding } from 'frappe-ui/frappe'
 import { ref, reactive, computed, onMounted, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useActiveTabManager } from '@/composables/useActiveTabManager'
@@ -368,8 +383,11 @@ import { useActiveTabManager } from '@/composables/useActiveTabManager'
 const { brand } = getSettings()
 const { isManager } = usersStore()
 const { $dialog, $socket, makeCall } = globalStore()
-const { getContactByName, contacts } = contactsStore()
 const { statusOptions, getLeadStatus, getDealStatus } = statusesStore()
+const { doctypeMeta } = getMeta('CRM Lead')
+
+const { updateOnboardingStep } = useOnboarding('frappecrm')
+
 const route = useRoute()
 const router = useRouter()
 
@@ -380,11 +398,16 @@ const props = defineProps({
   },
 })
 
+const errorTitle = ref('')
+const errorMessage = ref('')
+
 const lead = createResource({
   url: 'crm.fcrm.doctype.crm_lead.api.get_lead',
   params: { name: props.leadId },
   cache: ['lead', props.leadId],
   onSuccess: (data) => {
+    errorTitle.value = ''
+    errorMessage.value = ''
     setupAssignees(lead)
     setupCustomizations(lead, {
       doc: data,
@@ -397,6 +420,14 @@ const lead = createResource({
       resource: { lead, sections },
       call,
     })
+  },
+  onError: (err) => {
+    if (err.messages?.[0]) {
+      errorTitle.value = __('Not permitted')
+      errorMessage.value = __(err.messages?.[0])
+    } else {
+      router.push({ name: 'Leads' })
+    }
   },
 })
 
@@ -476,15 +507,20 @@ const breadcrumbs = computed(() => {
   }
 
   items.push({
-    label: lead.data.lead_name || __('Untitled'),
+    label: title.value,
     route: { name: 'Lead', params: { leadId: lead.data.name } },
   })
   return items
 })
 
+const title = computed(() => {
+  let t = doctypeMeta['CRM Lead']?.title_field || 'name'
+  return lead.data?.[t] || props.leadId
+})
+
 usePageMeta(() => {
   return {
-    title: lead.data?.lead_name || lead.data?.name,
+    title: title.value,
     icon: brand.favicon,
   }
 })
@@ -515,7 +551,6 @@ const tabs = computed(() => {
       name: 'Calls',
       label: __('Calls'),
       icon: PhoneIcon,
-      condition: () => callEnabled.value,
     },
     {
       name: 'Tasks',
@@ -592,9 +627,7 @@ const existingOrganizationChecked = ref(false)
 const existingContact = ref('')
 const existingOrganization = ref('')
 
-async function convertToDeal(updated) {
-  let valueUpdated = false
-
+async function convertToDeal() {
   if (existingContactChecked.value && !existingContact.value) {
     createToast({
       title: __('Error'),
@@ -615,55 +648,38 @@ async function convertToDeal(updated) {
     return
   }
 
-  if (existingContactChecked.value && existingContact.value) {
-    lead.data.salutation = getContactByName(existingContact.value).salutation
-    lead.data.first_name = getContactByName(existingContact.value).first_name
-    lead.data.last_name = getContactByName(existingContact.value).last_name
-    lead.data.email_id = getContactByName(existingContact.value).email_id
-    lead.data.mobile_no = getContactByName(existingContact.value).mobile_no
-    existingContactChecked.value = false
-    valueUpdated = true
+  if (!existingContactChecked.value && existingContact.value) {
+    existingContact.value = ''
   }
 
-  if (existingOrganizationChecked.value && existingOrganization.value) {
-    lead.data.organization = existingOrganization.value
-    existingOrganizationChecked.value = false
-    valueUpdated = true
+  if (!existingOrganizationChecked.value && existingOrganization.value) {
+    existingOrganization.value = ''
   }
 
-  if (valueUpdated) {
-    updateLead(
-      {
-        salutation: lead.data.salutation,
-        first_name: lead.data.first_name,
-        last_name: lead.data.last_name,
-        email_id: lead.data.email_id,
-        mobile_no: lead.data.mobile_no,
-        organization: lead.data.organization,
-      },
-      '',
-      () => convertToDeal(true),
-    )
-    showConvertToDealModal.value = false
-  } else {
-    let _deal = await call(
-      'crm.fcrm.doctype.crm_lead.crm_lead.convert_to_deal',
-      { lead: lead.data.name, deal },
-    ).catch((err) => {
-      createToast({
-        title: __('Error converting to deal'),
-        text: __(err.messages?.[0]),
-        icon: 'x',
-        iconClasses: 'text-ink-red-4',
-      })
+  let _deal = await call('crm.fcrm.doctype.crm_lead.crm_lead.convert_to_deal', {
+    lead: lead.data.name,
+    deal,
+    existing_contact: existingContact.value,
+    existing_organization: existingOrganization.value,
+  }).catch((err) => {
+    createToast({
+      title: __('Error converting to deal'),
+      text: __(err.messages?.[0]),
+      icon: 'x',
+      iconClasses: 'text-ink-red-4',
     })
-    if (_deal) {
-      capture('convert_lead_to_deal')
-      if (updated) {
-        await contacts.reload()
-      }
-      router.push({ name: 'Deal', params: { dealId: _deal } })
-    }
+  })
+  if (_deal) {
+    showConvertToDealModal.value = false
+    existingContactChecked.value = false
+    existingOrganizationChecked.value = false
+    existingContact.value = ''
+    existingOrganization.value = ''
+    updateOnboardingStep('convert_lead_to_deal', true, false, () => {
+      localStorage.setItem('firstDeal', _deal)
+    })
+    capture('convert_lead_to_deal')
+    router.push({ name: 'Deal', params: { dealId: _deal } })
   }
 }
 
