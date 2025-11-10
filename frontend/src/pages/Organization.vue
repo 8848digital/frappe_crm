@@ -214,7 +214,6 @@ import {
 } from 'frappe-ui'
 import { h, computed, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { useDocumentPermissions } from '@/composables/permissions'
 
 const props = defineProps({
   organizationId: {
@@ -223,7 +222,6 @@ const props = defineProps({
   },
 })
 
-const canDelete = useDocumentPermissions('CRM Organization', props.organizationId)
 const { brand } = getSettings()
 const { $dialog, $socket } = globalStore()
 const { getUser } = usersStore()
@@ -238,21 +236,12 @@ const errorMessage = ref('')
 
 const showDeleteLinkedDocModal = ref(false)
 
-const { document: organization, scripts } = useDocument(
+const { document: organization, permissions, scripts } = useDocument(
   'CRM Organization',
   props.organizationId,
 )
 
-async function updateField(fieldname, value) {
-  await organization.setValue.submit({
-    [fieldname]: value,
-  })
-  createToast({
-    title: __('Organization updated'),
-    icon: 'check',
-    iconClasses: 'text-ink-green-3',
-  })
-}
+const canDelete = computed(() => permissions.data?.permissions?.delete || false)
 
 const breadcrumbs = computed(() => {
   let items = [{ label: __('Organizations'), route: { name: 'Organizations' } }]

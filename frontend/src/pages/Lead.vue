@@ -269,7 +269,6 @@ import {
 import { ref, computed, watch, nextTick } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useActiveTabManager } from '@/composables/useActiveTabManager'
-import { useDocumentPermissions } from '@/composables/permissions'
 
 const { brand } = getSettings()
 const { $dialog, $socket, makeCall } = globalStore()
@@ -286,7 +285,6 @@ const props = defineProps({
   },
 })
 
-const canDelete = useDocumentPermissions('CRM Lead', props.leadId || '')
 const reload = ref(false)
 const activities = ref(null)
 const errorTitle = ref('')
