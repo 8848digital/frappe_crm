@@ -55,6 +55,8 @@
   "column_break_pweh",
   "first_response_time",
   "first_responded_on",
+  "section_break_kikl",
+  "rolling_responses",
   "log_tab",
   "status_change_log"
  ],
@@ -294,51 +296,82 @@
    "options": "CRM Status Change Log"
   },
   {
-    "fieldname": "products_tab",
-    "fieldtype": "Tab Break",
-    "label": "Products"
-   },
-   {
-    "fieldname": "products",
-    "fieldtype": "Table",
-    "label": "Products",
-    "options": "CRM Products"
-   },
-   {
-    "fieldname": "section_break_ggwh",
-    "fieldtype": "Section Break"
-   },
-   {
-    "fieldname": "total",
-    "fieldtype": "Currency",
-    "label": "Total",
-    "options": "currency",
-    "read_only": 1
-   },
-   {
-    "fieldname": "column_break_uisv",
-    "fieldtype": "Column Break"
-   },
-   {
-    "description": "Total after discount",
-    "fieldname": "net_total",
-    "fieldtype": "Currency",
-    "label": "Net Total",
-    "options": "currency",
-    "read_only": 1
-   },
+   "fieldname": "products_tab",
+   "fieldtype": "Tab Break",
+   "label": "Products"
+  },
   {
-   "fieldname": "business_vertical",
-   "fieldtype": "Link",
-   "label": "Business Vertical",
-   "options": "Business Verticals"
+   "fieldname": "products",
+   "fieldtype": "Table",
+   "label": "Products",
+   "options": "CRM Products"
+  },
+  {
+   "fieldname": "section_break_ggwh",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "total",
+   "fieldtype": "Currency",
+   "label": "Total",
+   "options": "currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_uisv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "description": "Total after discount",
+   "fieldname": "net_total",
+   "fieldtype": "Currency",
+   "label": "Net Total",
+   "options": "currency",
+   "read_only": 1
+<<<<<<< HEAD
+=======
+  },
+  {
+   "fieldname": "syncing_tab",
+   "fieldtype": "Tab Break",
+   "label": "Syncing"
+  },
+  {
+   "fieldname": "facebook_lead_id",
+   "fieldtype": "Data",
+   "label": "Facebook Lead ID",
+   "unique": 1
+  },
+  {
+   "fieldname": "column_break_ixmu",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "facebook_form_id",
+   "fieldtype": "Data",
+   "label": "Facebook Form ID"
+  },
+  {
+   "fieldname": "section_break_kikl",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "rolling_responses",
+   "fieldtype": "Table",
+   "label": "Rolling Responses",
+   "options": "CRM Rolling Response Time"
+>>>>>>> 5f12d1c0 (fix: created rolling response time child table to capture multiple response cycle and added in lead & deal)
   }
  ],
  "grid_page_length": 50,
  "image_field": "image",
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-03-25 12:30:36.853029",
+<<<<<<< HEAD
+ "modified": "2025-05-14 19:51:06.184569",
+=======
+ "modified": "2025-11-10 19:59:38.158921",
+>>>>>>> 5f12d1c0 (fix: created rolling response time child table to capture multiple response cycle and added in lead & deal)
  "modified_by": "Administrator",
  "module": "FCRM",
  "name": "CRM Lead",
