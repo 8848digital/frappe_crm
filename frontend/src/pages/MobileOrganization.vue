@@ -69,6 +69,7 @@
                   <FeatherIcon name="link" class="h-4 w-4" />
                 </Button>
                 <Button
+                  v-if="canDelete"
                   :label="__('Delete')"
                   theme="red"
                   size="sm"
@@ -195,21 +196,12 @@ const { getDealStatus } = statusesStore()
 const route = useRoute()
 const router = useRouter()
 
-const { document: organization } = useDocument(
+const { document: organization, permissions } = useDocument(
   'CRM Organization',
   props.organizationId,
 )
 
-async function updateField(fieldname, value) {
-  await organization.setValue.submit({
-    [fieldname]: value,
-  })
-  createToast({
-    title: __('Organization updated'),
-    icon: 'check',
-    iconClasses: 'text-ink-green-3',
-  })
-}
+const canDelete = computed(() => permissions.data?.permissions?.delete || false)
 
 const breadcrumbs = computed(() => {
   let items = [{ label: __('Organizations'), route: { name: 'Organizations' } }]
