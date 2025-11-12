@@ -38,6 +38,12 @@
   "annual_revenue",
   "image",
   "converted",
+  "products_tab",
+  "products",
+  "section_break_ggwh",
+  "total",
+  "column_break_uisv",
+  "net_total",
   "sla_tab",
   "sla",
   "sla_creation",
@@ -288,12 +294,47 @@
    "options": "CRM Status Change Log"
   },
   {
+    "fieldname": "products_tab",
+    "fieldtype": "Tab Break",
+    "label": "Products"
+   },
+   {
+    "fieldname": "products",
+    "fieldtype": "Table",
+    "label": "Products",
+    "options": "CRM Products"
+   },
+   {
+    "fieldname": "section_break_ggwh",
+    "fieldtype": "Section Break"
+   },
+   {
+    "fieldname": "total",
+    "fieldtype": "Currency",
+    "label": "Total",
+    "options": "currency",
+    "read_only": 1
+   },
+   {
+    "fieldname": "column_break_uisv",
+    "fieldtype": "Column Break"
+   },
+   {
+    "description": "Total after discount",
+    "fieldname": "net_total",
+    "fieldtype": "Currency",
+    "label": "Net Total",
+    "options": "currency",
+    "read_only": 1
+   },
+  {
    "fieldname": "business_vertical",
    "fieldtype": "Link",
    "label": "Business Vertical",
    "options": "Business Verticals"
   }
  ],
+ "grid_page_length": 50,
  "image_field": "image",
  "index_web_pages_for_search": 1,
  "links": [],
@@ -338,6 +379,7 @@
    "share": 1
   }
  ],
+ "row_format": "Dynamic",
  "sender_field": "email",
  "sender_name_field": "first_name",
  "show_title_field_in_link": 1,
