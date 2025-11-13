@@ -199,7 +199,13 @@ import { getMeta } from '@/stores/meta'
 import { usersStore } from '@/stores/users'
 import { statusesStore } from '@/stores/statuses'
 import { getView } from '@/utils/view'
-import { formatDate, timeAgo, validateIsImageFile, setupCustomizations } from '@/utils'
+import {
+  formatDate,
+  timeAgo,
+  validateIsImageFile,
+  setupCustomizations,
+  openWebsite as openExternalWebsite,
+} from '@/utils'
 import {
   Breadcrumbs,
   Avatar,
@@ -236,10 +242,11 @@ const errorMessage = ref('')
 
 const showDeleteLinkedDocModal = ref(false)
 
-const { document: organization, permissions, scripts } = useDocument(
-  'CRM Organization',
-  props.organizationId,
-)
+const {
+  document: organization,
+  permissions,
+  scripts,
+} = useDocument('CRM Organization', props.organizationId)
 
 const canDelete = computed(() => permissions.data?.permissions?.delete || false)
 
@@ -319,13 +326,12 @@ function website(url) {
 }
 
 function openWebsite() {
-  if (!organization.doc.website)
-    createToast({
-      title: __('Website not found'),
-      icon: 'x',
-      iconClasses: 'text-ink-red-4',
-    })
-  else window.open(organization.doc.website, '_blank')
+  if (!organization.doc.website) {
+    toast.error(__('No website found'))
+    return
+  }
+
+  openExternalWebsite(organization.doc.website)
 }
 
 const sections = createResource({
