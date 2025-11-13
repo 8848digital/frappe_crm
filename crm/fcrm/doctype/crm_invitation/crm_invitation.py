@@ -44,12 +44,24 @@ class CRMInvitation(Document):
 
 		user = self.create_user_if_not_exists()
 		user.append_roles(self.role)
+		if self.role == "Sales User":
+			self.update_module_in_user(user, "FCRM")
 		user.save(ignore_permissions=True)
 
 		self.status = "Accepted"
 		self.accepted_at = frappe.utils.now()
 		self.save(ignore_permissions=True)
 
+	def update_module_in_user(self, user, module):
+		block_modules = frappe.get_all(
+			"Module Def",
+			fields=["name as module"],
+			filters={"name": ["!=", module]},
+		)
+
+		if block_modules:
+			user.set("block_modules", block_modules)
+			
 	def create_user_if_not_exists(self):
 		if not frappe.db.exists("User", self.email):
 			first_name = self.email.split("@")[0].title()

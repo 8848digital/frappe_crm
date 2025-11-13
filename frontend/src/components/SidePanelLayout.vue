@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="!document.get.loading"
+    v-if="!document.get?.loading"
     class="sections flex flex-col overflow-y-auto"
   >
     <template v-for="(section, i) in _sections" :key="section.name">
@@ -169,7 +169,7 @@
                           "
                           class="form-control"
                           type="textarea"
-                          :value="document.doc[field.fieldname]"
+                          :value="document.doc[field.fieldname] || '0'"
                           :placeholder="field.placeholder"
                           :debounce="500"
                           @change.stop="
@@ -286,6 +286,15 @@
                           "
                           :disabled="Boolean(field.read_only)"
                         />
+                        <Password
+                          v-else-if="field.fieldtype === 'Password'"
+                          class="form-control"
+                          :value="document.doc[field.fieldname]"
+                          :placeholder="field.placeholder"
+                          :debounce="500"
+                          @change.stop="fieldChange($event.target.value, field)"
+                          :disabled="Boolean(field.read_only)"
+                        />
                         <FormattedInput
                           v-else-if="field.fieldtype === 'Int'"
                           class="form-control"
@@ -388,6 +397,7 @@
 </template>
 
 <script setup>
+import Password from '@/components/Controls/Password.vue'
 import FormattedInput from '@/components/Controls/FormattedInput.vue'
 import Section from '@/components/Section.vue'
 import NestedPopover from '@/components/NestedPopover.vue'
@@ -434,12 +444,18 @@ const { getFormattedPercent, getFormattedFloat, getFormattedCurrency } =
 
 const { isManager, getUser } = usersStore()
 
-const emit = defineEmits(['update', 'reload'])
+const emit = defineEmits(['reload'])
 
 const showSidePanelModal = ref(false)
 
-const { document, triggerOnChange } = useDocument(props.doctype, props.docname)
+let document = { doc: {} }
+let triggerOnChange
 
+if (props.docname) {
+  let d = useDocument(props.doctype, props.docname)
+  document = d.document
+  triggerOnChange = d.triggerOnChange
+}
 const _sections = computed(() => {
   if (!props.sections?.length) return []
   let editButtonAdded = false
@@ -492,6 +508,7 @@ function parsedField(field) {
 }
 
 async function fieldChange(value, df) {
+  if (props.preview) return
   document.doc[df.fieldname] = value
 
   await triggerOnChange(df.fieldname)

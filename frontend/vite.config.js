@@ -15,6 +15,13 @@ export default defineConfig({
       },
     }),
     vueJsx(),
+    vue({
+      template: {
+        compilerOptions: {
+          isCustomElement: (tag) => tag.startsWith('Lucide'),
+        },
+      },
+    }),
     VitePWA({
       registerType: 'autoUpdate',
       devOptions: {
