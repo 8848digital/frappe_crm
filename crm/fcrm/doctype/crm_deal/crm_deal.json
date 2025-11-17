@@ -43,6 +43,11 @@
   "mobile_no",
   "phone",
   "gender",
+  "products_tab",
+  "products",
+  "section_break_ccbj",
+  "total",
+  "net_total",
   "section_break_kkbg",
   "business_vertical",
   "sla_tab",
@@ -342,6 +347,40 @@
    "fieldtype": "Section Break"
   },
   {
+    "fieldname": "products_tab",
+    "fieldtype": "Tab Break",
+    "label": "Products"
+   },
+   {
+    "fieldname": "products",
+    "fieldtype": "Table",
+    "label": "Products",
+    "options": "CRM Products"
+   },
+   {
+    "fieldname": "section_break_ccbj",
+    "fieldtype": "Section Break"
+   },
+   {
+    "fieldname": "column_break_udbq",
+    "fieldtype": "Column Break"
+   },
+   {
+    "fieldname": "total",
+    "fieldtype": "Currency",
+    "label": "Total",
+    "options": "currency",
+    "read_only": 1
+   },
+   {
+    "description": "Total after discount",
+    "fieldname": "net_total",
+    "fieldtype": "Currency",
+    "label": "Net Total",
+    "options": "currency",
+    "read_only": 1
+   },
+  {
    "fetch_from": "lead.business_vertical",
    "fieldname": "business_vertical",
    "fieldtype": "Link",
@@ -383,6 +422,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "show_title_field_in_link": 1,
  "sort_field": "modified",
  "sort_order": "DESC",

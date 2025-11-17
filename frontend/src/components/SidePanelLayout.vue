@@ -53,7 +53,7 @@
                             (field.mandatory_depends_on &&
                               field.mandatory_via_depends_on)
                           "
-                          class="text-ink-red-3"
+                          class="text-ink-red-2"
                           >*</span
                         >
                       </div>
@@ -65,7 +65,14 @@
                         <div
                           v-if="
                             field.read_only &&
-                            !['Check', 'Dropdown'].includes(field.fieldtype)
+                            ![
+                              'Int',
+                              'Float',
+                              'Currency',
+                              'Percent',
+                              'Check',
+                              'Dropdown',
+                            ].includes(field.fieldtype)
                           "
                           class="flex h-7 cursor-pointer items-center px-2 py-1 text-ink-gray-5"
                         >
@@ -177,6 +184,7 @@
                           :options="field.options"
                           :placeholder="field.placeholder"
                           @change.stop="fieldChange($event.target.value, field)"
+                          :disabled="Boolean(field.read_only)"
                         />
                         <Link
                           v-else-if="field.fieldtype === 'User'"
@@ -260,7 +268,7 @@
                             @change="(v) => emit('update', field.fieldname, v)"
                           />
                         </div>
-                        <FormControl
+                        <FormattedInput
                           v-else-if="field.fieldtype === 'Percent'"
                           class="form-control"
                           type="text"
@@ -276,19 +284,21 @@
                               flt($event.target.value),
                             )
                           "
+                          :disabled="Boolean(field.read_only)"
                         />
-                        <FormControl
+                        <FormattedInput
                           v-else-if="field.fieldtype === 'Int'"
                           class="form-control"
-                          type="number"
+                          type="text"
                           v-model="document.doc[field.fieldname]"
                           :placeholder="field.placeholder"
                           :debounce="500"
                           @change.stop="
                             emit('update', field.fieldname, $event.target.value)
                           "
+                          :disabled="Boolean(field.read_only)"
                         />
-                        <FormControl
+                         <FormattedInput
                           v-else-if="field.fieldtype === 'Float'"
                           class="form-control"
                           type="text"
@@ -304,8 +314,9 @@
                               flt($event.target.value),
                             )
                           "
+                          :disabled="Boolean(field.read_only)"
                         />
-                        <FormControl
+                        <FormattedInput
                           v-else-if="field.fieldtype === 'Currency'"
                           class="form-control"
                           type="text"
@@ -377,6 +388,7 @@
 </template>
 
 <script setup>
+import FormattedInput from '@/components/Controls/FormattedInput.vue'
 import Section from '@/components/Section.vue'
 import NestedPopover from '@/components/NestedPopover.vue'
 import DropdownItem from '@/components/DropdownItem.vue'

@@ -39,7 +39,19 @@ export function getMeta(doctype) {
     return formatNumber(doc[fieldname], '', precision)
   }
 
-  function getFormattedCurrency(fieldname, doc) {
+  function getFloatWithPrecision(fieldname, doc) {
+    let df = doctypeMeta[doctype]?.fields.find((f) => f.fieldname == fieldname)
+    let precision = df?.precision || null
+    return formatNumber(doc[fieldname], '', precision)
+  }
+
+  function getCurrencyWithPrecision(fieldname, doc) {
+    let df = doctypeMeta[doctype]?.fields.find((f) => f.fieldname == fieldname)
+    let precision = df?.precision || null
+    return formatCurrency(doc[fieldname], '', '', precision)
+  }
+
+  function getFormattedCurrency(fieldname, doc, parentDoc = null) {
     let currency = window.sysdefaults.currency || 'USD'
     let df = doctypeMeta[doctype]?.fields.find((f) => f.fieldname == fieldname)
     let precision = df?.precision || null
@@ -50,8 +62,10 @@ export function getMeta(doctype) {
       } else if (doc && doc[df.options]) {
         currency = doc[df.options]
       }
+    } else if (parentDoc && parentDoc[df.options]) {
+      currency = parentDoc[df.options]
     }
-
+    
     return formatCurrency(doc[fieldname], '', currency, precision)
   }
 
@@ -126,6 +140,8 @@ export function getMeta(doctype) {
     getGridSettings,
     getGridViewSettings,
     saveUserSettings,
+    getFloatWithPrecision,
+    getCurrencyWithPrecision,
     getFormattedFloat,
     getFormattedPercent,
     getFormattedCurrency,
