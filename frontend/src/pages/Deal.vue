@@ -122,7 +122,6 @@
       <SLASection
         v-if="deal.data.sla_status"
         v-model="deal.data"
-        @updateField="updateField"
       />
       <div
         v-if="sections.data"

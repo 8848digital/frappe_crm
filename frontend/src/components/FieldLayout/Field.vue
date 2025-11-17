@@ -136,7 +136,6 @@
     <DateTimePicker
       v-else-if="field.fieldtype === 'Datetime'"
       :value="data[field.fieldname]"
-      icon-left=""
       :formatter="(date) => getFormat(date, '', true, true)"
       :placeholder="getPlaceholder(field)"
       input-class="border-none"
@@ -144,7 +143,6 @@
     />
     <DatePicker
       v-else-if="field.fieldtype === 'Date'"
-      icon-left=""
       :value="data[field.fieldname]"
       :formatter="(date) => getFormat(date, '', true)"
       :placeholder="getPlaceholder(field)"
@@ -161,11 +159,19 @@
       :description="field.description"
       @change="fieldChange($event.target.value, field)"
     />
+    <Password
+      v-else-if="field.fieldtype === 'Password'"
+      :value="data[field.fieldname]"
+      :placeholder="getPlaceholder(field)"
+      :description="field.description"
+      @change="fieldChange($event.target.value, field)"
+    />
     <FormattedInput
       v-else-if="['Int'].includes(field.fieldtype)"
-      type="number"
+      v-else-if="field.fieldtype === 'Int'"
+      type="text"
       :placeholder="getPlaceholder(field)"
-      :value="data[field.fieldname]"
+      :value="data[field.fieldname] || '0'"
       :disabled="Boolean(field.read_only)"
       :description="field.description"
       @change="fieldChange($event.target.value, field)"
@@ -201,7 +207,7 @@
       v-else
       type="text"
       :placeholder="getPlaceholder(field)"
-      :value="data[field.fieldname]"
+      :value="getDataValue(data[field.fieldname], field)"
       :disabled="Boolean(field.read_only)"
       :description="field.description"
       @change="fieldChange($event.target.value, field)"
@@ -209,6 +215,7 @@
   </div>
 </template>
 <script setup>
+import Password from '@/components/Controls/Password.vue'
 import FormattedInput from '@/components/Controls/FormattedInput.vue'
 import EditIcon from '@/components/Icons/EditIcon.vue'
 import IndicatorIcon from '@/components/Icons/IndicatorIcon.vue'
@@ -333,6 +340,12 @@ function fieldChange(value, df) {
   } else {
     triggerOnChange(df.fieldname)
   }
+}
+function getDataValue(value, field) {
+  if (field.fieldtype === 'Duration') {
+    return value || 0
+  }
+  return value
 }
 </script>
 <style scoped>

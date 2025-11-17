@@ -312,11 +312,12 @@ import { globalStore } from '@/stores/global'
 import { viewsStore } from '@/stores/views'
 import { usersStore } from '@/stores/users'
 import { getMeta } from '@/stores/meta'
-import { isEmoji, createToast } from '@/utils'
+import { isEmoji } from '@/utils'
 import {
   Tooltip,
   createResource,
   Dropdown,
+  toast,
   call,
   FeatherIcon,
   usePageMeta,
@@ -728,11 +729,7 @@ const updateQuickFilters = createResource({
     quickFilters.update({ params: { doctype: props.doctype, cached: false } })
     quickFilters.reload()
 
-    createToast({
-      title: __('Quick Filters updated successfully'),
-      icon: 'check',
-      iconClasses: 'text-ink-green-3',
-    })
+    toast.success(__('Quick Filters updated successfully'))
   },
 })
 
@@ -756,6 +753,7 @@ const quickFilterOptions = computed(() => {
   let fields = getFields()
   if (!fields) return []
 
+  let existingQuickFilters = newQuickFilters.value.map((f) => f.fieldname)
   let restrictedFieldtypes = [
     'Tab Break',
     'Section Break',
@@ -770,6 +768,7 @@ const quickFilterOptions = computed(() => {
   ]
   let options = fields
     .filter((f) => f.label && !restrictedFieldtypes.includes(f.fieldtype))
+    .filter((f) => !existingQuickFilters.includes(f.fieldname))
     .map((field) => ({
       label: field.label,
       value: field.fieldname,

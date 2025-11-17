@@ -115,7 +115,7 @@
               v-model="organization.doc"
               :sections="sections.data"
               doctype="CRM Organization"
-              @update="updateField"
+              :docname="organization.doc.name"
               @reload="sections.reload"
             />
           </div>

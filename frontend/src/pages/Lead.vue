@@ -185,7 +185,6 @@
           :sections="sections.data"
           doctype="CRM Lead"
           :docname="lead.data.name"
-          @update="updateField"
           @reload="sections.reload"
         />
       </div>
@@ -353,6 +352,7 @@ import {
 } from '@/utils'
 import { getView } from '@/utils/view'
 import { getSettings } from '@/stores/settings'
+import { sessionStore } from '@/stores/session'
 import { usersStore } from '@/stores/users'
 import { globalStore } from '@/stores/global'
 import { statusesStore } from '@/stores/statuses'
@@ -381,6 +381,7 @@ import { useRouter, useRoute } from 'vue-router'
 import { useActiveTabManager } from '@/composables/useActiveTabManager'
 
 const { brand } = getSettings()
+const { user } = sessionStore()
 const { isManager } = usersStore()
 const { $dialog, $socket, makeCall } = globalStore()
 const { statusOptions, getLeadStatus, getDealStatus } = statusesStore()
@@ -676,7 +677,7 @@ async function convertToDeal() {
     existingContact.value = ''
     existingOrganization.value = ''
     updateOnboardingStep('convert_lead_to_deal', true, false, () => {
-      localStorage.setItem('firstDeal', _deal)
+      localStorage.setItem('firstDeal' + user, _deal)
     })
     capture('convert_lead_to_deal')
     router.push({ name: 'Deal', params: { dealId: _deal } })

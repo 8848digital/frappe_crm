@@ -65,7 +65,6 @@
               v-model="deal.data"
               :sections="sections.data"
               doctype="CRM Deal"
-              @update="updateField"
               @reload="sections.reload"
             >
               <template #actions="{ section }">
