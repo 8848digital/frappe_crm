@@ -58,7 +58,7 @@
                         >
                       </div>
                     </Tooltip>
-                     <div class="flex items-center justify-between w-[65%]"></div>
+                    <div class="flex items-center justify-between w-[65%]">
                       <div
                         class="grid min-h-[28px] flex-1 items-center overflow-hidden text-base"
                       >
@@ -150,11 +150,7 @@
                           type="checkbox"
                           v-model="document.doc[field.fieldname]"
                           @change.stop="
-                            emit(
-                              'update',
-                              field.fieldname,
-                              $event.target.checked,
-                            )
+                            fieldChange($event.target.checked, field)
                           "
                           :disabled="Boolean(field.read_only)"
                         />
@@ -169,12 +165,10 @@
                           "
                           class="form-control"
                           type="textarea"
-                          :value="document.doc[field.fieldname] || '0'"
+                          :value="document.doc[field.fieldname]"
                           :placeholder="field.placeholder"
                           :debounce="500"
-                          @change.stop="
-                            emit('update', field.fieldname, $event.target.value)
-                          "
+                          @change.stop="fieldChange($event.target.value, field)"
                         />
                         <FormControl
                           v-else-if="field.fieldtype === 'Select'"
@@ -184,7 +178,6 @@
                           :options="field.options"
                           :placeholder="field.placeholder"
                           @change.stop="fieldChange($event.target.value, field)"
-                          :disabled="Boolean(field.read_only)"
                         />
                         <Link
                           v-else-if="field.fieldtype === 'User'"
@@ -195,7 +188,7 @@
                           "
                           doctype="User"
                           :filters="field.filters"
-                          @change="(v) => emit('update', field.fieldname, v)"
+                          @change="(v) => fieldChange(v, field)"
                           :placeholder="'Select' + ' ' + field.label + '...'"
                           :hideMe="true"
                         >
@@ -237,7 +230,7 @@
                           "
                           :filters="field.filters"
                           :placeholder="field.placeholder"
-                          @change="(v) => emit('update', field.fieldname, v)"
+                          @change="(v) => fieldChange(v, field)"
                           :onCreate="field.create"
                         />
                         <div
@@ -252,7 +245,7 @@
                             "
                             :placeholder="field.placeholder"
                             placement="left-start"
-                            @change="(v) => emit('update', field.fieldname, v)"
+                            @change="(v) => fieldChange(v, field)"
                           />
                         </div>
                         <div
@@ -265,7 +258,7 @@
                             :formatter="(date) => getFormat(date, '', true)"
                             :placeholder="field.placeholder"
                             placement="left-start"
-                            @change="(v) => emit('update', field.fieldname, v)"
+                            @change="(v) => fieldChange(v, field)"
                           />
                         </div>
                         <FormattedInput
@@ -278,11 +271,7 @@
                           :placeholder="field.placeholder"
                           :debounce="500"
                           @change.stop="
-                            emit(
-                              'update',
-                              field.fieldname,
-                              flt($event.target.value),
-                            )
+                            fieldChange(flt($event.target.value), field)
                           "
                           :disabled="Boolean(field.read_only)"
                         />
@@ -299,15 +288,13 @@
                           v-else-if="field.fieldtype === 'Int'"
                           class="form-control"
                           type="text"
-                          v-model="document.doc[field.fieldname]"
+                          :value="document.doc[field.fieldname] || '0'"
                           :placeholder="field.placeholder"
                           :debounce="500"
-                          @change.stop="
-                            emit('update', field.fieldname, $event.target.value)
-                          "
+                          @change.stop="fieldChange($event.target.value, field)"
                           :disabled="Boolean(field.read_only)"
                         />
-                         <FormattedInput
+                        <FormattedInput
                           v-else-if="field.fieldtype === 'Float'"
                           class="form-control"
                           type="text"
@@ -317,11 +304,7 @@
                           :placeholder="field.placeholder"
                           :debounce="500"
                           @change.stop="
-                            emit(
-                              'update',
-                              field.fieldname,
-                              flt($event.target.value),
-                            )
+                            fieldChange(flt($event.target.value), field)
                           "
                           :disabled="Boolean(field.read_only)"
                         />
@@ -335,12 +318,9 @@
                           :placeholder="field.placeholder"
                           :debounce="500"
                           @change.stop="
-                            emit(
-                              'update',
-                              field.fieldname,
-                              flt($event.target.value),
-                            )
+                            fieldChange(flt($event.target.value), field)
                           "
+                          :disabled="Boolean(field.read_only)"
                         />
                         <FormControl
                           v-else
@@ -349,9 +329,7 @@
                           :value="document.doc[field.fieldname]"
                           :placeholder="field.placeholder"
                           :debounce="500"
-                          @change.stop="
-                            emit('update', field.fieldname, $event.target.value)
-                          "
+                          @change.stop="fieldChange($event.target.value, field)"
                         />
                       </div>
                       <div class="ml-1">
@@ -456,6 +434,7 @@ if (props.docname) {
   document = d.document
   triggerOnChange = d.triggerOnChange
 }
+
 const _sections = computed(() => {
   if (!props.sections?.length) return []
   let editButtonAdded = false
@@ -509,6 +488,7 @@ function parsedField(field) {
 
 async function fieldChange(value, df) {
   if (props.preview) return
+
   document.doc[df.fieldname] = value
 
   await triggerOnChange(df.fieldname)
