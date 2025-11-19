@@ -167,7 +167,6 @@
       @change="fieldChange($event.target.value, field)"
     />
     <FormattedInput
-      v-else-if="['Int'].includes(field.fieldtype)"
       v-else-if="field.fieldtype === 'Int'"
       type="text"
       :placeholder="getPlaceholder(field)"

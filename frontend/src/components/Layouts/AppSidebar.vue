@@ -312,7 +312,6 @@ async function getFirstLead() {
 }
 
 async function getFirstDeal() {
-  let firstDeal = localStorage.getItem('firstDeal')
   let firstDeal = localStorage.getItem('firstDeal' + user)
   if (firstDeal) return firstDeal
   return await call('crm.api.onboarding.get_first_deal')
