@@ -53,7 +53,7 @@
               <div id="fieldname" class="w-full">
                 <Autocomplete
                   :value="f.field.fieldname"
-                  :options="availableFilters"
+                  :options="filterableFields.data"
                   @change="(e) => updateFilter(e, i)"
                   :placeholder="__('First Name')"
                 />
@@ -214,21 +214,7 @@ const filters = computed(() => {
   if (props.default_filters) {
     allFilters = removeCommonFilters(props.default_filters, allFilters)
   }
-  @@ -217,6 +217,19 @@ const filters = computed(() => {
   return convertFilters(filterableFields.data, allFilters)
-  })
-})
-const availableFilters = computed(() => {
-  if (!filterableFields.data) return []
-
-  const selectedFieldNames = new Set()
-  for (const filter of filters.value) {
-    selectedFieldNames.add(filter.fieldname)
-  }
-
-  return filterableFields.data.filter(
-    (field) => !selectedFieldNames.has(field.fieldname),
-  )
 })
 
 function removeCommonFilters(commonFilters, allFilters) {

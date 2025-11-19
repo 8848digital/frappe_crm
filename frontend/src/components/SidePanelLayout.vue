@@ -168,7 +168,7 @@
                           "
                           class="form-control"
                           type="textarea"
-                          :value="doc[field.fieldname]"
+                          :value="document.doc[field.fieldname]"
                           :placeholder="field.placeholder"
                           :debounce="500"
                           @change.stop="fieldChange($event.target.value, field)"
@@ -245,7 +245,6 @@
                             "
                             :placeholder="field.placeholder"
                             placement="left-start"
-                            :hideIcon="true"
                             @change="(v) => fieldChange(v, field)"
                           />
                         </div>
@@ -259,7 +258,6 @@
                             :formatter="(date) => getFormat(date, '', true)"
                             :placeholder="field.placeholder"
                             placement="left-start"
-                            :hideIcon="true"
                             @change="(v) => fieldChange(v, field)"
                           />
                         </div>
@@ -288,7 +286,7 @@
                           v-else-if="field.fieldtype === 'Int'"
                           class="form-control"
                           type="text"
-                          :value="doc[field.fieldname] || '0'"
+                          :value="document.doc[field.fieldname] || '0'"
                           :placeholder="field.placeholder"
                           :debounce="500"
                           @change.stop="fieldChange($event.target.value, field)"
@@ -426,8 +424,6 @@ if (props.docname) {
   triggerOnChange = d.triggerOnChange
 }
 
-const doc = computed(() => document.doc || {})
-
 const _sections = computed(() => {
   if (!props.sections?.length) return []
   let editButtonAdded = false
@@ -484,6 +480,8 @@ const attrs = instance?.vnode?.props ?? {}
 
 async function fieldChange(value, df) {
   if (props.preview) return
+
+  document.doc[df.fieldname] = value
 
   await triggerOnChange(df.fieldname, value)
 

@@ -46,7 +46,6 @@ import {
   Badge,
   ErrorMessage,
 } from 'frappe-ui'
-import { createToast, getRandom } from '@/utils'
 import { getRandom } from '@/utils'
 import { computed } from 'vue'
 

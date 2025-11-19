@@ -3,12 +3,11 @@
     v-model="showSettings"
     :options="{ size: '5xl' }"
     @close="activeSettingsPage = ''"
-    :disableOutsideClickToClose="disableSettingModalOutsideClick"
   >
     <template #body>
       <div class="flex h-[calc(100vh_-_8rem)]">
         <div class="flex flex-col p-2 w-52 shrink-0 bg-surface-gray-2">
-          <h1 class="px-2 pt-2 mb-3 text-lg font-semibold text-ink-gray-8">
+          <h1 class="px-2 pt-2 mb-3 text-lg font-semibold text-ink-gray-9">
             {{ __('Settings') }}
           </h1>
           <div v-for="tab in tabs">
@@ -29,12 +28,20 @@
                     ? 'bg-surface-selected shadow-sm hover:bg-surface-selected'
                     : 'hover:bg-surface-gray-3'
                 "
-                @click="activeSettingsPage = i.label"
+                @click="activeTab = i"
               />
             </nav>
           </div>
         </div>
-        <div class="flex flex-col flex-1 overflow-y-auto bg-surface-modal">
+        <div
+          class="relative flex flex-col flex-1 overflow-y-auto bg-surface-modal"
+        >
+          <Button
+            class="absolute right-5 top-5"
+            variant="ghost"
+            icon="x"
+            @click="showSettings = false"
+          />
           <component :is="activeTab.component" v-if="activeTab" />
         </div>
       </div>
@@ -42,22 +49,16 @@
   </Dialog>
 </template>
 <script setup>
-import CircleDollarSignIcon from '~icons/lucide/circle-dollar-sign'
-import TrendingUpDownIcon from '~icons/lucide/trending-up-down'
-import SparkleIcon from '@/components/Icons/SparkleIcon.vue'
 import WhatsAppIcon from '@/components/Icons/WhatsAppIcon.vue'
 import ERPNextIcon from '@/components/Icons/ERPNextIcon.vue'
-import HelpdeskIcon from '@/components/Icons/HelpdeskIcon.vue'
 import PhoneIcon from '@/components/Icons/PhoneIcon.vue'
+import InviteIcon from '@/components/Icons/InviteIcon.vue'
 import Email2Icon from '@/components/Icons/Email2Icon.vue'
-import EmailTemplateIcon from '@/components/Icons/EmailTemplateIcon.vue'
-import Users from '@/components/Settings/Users.vue'
-import GeneralSettingsPage from '@/components/Settings/General/GeneralSettingsPage.vue'
-import InviteUserPage from '@/components/Settings/InviteUserPage.vue'
+import GeneralSettings from '@/components/Settings/GeneralSettings.vue'
+import InviteMemberPage from '@/components/Settings/InviteMemberPage.vue'
 import ProfileSettings from '@/components/Settings/ProfileSettings.vue'
 import WhatsAppSettings from '@/components/Settings/WhatsAppSettings.vue'
 import ERPNextSettings from '@/components/Settings/ERPNextSettings.vue'
-import EmailTemplatePage from '@/components/Settings/EmailTemplate/EmailTemplatePage.vue'
 import TelephonySettings from '@/components/Settings/TelephonySettings.vue'
 import EmailConfig from '@/components/Settings/EmailConfig.vue'
 import SidebarLink from '@/components/SidebarLink.vue'
@@ -66,20 +67,18 @@ import {
   isWhatsappInstalled,
   showSettings,
   activeSettingsPage,
-  disableSettingModalOutsideClick,
 } from '@/composables/settings'
-import { Dialog, Avatar } from 'frappe-ui'
+import { Dialog, Button, Avatar } from 'frappe-ui'
 import { ref, markRaw, computed, watch, h } from 'vue'
-import AssignmentRulePage from './AssignmentRules/AssignmentRulePage.vue'
 
-const { isManager, isTelephonyAgent, getUser } = usersStore()
+const { isManager, isAgent, getUser } = usersStore()
 
 const user = computed(() => getUser() || {})
 
 const tabs = computed(() => {
   let _tabs = [
     {
-      label: __('Personal Settings'),
+      label: __('Settings'),
       hideLabel: true,
       items: [
         {
@@ -92,56 +91,34 @@ const tabs = computed(() => {
             }),
           component: markRaw(ProfileSettings),
         },
-      ],
-    },
-    {
-      label: __('System Configuration'),
-      items: [
         {
           label: __('General'),
           icon: 'settings',
-          component: markRaw(GeneralSettingsPage),
+          component: markRaw(GeneralSettings),
           condition: () => isManager(),
         },
         {
-          label: __('Users'),
-          icon: 'user',
-          component: markRaw(Users),
+          label: __('Invite Members'),
+          icon: InviteIcon,
+          component: markRaw(InviteMemberPage),
           condition: () => isManager(),
         },
-        {
-          label: __('Invite User'),
-          icon: 'user-plus',
-          component: markRaw(InviteUserPage),
-          condition: () => isManager(),
-        },
-      ],
-      condition: () => isManager(),
-    },
-    {
-      label: __('Email Settings'),
-      items: [
         {
           label: __('Email Accounts'),
           icon: Email2Icon,
           component: markRaw(EmailConfig),
           condition: () => isManager(),
         },
-        {
-          label: __('Email Templates'),
-          icon: EmailTemplateIcon,
-          component: markRaw(EmailTemplatePage),
-        },
       ],
     },
     {
-      label: __('Integrations', null, 'FCRM'),
+      label: __('Integrations'),
       items: [
         {
           label: __('Telephony'),
           icon: PhoneIcon,
           component: markRaw(TelephonySettings),
-          condition: () => isManager() || isTelephonyAgent(),
+          condition: () => isManager() || isAgent(),
         },
         {
           label: __('WhatsApp'),
@@ -155,20 +132,8 @@ const tabs = computed(() => {
           component: markRaw(ERPNextSettings),
           condition: () => isManager(),
         },
-        {
-          label: __('Helpdesk'),
-          icon: HelpdeskIcon,
-          component: markRaw(HelpdeskSettings),
-          condition: () => isManager(),
-        },
-        {
-          label: __('Lead Syncing'),
-          icon: 'refresh-cw',
-          component: markRaw(LeadSyncSourcePage),
-          condition: () => isManager(),
-        },
       ],
-      condition: () => isManager() || isTelephonyAgent(),
+      condition: () => isManager() || isAgent(),
     },
   ]
 

@@ -69,20 +69,18 @@ console.log('Generated app aliases:', alias)
 export default defineConfig({
   define: defineFlags,
   plugins: [
-    frappeui(),
-    vue({
-      script: {
-        propsDestructure: true,
+    frappeui({
+      frappeProxy: true,
+      lucideIcons: true,
+      jinjaBootData: true,
+      buildConfig: {
+        indexHtmlPath: '../crm/www/crm.html',
+        emptyOutDir: true,
+        sourcemap: true,
       },
     }),
+    vue(),
     vueJsx(),
-    vue({
-      template: {
-        compilerOptions: {
-          isCustomElement: (tag) => tag.startsWith('Lucide'),
-        },
-      },
-    }),
     VitePWA({
       registerType: 'autoUpdate',
       devOptions: {
@@ -123,16 +121,20 @@ export default defineConfig({
         ],
       },
     }),
-    virtualStubPlugin,
   ],
-  resolve: { alias },
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, 'src'),
+    },
+  },
   optimizeDeps: {
     include: [
       'feather-icons',
       'showdown',
       'tailwind.config.js',
-      'engine.io-client',
       'prosemirror-state',
+      'prosemirror-view',
+      'lowlight',
     ],
   },
 })
