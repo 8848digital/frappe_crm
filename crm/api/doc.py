@@ -13,9 +13,8 @@ from crm.api.views import get_views
 from crm.fcrm.doctype.crm_form_script.crm_form_script import get_form_script
 from crm.utils import get_dynamic_linked_docs, get_linked_docs, is_version_16
 
-COUNT_NAME = (
-    {"COUNT": "name", "as": "total_count"} if is_version_16() else "count(name) as total_count"
-)
+COUNT_NAME = {"COUNT": "name", "as": "total_count"} if is_version_16() else "count(name) as total_count"
+
 
 @frappe.whitelist()
 def sort_options(doctype: str):
@@ -176,7 +175,7 @@ def get_doctype_fields_meta(DocField, doctype, allowed_fieldtypes, restricted_fi
 			DocField.options,
 		)
 		.where(DocField[parent] == doctype)
-		.where(DocField.hidden == 0)  # noqa: E712
+		.where(DocField.hidden == False)  # noqa: E712
 		.where(Criterion.any([DocField.fieldtype == i for i in allowed_fieldtypes]))
 		.where(Criterion.all([DocField.fieldname != i for i in restricted_fields]))
 		.run(as_dict=True)
@@ -224,7 +223,7 @@ def get_quick_filters(doctype: str, cached: bool = True):
 	if doctype == "CRM Lead":
 		quick_filters = [filter for filter in quick_filters if filter.get("fieldname") != "converted"]
 
-	return str(quick_filters)
+	return quick_filters
 
 
 @frappe.whitelist()
@@ -452,7 +451,7 @@ def get_data(
 
 				all_count = frappe.get_list(
 					doctype,
-					filters=column_filters,
+					filters=convert_filter_to_tuple(doctype, new_filters),
 					fields=[COUNT_NAME],
 				)[0].total_count
 
@@ -556,9 +555,7 @@ def get_data(
 		"page_length_count": page_length_count,
 		"is_default": is_default,
 		"views": get_views(doctype),
-		"total_count": frappe.get_list(doctype, filters=filters, fields=[COUNT_NAME])[
-			0
-		].total_count,
+		"total_count": frappe.get_list(doctype, filters=filters, fields=[COUNT_NAME])[0].total_count,
 		"row_count": len(data),
 		"form_script": get_form_script(doctype),
 		"list_script": get_form_script(doctype, "List"),
