@@ -6,7 +6,7 @@ import os
 import subprocess
 
 import frappe
-from frappe import safe_decode
+from frappe import _, safe_decode
 from frappe.integrations.frappe_providers.frappecloud_billing import is_fc_site
 from frappe.utils import cint, get_system_timezone
 from frappe.utils.telemetry import capture
@@ -15,6 +15,14 @@ no_cache = 1
 
 
 def get_context():
+	from crm.api import check_app_permission
+
+	if not check_app_permission():
+		frappe.throw(
+			_("You do not have permission to access Frappe CRM"),
+			frappe.PermissionError
+		)
+
 	frappe.db.commit()
 	context = frappe._dict()
 	context.boot = get_boot()
@@ -26,7 +34,7 @@ def get_context():
 @frappe.whitelist(methods=["POST"], allow_guest=True)
 def get_context_for_dev():
 	if not frappe.conf.developer_mode:
-		frappe.throw("This method is only meant for developer mode")
+		frappe.throw(_("This method is only meant for developer mode"))
 	return get_boot()
 
 
@@ -47,31 +55,12 @@ def get_boot():
 				"user": frappe.db.get_value("User", frappe.session.user, "time_zone")
 				or get_system_timezone(),
 			},
-			"app_version": get_app_version(),
 		}
 	)
 
 
 def get_default_route():
 	return "/crm"
-
-def get_app_version():
-	app = "crm"
-	branch = run_git_command(f"cd ../apps/{app} && git rev-parse --abbrev-ref HEAD")
-	commit = run_git_command(f"git -C ../apps/{app} rev-parse --short=7 HEAD")
-	tag = run_git_command(f"git -C ../apps/{app} describe --tags --abbrev=0")
-	dirty = run_git_command(f"git -C ../apps/{app} diff --quiet || echo 'dirty'") == "dirty"
-	commit_date = run_git_command(f"git -C ../apps/{app} log -1 --format=%cd")
-	commit_message = run_git_command(f"git -C ../apps/{app} log -1 --pretty=%B")
-
-	return {
-		"branch": branch,
-		"commit": commit,
-		"commit_date": commit_date,
-		"commit_message": commit_message,
-		"tag": tag,
-		"dirty": dirty,
-	}
 
 
 def run_git_command(command):

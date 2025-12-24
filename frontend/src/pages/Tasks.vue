@@ -8,9 +8,12 @@
         v-if="tasksListView?.customListActions"
         :actions="tasksListView.customListActions"
       />
-      <Button variant="solid" :label="__('Create')" @click="createTask">
-        <template #prefix><FeatherIcon name="plus" class="h-4" /></template>
-      </Button>
+      <Button
+        variant="solid"
+        :label="__('Create')"
+        iconLeft="plus"
+        @click="createTask"
+      />
     </template>
   </LayoutHeader>
   <ViewControls
@@ -120,8 +123,8 @@
       <div class="flex gap-2 items-center justify-between">
         <div>
           <Button
-            class="-ml-2"
             v-if="getRow(itemName, 'reference_docname').label"
+            class="-ml-2"
             variant="ghost"
             size="sm"
             :label="
@@ -129,17 +132,14 @@
                 ? __('Deal')
                 : __('Lead')
             "
+            :iconRight="ArrowUpRightIcon"
             @click.stop="
               redirect(
                 getRow(itemName, 'reference_doctype').label,
                 getRow(itemName, 'reference_docname').label,
               )
             "
-          >
-            <template #suffix>
-              <ArrowUpRightIcon class="h-4 w-4" />
-            </template>
-          </Button>
+          />
         </div>
         <Dropdown
           class="flex items-center gap-2"
@@ -182,9 +182,11 @@
     >
       <Email2Icon class="h-10 w-10" />
       <span>{{ __('No {0} Found', [__('Tasks')]) }}</span>
-      <Button :label="__('Create')" @click="showTaskModal = true">
-        <template #prefix><FeatherIcon name="plus" class="h-4" /></template>
-      </Button>
+      <Button
+        :label="__('Create')"
+        iconLeft="plus"
+        @click="showTaskModal = true"
+      />
     </div>
   </div>
   <TaskModal
@@ -211,7 +213,7 @@ import { getMeta } from '@/stores/meta'
 import { usersStore } from '@/stores/users'
 import { formatDate, timeAgo } from '@/utils'
 import { Tooltip, Avatar, TextEditor, Dropdown, call } from 'frappe-ui'
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
 const { getFormattedPercent, getFormattedFloat, getFormattedCurrency } =
@@ -246,6 +248,7 @@ const rows = computed(() => {
     return getKanbanRows(tasks.value.data.data, tasks.value.data.fields)
   }
 
+  openTaskFromURL()
   return parseRows(tasks.value?.data.data, tasks.value?.data.columns)
 })
 
@@ -386,5 +389,16 @@ function redirect(doctype, docname) {
     params = { dealId: docname }
   }
   router.push({ name: name, params: params })
+}
+
+const openTaskFromURL = () => {
+  const searchParams = new URLSearchParams(window.location.search)
+  const taskName = searchParams.get('open')
+
+  if (taskName && rows.value?.length) {
+    showTask(parseInt(taskName))
+    searchParams.delete('open')
+    window.history.replaceState(null, '', window.location.pathname)
+  }
 }
 </script>

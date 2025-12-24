@@ -1,17 +1,5 @@
 <template>
-  <Dialog
-    v-model="show"
-    :options="{
-      size: 'xl',
-      actions: [
-        {
-          label: editMode ? __('Update') : __('Create'),
-          variant: 'solid',
-          onClick: () => updateNote(),
-        },
-      ],
-    }"
-  >
+  <Dialog v-model="show" :options="{ size: 'xl' }">
     <template #body-title>
       <div class="flex items-center gap-3">
         <h3 class="text-2xl font-semibold leading-6 text-ink-gray-9">
@@ -25,12 +13,9 @@
               ? __('Open Deal')
               : __('Open Lead')
           "
+          :iconRight="ArrowUpRightIcon"
           @click="redirect()"
-        >
-          <template #suffix>
-            <ArrowUpRightIcon class="h-4 w-4" />
-          </template>
-        </Button>
+        />
       </div>
     </template>
     <template #body-content>
@@ -41,6 +26,7 @@
             :label="__('Title')"
             v-model="_note.title"
             :placeholder="__('Call with John Doe')"
+            required
           />
         </div>
         <div>
@@ -57,6 +43,16 @@
             "
           />
         </div>
+        <ErrorMessage class="mt-4" v-if="error" :message="__(error)" />
+      </div>
+    </template>
+    <template #actions>
+      <div class="flex justify-end">
+        <Button
+          :label="editMode ? __('Update') : __('Create')"
+          variant="solid"
+          @click="updateNote"
+        />
       </div>
     </template>
   </Dialog>
@@ -91,17 +87,14 @@ const emit = defineEmits(['after'])
 
 const router = useRouter()
 
+const { updateOnboardingStep } = useOnboarding('frappecrm')
+
+const error = ref(null)
 const title = ref(null)
 const editMode = ref(false)
 let _note = ref({})
 
 async function updateNote() {
-  if (
-    props.note.title === _note.value.title &&
-    props.note.content === _note.value.content
-  )
-    return
-
   if (_note.value.name) {
     let d = await call('frappe.client.set_value', {
       doctype: 'FCRM Note',
@@ -113,15 +106,25 @@ async function updateNote() {
       emit('after', d)
     }
   } else {
-    let d = await call('frappe.client.insert', {
-      doc: {
-        doctype: 'FCRM Note',
-        title: _note.value.title,
-        content: _note.value.content,
-        reference_doctype: props.doctype,
-        reference_docname: props.doc || '',
+    let d = await call(
+      'frappe.client.insert',
+      {
+        doc: {
+          doctype: 'FCRM Note',
+          title: _note.value.title,
+          content: _note.value.content,
+          reference_doctype: props.doctype,
+          reference_docname: props.doc || '',
+        },
       },
-    })
+      {
+        onError: (err) => {
+          if (err.error.exc_type == 'MandatoryError') {
+            error.value = 'Title is mandatory'
+          }
+        },
+      },
+    )
     if (d.name) {
       capture('note_created')
       notes.value?.reload()

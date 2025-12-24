@@ -13,17 +13,20 @@
               v-if="isManager() && !isMobileView"
               variant="ghost"
               class="w-7"
+              :tooltip="__('Edit fields layout')"
+              :icon="EditIcon"
               @click="openQuickEntryModal"
-            >
-              <EditIcon class="h-4 w-4" />
-            </Button>
-            <Button variant="ghost" class="w-7" @click="show = false">
-              <FeatherIcon name="x" class="h-4 w-4" />
-            </Button>
+            />
+            <Button
+              variant="ghost"
+              class="w-7"
+              icon="x"
+              @click="show = false"
+            />
           </div>
         </div>
         <div v-if="tabs.data">
-          <FieldLayout :tabs="tabs.data" :data="_data" :doctype="doctype" />
+          <FieldLayout :tabs="tabs.data" :data="_data.doc" :doctype="doctype" />
           <ErrorMessage class="mt-2" :message="error" />
         </div>
       </div>
@@ -47,7 +50,9 @@
 import FieldLayout from '@/components/FieldLayout/FieldLayout.vue'
 import EditIcon from '@/components/Icons/EditIcon.vue'
 import { usersStore } from '@/stores/users'
+import { useDocument } from '@/data/document'
 import { isMobileView } from '@/composables/settings'
+import { showQuickEntryModal, quickEntryProps } from '@/composables/modals'
 import { FeatherIcon, createResource, ErrorMessage, call } from 'frappe-ui'
 import { ref, nextTick, watch, computed } from 'vue'
 
@@ -62,7 +67,7 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['showQuickEntryModal', 'callback'])
+const emit = defineEmits(['callback'])
 
 const { isManager } = usersStore()
 
@@ -71,7 +76,7 @@ const show = defineModel()
 const loading = ref(false)
 const error = ref(null)
 
-let _data = ref({})
+const { document: _data, triggerOnBeforeCreate } = useDocument(props.doctype)
 
 const dialogOptions = computed(() => {
   let doctype = props.doctype
@@ -104,12 +109,14 @@ async function create() {
   loading.value = true
   error.value = null
 
-    let doc = await call(
+  await triggerOnBeforeCreate?.()
+
+  let doc = await call(
     'frappe.client.insert',
     {
       doc: {
         doctype: props.doctype,
-        ..._data.value,
+        ..._data.doc,
       },
     },
     {
@@ -133,15 +140,14 @@ watch(
     if (!value) return
 
     nextTick(() => {
-      _data.value = { ...props.data }
+      _data.doc = { ...props.data }
     })
   },
 )
 
 function openQuickEntryModal() {
-  emit('showQuickEntryModal', props.doctype)
-  nextTick(() => {
-    show.value = false
-  })
+  showQuickEntryModal.value = true
+  quickEntryProps.value = { doctype: props.doctype }
+  nextTick(() => (show.value = false))
 }
 </script>

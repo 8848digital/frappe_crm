@@ -11,10 +11,9 @@
       <Button
         variant="solid"
         :label="__('Create')"
+        iconLeft="plus"
         @click="showDealModal = true"
-      >
-        <template #prefix><FeatherIcon name="plus" class="h-4" /></template>
-      </Button>
+      />
     </template>
   </LayoutHeader>
   <ViewControls
@@ -233,15 +232,16 @@
     >
       <DealsIcon class="h-10 w-10" />
       <span>{{ __('No {0} Found', [__('Deals')]) }}</span>
-      <Button :label="__('Create')" @click="showDealModal = true">
-        <template #prefix><FeatherIcon name="plus" class="h-4" /></template>
-      </Button>
+      <Button
+        :label="__('Create')"
+        iconLeft="plus"
+        @click="showDealModal = true"
+      />
     </div>
   </div>
   <DealModal
     v-if="showDealModal"
     v-model="showDealModal"
-    v-model:quickEntry="showQuickEntryModal"
     :defaults="defaults"
   />
   <NoteModal
@@ -257,11 +257,6 @@
     :task="task"
     doctype="CRM Deal"
     :doc="docname"
-  />
-  <QuickEntryModal
-    v-if="showQuickEntryModal"
-    v-model="showQuickEntryModal"
-    doctype="CRM Deal"
   />
 </template>
 
@@ -282,7 +277,6 @@ import KanbanView from '@/components/Kanban/KanbanView.vue'
 import DealModal from '@/components/Modals/DealModal.vue'
 import NoteModal from '@/components/Modals/NoteModal.vue'
 import TaskModal from '@/components/Modals/TaskModal.vue'
-import QuickEntryModal from '@/components/Modals/QuickEntryModal.vue'
 import ViewControls from '@/components/ViewControls.vue'
 import { getMeta } from '@/stores/meta'
 import { globalStore } from '@/stores/global'
@@ -306,7 +300,6 @@ const route = useRoute()
 
 const dealsListView = ref(null)
 const showDealModal = ref(false)
-const showQuickEntryModal = ref(false)
 
 const defaults = reactive({})
 
@@ -441,7 +434,7 @@ function parseRows(rows, columns = []) {
             : deal.sla_status == 'Fulfilled'
               ? 'green'
               : 'orange'
-        if (value == 'First Response Due') {
+        if (value == 'First Response Due' || value == 'Rolling Response Due') {
           value = __(timeAgo(deal.response_by))
           tooltipText = formatDate(deal.response_by)
           if (new Date(deal.response_by) < new Date()) {

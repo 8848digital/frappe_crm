@@ -1,5 +1,5 @@
 <template>
-  <LayoutHeader v-if="contact.data">
+  <LayoutHeader v-if="contact.doc">
     <header
       class="relative flex h-10.5 items-center justify-between gap-2 py-2.5 pl-2"
     >
@@ -10,8 +10,11 @@
       </Breadcrumbs>
     </header>
   </LayoutHeader>
-  <div v-if="contact.data" class="flex flex-col h-full overflow-hidden">
-    <FileUploader @success="changeContactImage" :validateFile="validateFile">
+  <div v-if="contact.doc" class="flex flex-col h-full overflow-hidden">
+    <FileUploader
+      @success="changeContactImage"
+      :validateFile="validateIsImageFile"
+    >
       <template #default="{ openFileSelector, error }">
         <div class="flex flex-col items-start justify-start gap-4 p-4">
           <div class="flex gap-4 items-center">
@@ -19,18 +22,18 @@
               <Avatar
                 size="3xl"
                 class="h-14.5 w-14.5"
-                :label="contact.data.full_name"
-                :image="contact.data.image"
+                :label="contact.doc.full_name"
+                :image="contact.doc.image"
               />
               <component
-                :is="contact.data.image ? Dropdown : 'div'"
+                :is="contact.doc.image ? Dropdown : 'div'"
                 v-bind="
-                  contact.data.image
+                  contact.doc.image
                     ? {
                         options: [
                           {
                             icon: 'upload',
-                            label: contact.data.image
+                            label: contact.doc.image
                               ? __('Change image')
                               : __('Upload image'),
                             onClick: openFileSelector,
@@ -59,41 +62,33 @@
             </div>
             <div class="flex flex-col gap-2 truncate">
               <div class="truncate text-lg font-medium text-ink-gray-9">
-                <span v-if="contact.data.salutation">
-                  {{ contact.data.salutation + '. ' }}
+                <span v-if="contact.doc.salutation">
+                  {{ contact.doc.salutation + '. ' }}
                 </span>
-                <span>{{ contact.data.full_name }}</span>
+                <span>{{ contact.doc.full_name }}</span>
               </div>
               <div class="flex items-center gap-1.5">
                 <Button
-                  v-if="contact.data.actual_mobile_no"
+                  v-if="callEnabled && contact.doc.mobile_no"
                   :label="__('Make Call')"
                   size="sm"
-                  @click="
-                    callEnabled && makeCall(contact.data.actual_mobile_no)
-                  "
-                >
-                  <template #prefix>
-                    <PhoneIcon class="h-4 w-4" />
-                  </template>
-                </Button>
+                  :iconLeft="PhoneIcon"
+                  @click="callEnabled && makeCall(contact.doc.mobile_no)"
+                />
                 <Button
+                  v-if="canDelete"
                   :label="__('Delete')"
                   theme="red"
                   size="sm"
+                  icon-left="trash-2"
                   @click="deleteContact"
-                >
-                  <template #prefix>
-                    <FeatherIcon name="trash-2" class="h-4 w-4" />
-                  </template>
-                </Button>
+                />
                 <Avatar
-                  v-if="contact.data.company_name"
+                  v-if="contact.doc.company_name"
                   size="md"
-                  :label="contact.data.company_name"
+                  :label="contact.doc.company_name"
                   :image="
-                    getOrganization(contact.data.company_name)
-                      ?.organization_logo
+                    getOrganization(contact.doc.company_name)?.organization_logo
                   "
                 />
               </div>
@@ -103,11 +98,16 @@
         </div>
       </template>
     </FileUploader>
-    <Tabs as="div" v-model="tabIndex" :tabs="tabs" class="overflow-auto">
-      <TabList class="!px-4" v-slot="{ tab, selected }">
+    <Tabs
+      as="div"
+      v-model="tabIndex"
+      :tabs="tabs"
+      class="flex flex-1 overflow-auto flex-col [&_[role='tablist']]:gap-3 [&_[role='tablist']]:px-4 [&_[role='tabpanel']:not([hidden])]:flex [&_[role='tabpanel']:not([hidden])]:grow"
+    >
+      <template #tab-item="{ tab, selected }">
         <button
           v-if="tab.name == 'Deals'"
-          class="group flex items-center gap-2 border-b border-transparent py-2.5 text-base text-ink-gray-5 duration-300 ease-in-out hover:border-outline-gray-3 hover:text-ink-gray-9"
+          class="group flex items-center gap-2 border-b border-transparent py-2.5 text-base text-ink-gray-5 duration-300 ease-in-out hover:text-ink-gray-9 !px-4"
           :class="{ 'text-ink-gray-9': selected }"
         >
           <component v-if="tab.icon" :is="tab.icon" class="h-5" />
@@ -122,8 +122,8 @@
             {{ tab.count }}
           </Badge>
         </button>
-      </TabList>
-      <TabPanel v-slot="{ tab }">
+      </template>
+      <template #tab-panel="{ tab }">
         <div v-if="tab.name == 'Details'">
           <div
             v-if="sections.data"
@@ -133,6 +133,7 @@
               v-model="contact.data"
               :sections="sections.data"
               doctype="Contact"
+              :docname="contact.doc.name"
               @reload="sections.reload"
             />
           </div>
@@ -153,10 +154,9 @@
             <div>{{ __('No {0} Found', [__(tab.label)]) }}</div>
           </div>
         </div>
-      </TabPanel>
+      </template>
     </Tabs>
   </div>
-  <AddressModal v-model="showAddressModal" v-model:address="_address" />
 </template>
 
 <script setup>
@@ -168,23 +168,22 @@ import PhoneIcon from '@/components/Icons/PhoneIcon.vue'
 import CameraIcon from '@/components/Icons/CameraIcon.vue'
 import DealsIcon from '@/components/Icons/DealsIcon.vue'
 import DealsListView from '@/components/ListViews/DealsListView.vue'
-import AddressModal from '@/components/Modals/AddressModal.vue'
-import { formatDate, timeAgo, createToast } from '@/utils'
+import { formatDate, timeAgo, validateIsImageFile } from '@/utils'
 import { getView } from '@/utils/view'
+import { useDocument } from '@/data/document'
 import { getSettings } from '@/stores/settings'
 import { getMeta } from '@/stores/meta'
 import { globalStore } from '@/stores/global.js'
 import { usersStore } from '@/stores/users.js'
 import { organizationsStore } from '@/stores/organizations.js'
 import { statusesStore } from '@/stores/statuses'
+import { showAddressModal, addressProps } from '@/composables/modals'
 import { callEnabled } from '@/composables/settings'
 import {
   Breadcrumbs,
   Avatar,
   FileUploader,
   Tabs,
-  TabList,
-  TabPanel,
   call,
   createResource,
   usePageMeta,
@@ -210,25 +209,12 @@ const props = defineProps({
 const route = useRoute()
 const router = useRouter()
 
-const showAddressModal = ref(false)
-const _contact = ref({})
-const _address = ref({})
+const { document: contact, permissions } = useDocument(
+  'Contact',
+  props.contactId,
+)
 
-const contact = createResource({
-  url: 'crm.api.contact.get_contact',
-  cache: ['contact', props.contactId],
-  params: {
-    name: props.contactId,
-  },
-  auto: true,
-  transform: (data) => {
-    return {
-      ...data,
-      actual_mobile_no: data.mobile_no,
-      mobile_no: data.mobile_no,
-    }
-  },
-})
+const canDelete = computed(() => permissions.data?.permissions?.delete || false)
 
 const breadcrumbs = computed(() => {
   let items = [{ label: __('Contacts'), route: { name: 'Contacts' } }]
@@ -255,6 +241,11 @@ const breadcrumbs = computed(() => {
   return items
 })
 
+const title = computed(() => {
+  let t = doctypeMeta['Contact']?.title_field || 'name'
+  return contact.doc?.[t] || props.contactId
+})
+
 usePageMeta(() => {
   return {
     title: contact.data?.full_name || contact.data?.name,
@@ -262,21 +253,13 @@ usePageMeta(() => {
   }
 })
 
-function validateFile(file) {
-  let extn = file.name.split('.').pop().toLowerCase()
-  if (!['png', 'jpg', 'jpeg'].includes(extn)) {
-    return __('Only PNG and JPG images are allowed')
-  }
-}
-
-async function changeContactImage(file) {
-  await call('frappe.client.set_value', {
-    doctype: 'Contact',
-    name: props.contactId,
-    fieldname: 'image',
-    value: file?.file_url || '',
+function changeContactImage(file) {
+  contact.doc.image = file?.file_url || ''
+  contact.save.submit(null, {
+    onSuccess: () => {
+      toast.success(__('Contact image updated'))
+    },
   })
-  contact.reload()
 }
 
 async function deleteContact() {
@@ -346,22 +329,18 @@ function getParsedSections(_sections) {
             ...field,
             type: 'dropdown',
             options:
-              contact.data?.email_ids?.map((email) => {
+              contact.doc?.email_ids?.map((email) => {
                 return {
                   name: email.name,
                   value: email.email_id,
-                  selected: email.email_id === contact.data.email_id,
+                  selected: email.email_id === contact.doc.email_id,
                   placeholder: 'john@doe.com',
                   onClick: () => {
-                    _contact.value.email_id = email.email_id
                     setAsPrimary('email', email.email_id)
                   },
                   onSave: (option, isNew) => {
                     if (isNew) {
                       createNew('email', option.value)
-                      if (contact.data.email_ids.length === 1) {
-                        _contact.value.email_id = option.value
-                      }
                     } else {
                       editOption(
                         'Contact Email',
@@ -372,24 +351,15 @@ function getParsedSections(_sections) {
                     }
                   },
                   onDelete: async (option, isNew) => {
-                    contact.data.email_ids = contact.data.email_ids.filter(
+                    contact.doc.email_ids = contact.doc.email_ids.filter(
                       (email) => email.name !== option.name,
                     )
                     !isNew && (await deleteOption('Contact Email', option.name))
-                    if (_contact.value.email_id === option.value) {
-                      if (contact.data.email_ids.length === 0) {
-                        _contact.value.email_id = ''
-                      } else {
-                        _contact.value.email_id = contact.data.email_ids.find(
-                          (email) => email.is_primary,
-                        )?.email_id
-                      }
-                    }
                   },
                 }
               }) || [],
             create: () => {
-              contact.data?.email_ids?.push({
+              contact.doc?.email_ids?.push({
                 name: 'new-1',
                 value: '',
                 selected: false,
@@ -403,22 +373,17 @@ function getParsedSections(_sections) {
             read_only: false,
             fieldtype: 'dropdown',
             options:
-              contact.data?.phone_nos?.map((phone) => {
+              contact.doc?.phone_nos?.map((phone) => {
                 return {
                   name: phone.name,
                   value: phone.phone,
-                  selected: phone.phone === contact.data.actual_mobile_no,
+                  selected: phone.phone === contact.doc.mobile_no,
                   onClick: () => {
-                    _contact.value.actual_mobile_no = phone.phone
-                    _contact.value.mobile_no = phone.phone
                     setAsPrimary('mobile_no', phone.phone)
                   },
                   onSave: (option, isNew) => {
                     if (isNew) {
                       createNew('phone', option.value)
-                      if (contact.data.phone_nos.length === 1) {
-                        _contact.value.actual_mobile_no = option.value
-                      }
                     } else {
                       editOption(
                         'Contact Phone',
@@ -429,25 +394,15 @@ function getParsedSections(_sections) {
                     }
                   },
                   onDelete: async (option, isNew) => {
-                    contact.data.phone_nos = contact.data.phone_nos.filter(
+                    contact.doc.phone_nos = contact.doc.phone_nos.filter(
                       (phone) => phone.name !== option.name,
                     )
                     !isNew && (await deleteOption('Contact Phone', option.name))
-                    if (_contact.value.actual_mobile_no === option.value) {
-                      if (contact.data.phone_nos.length === 0) {
-                        _contact.value.actual_mobile_no = ''
-                      } else {
-                        _contact.value.actual_mobile_no =
-                          contact.data.phone_nos.find(
-                            (phone) => phone.is_primary_mobile_no,
-                          )?.phone
-                      }
-                    }
                   },
                 }
               }) || [],
             create: () => {
-              contact.data?.phone_nos?.push({
+              contact.doc?.phone_nos?.push({
                 name: 'new-1',
                 value: '',
                 selected: false,
@@ -459,18 +414,10 @@ function getParsedSections(_sections) {
           return {
             ...field,
             create: (value, close) => {
-              _contact.value.address = value
-              _address.value = {}
-              showAddressModal.value = true
+              openAddressModal()
               close()
             },
-            edit: async (addr) => {
-              _address.value = await call('frappe.client.get', {
-                doctype: 'Address',
-                name: addr,
-              })
-              showAddressModal.value = true
-            },
+            edit: (address) => openAddressModal(address),
           }
         } else {
           return field
@@ -484,7 +431,7 @@ function getParsedSections(_sections) {
 
 async function setAsPrimary(field, value) {
   let d = await call('crm.api.contact.set_as_primary', {
-    contact: contact.data.name,
+    contact: contact.doc.name,
     field,
     value,
   })
@@ -501,7 +448,7 @@ async function setAsPrimary(field, value) {
 async function createNew(field, value) {
   if (!value) return
   let d = await call('crm.api.contact.create_new', {
-    contact: contact.data.name,
+    contact: contact.doc.name,
     field,
     value,
   })
@@ -543,22 +490,6 @@ async function deleteOption(doctype, name) {
     icon: 'check',
     iconClasses: 'text-ink-green-3',
   })
-}
-
-async function updateField(fieldname, value) {
-  await call('frappe.client.set_value', {
-    doctype: 'Contact',
-    name: props.contactId,
-    fieldname,
-    value,
-  })
-  createToast({
-    title: 'Contact updated',
-    icon: 'check',
-    iconClasses: 'text-ink-green-3',
-  })
-
-  contact.reload()
 }
 
 const { getFormattedCurrency } = getMeta('CRM Deal')
@@ -628,4 +559,12 @@ const dealColumns = [
     width: '8rem',
   },
 ]
+
+function openAddressModal(_address) {
+  showAddressModal.value = true
+  addressProps.value = {
+    doctype: 'Address',
+    address: _address,
+  }
+}
 </script>

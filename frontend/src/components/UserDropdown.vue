@@ -1,14 +1,14 @@
 <template>
   <Dropdown :options="dropdownItems" v-bind="$attrs">
-    <template v-slot="{ open }">
+    <template #default="{ open }">
       <button
         class="flex h-12 items-center rounded-md py-2 duration-300 ease-in-out"
         :class="
           isCollapsed
             ? 'w-auto px-0'
             : open
-              ? 'w-52 bg-surface-white px-2 shadow-sm'
-              : 'w-52 px-2 hover:bg-surface-gray-3'
+              ? 'w-full px-2 bg-surface-white shadow-sm'
+              : 'w-full px-2 hover:bg-surface-gray-3'
         "
       >
         <BrandLogo v-model="brand" class="h-8 max-w-16 flex-shrink-0" />
@@ -55,11 +55,8 @@ import Apps from '@/components/Apps.vue'
 import { sessionStore } from '@/stores/session'
 import { usersStore } from '@/stores/users'
 import { getSettings } from '@/stores/settings'
-import {
-  showSettings,
-  isMobileView,
-  showAboutModal,
-} from '@/composables/settings'
+import { showSettings, isMobileView } from '@/composables/settings'
+import { showAboutModal } from '@/composables/modals'
 import { confirmLoginToFrappeCloud } from '@/composables/frappecloud'
 import { Dropdown } from 'frappe-ui'
 import { theme, toggleTheme } from '@/stores/theme'

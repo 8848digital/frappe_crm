@@ -8,9 +8,12 @@
         v-if="callLogsListView?.customListActions"
         :actions="callLogsListView.customListActions"
       />
-      <Button variant="solid" :label="__('Create')" @click="createCallLog">
-        <template #prefix><FeatherIcon name="plus" class="h-4" /></template>
-      </Button>
+      <Button
+        variant="solid"
+        :label="__('Create')"
+        iconLeft="plus"
+        @click="createCallLog"
+      />
     </template>
   </LayoutHeader>
   <ViewControls
@@ -62,8 +65,9 @@
     v-model:callLog="callLog"
   />
   <CallLogModal
+    v-if="showCallLogModal"
     v-model="showCallLogModal"
-    v-model:callLog="callLog"
+    :data="callLog.data"
     :options="{ afterInsert: () => callLogs.reload() }"
   />
 </template>
@@ -79,7 +83,7 @@ import CallLogDetailModal from '@/components/Modals/CallLogDetailModal.vue'
 import CallLogModal from '@/components/Modals/CallLogModal.vue'
 import { getCallLogDetail } from '@/utils/callLog'
 import { createResource } from 'frappe-ui'
-import { computed, ref } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 
 const callLogsListView = ref(null)
 const showCallLogModal = ref(false)
@@ -123,4 +127,19 @@ function createCallLog() {
   callLog.value = {}
   showCallLogModal.value = true
 }
+
+const openCallLogFromURL = () => {
+  const searchParams = new URLSearchParams(window.location.search)
+  const callLogName = searchParams.get('open')
+
+  if (callLogName) {
+    showCallLog(callLogName)
+    searchParams.delete('open')
+    window.history.replaceState(null, '', window.location.pathname)
+  }
+}
+
+onMounted(() => {
+  openCallLogFromURL()
+})
 </script>
