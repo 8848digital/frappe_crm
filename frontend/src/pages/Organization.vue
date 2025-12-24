@@ -86,6 +86,7 @@
               </div>
               <div class="flex gap-1.5">
                 <Button
+                  v-if="canDelete"
                   :label="__('Delete')"
                   theme="red"
                   size="sm"
@@ -116,10 +117,15 @@
         />
       </div>
     </Resizer>
-    <Tabs as="div" v-model="tabIndex" :tabs="tabs">
+    <Tabs
+      as="div"
+      v-model="tabIndex"
+      :tabs="tabs"
+      class="flex flex-1 overflow-hidden flex-col [&_[role='tablist']]:gap-7.5 [&_[role='tablist']]:px-5 [&_[role='tabpanel']:not([hidden])]:flex [&_[role='tabpanel']:not([hidden])]:grow"
+    >
       <template #tab-item="{ tab, selected }">
         <button
-          class="group flex items-center gap-2 border-b border-transparent py-2.5 text-base text-ink-gray-5 duration-300 ease-in-out hover:border-outline-gray-3 hover:text-ink-gray-9"
+          class="group flex items-center gap-2 border-b border-transparent py-2.5 text-base text-ink-gray-5 duration-300 ease-in-out hover:text-ink-gray-9"
           :class="{ 'text-ink-gray-9': selected }"
         >
           <component v-if="tab.icon" :is="tab.icon" class="h-5" />
@@ -198,7 +204,13 @@ import { getMeta } from '@/stores/meta'
 import { usersStore } from '@/stores/users'
 import { statusesStore } from '@/stores/statuses'
 import { getView } from '@/utils/view'
-import { formatDate, timeAgo, validateIsImageFile, setupCustomizations } from '@/utils'
+import {
+  formatDate,
+  timeAgo,
+  validateIsImageFile,
+  setupCustomizations,
+  openWebsite as openExternalWebsite,
+} from '@/utils'
 import {
   Breadcrumbs,
   Avatar,
@@ -235,21 +247,13 @@ const errorMessage = ref('')
 
 const showDeleteLinkedDocModal = ref(false)
 
-const { document: organization, scripts } = useDocument(
-  'CRM Organization',
-  props.organizationId,
-)
+const {
+  document: organization,
+  permissions,
+  scripts,
+} = useDocument('CRM Organization', props.organizationId)
 
-async function updateField(fieldname, value) {
-  await organization.setValue.submit({
-    [fieldname]: value,
-  })
-  createToast({
-    title: __('Organization updated'),
-    icon: 'check',
-    iconClasses: 'text-ink-green-3',
-  })
-}
+const canDelete = computed(() => permissions.data?.permissions?.delete || false)
 
 const breadcrumbs = computed(() => {
   let items = [{ label: __('Organizations'), route: { name: 'Organizations' } }]
@@ -327,13 +331,12 @@ function website(url) {
 }
 
 function openWebsite() {
-  if (!organization.doc.website)
-    createToast({
-      title: __('Website not found'),
-      icon: 'x',
-      iconClasses: 'text-ink-red-4',
-    })
-  else window.open(organization.doc.website, '_blank')
+  if (!organization.doc.website) {
+    toast.error(__('No website found'))
+    return
+  }
+
+  openExternalWebsite(organization.doc.website)
 }
 
 const sections = createResource({

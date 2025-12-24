@@ -90,7 +90,7 @@ export function getMeta(doctype) {
           }
         })
 
-        if (f.options[0]?.value !== '') {
+        if (f.options[0]?.value !== '' && f.reqd !== 1) {
           f.options.unshift({
             label: '',
             value: '',
