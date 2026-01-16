@@ -20,9 +20,13 @@ class CRMLead(Document):
 	from typing import TYPE_CHECKING
 
 	if TYPE_CHECKING:
-		from crm.fcrm.doctype.crm_products.crm_products import CRMProducts
-		from crm.fcrm.doctype.crm_status_change_log.crm_status_change_log import CRMStatusChangeLog
 		from frappe.types import DF
+
+		from crm.fcrm.doctype.crm_products.crm_products import CRMProducts
+		from crm.fcrm.doctype.crm_rolling_response_time.crm_rolling_response_time import (
+			CRMRollingResponseTime,
+		)
+		from crm.fcrm.doctype.crm_status_change_log.crm_status_change_log import CRMStatusChangeLog
 
 		annual_revenue: DF.Currency
 		communication_status: DF.Link | None
@@ -38,6 +42,8 @@ class CRMLead(Document):
 		industry: DF.Link | None
 		job_title: DF.Data | None
 		last_name: DF.Data | None
+		last_responded_on: DF.Datetime | None
+		last_response_time: DF.Duration | None
 		lead_name: DF.Data | None
 		lead_owner: DF.Link | None
 		middle_name: DF.Data | None
@@ -49,10 +55,11 @@ class CRMLead(Document):
 		phone: DF.Data | None
 		products: DF.Table[CRMProducts]
 		response_by: DF.Datetime | None
+		rolling_responses: DF.Table[CRMRollingResponseTime]
 		salutation: DF.Link | None
 		sla: DF.Link | None
 		sla_creation: DF.Datetime | None
-		sla_status: DF.Literal["", "First Response Due", "Failed", "Fulfilled"]
+		sla_status: DF.Literal["", "First Response Due", "Rolling Response Due", "Failed", "Fulfilled"]
 		source: DF.Link | None
 		status: DF.Link
 		status_change_log: DF.Table[CRMStatusChangeLog]
@@ -162,13 +169,14 @@ class CRMLead(Document):
 			elif user != agent:
 				frappe.share.remove(self.doctype, self.name, user)
 
-	def create_contact(self, throw=True):
+	def create_contact(self, existing_contact=None, throw=True):
 		if not self.lead_name:
 			self.set_full_name()
 			self.set_lead_name()
 
-		existing_contact = self.contact_exists(throw)
+		existing_contact = existing_contact or self.contact_exists(throw)
 		if existing_contact:
+			self.update_lead_contact(existing_contact)
 			return existing_contact
 
 		contact = frappe.new_doc("Contact")
@@ -198,12 +206,15 @@ class CRMLead(Document):
 
 		return contact.name
 
-	def create_organization(self):
-		if not self.organization:
+	def create_organization(self, existing_organization=None):
+		if not self.organization and not existing_organization:
 			return
 
-		existing_organization = frappe.db.exists("CRM Organization", {"organization_name": self.organization})
+		existing_organization = existing_organization or frappe.db.exists(
+			"CRM Organization", {"organization_name": self.organization}
+		)
 		if existing_organization:
+			self.db_set("organization", existing_organization)
 			return existing_organization
 
 		organization = frappe.new_doc("CRM Organization")
@@ -218,6 +229,20 @@ class CRMLead(Document):
 		)
 		organization.insert(ignore_permissions=True)
 		return organization.name
+
+	def update_lead_contact(self, contact):
+		contact = frappe.get_cached_doc("Contact", contact)
+		frappe.db.set_value(
+			"CRM Lead",
+			self.name,
+			{
+				"salutation": contact.salutation,
+				"first_name": contact.first_name,
+				"last_name": contact.last_name,
+				"email": contact.email_id,
+				"mobile_no": contact.mobile_no,
+			},
+		)
 
 	def contact_exists(self, throw=True):
 		email_exist = frappe.db.exists("Contact Email", {"email_id": self.email})
@@ -258,7 +283,6 @@ class CRMLead(Document):
 			"HTML",
 			"Button",
 			"Attach",
-			"Table",
 		]
 		restricted_map_fields = [
 			"name",
@@ -280,6 +304,7 @@ class CRMLead(Document):
 			"first_responded_on",
 			"communication_status",
 			"sla_creation",
+			"status_change_log",
 		]
 
 		for field in self.meta.fields:
@@ -430,7 +455,7 @@ class CRMLead(Document):
 
 
 @frappe.whitelist()
-def convert_to_deal(lead, doc=None, deal=None):
+def convert_to_deal(lead, doc=None, deal=None, existing_contact=None, existing_organization=None):
 	if not (doc and doc.flags.get("ignore_permissions")) and not frappe.has_permission(
 		"CRM Lead", "write", lead
 	):
@@ -442,7 +467,7 @@ def convert_to_deal(lead, doc=None, deal=None):
 	lead.db_set("converted", 1)
 	if lead.sla and frappe.db.exists("CRM Communication Status", "Replied"):
 		lead.db_set("communication_status", "Replied")
-	contact = lead.create_contact(False)
-	organization = lead.create_organization()
+	contact = lead.create_contact(existing_contact, False)
+	organization = lead.create_organization(existing_organization)
 	_deal = lead.create_deal(contact, organization, deal)
 	return _deal
