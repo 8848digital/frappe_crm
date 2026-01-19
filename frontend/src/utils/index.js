@@ -548,8 +548,6 @@ export function DropdownOption({ option, icon, selected, onClick }) {
   )
 }
 
-<<<<<<< HEAD
-=======
 export function deepClone(obj) {
   if (obj === null || typeof obj !== 'object') {
     return obj
@@ -576,7 +574,6 @@ export function deepClone(obj) {
   return obj
 }
 
->>>>>>> eb2ee6c8 (fix: select field & MultiActionButton)
 export function copy(obj) {
   if (!obj) return obj
   return JSON.parse(JSON.stringify(obj))
