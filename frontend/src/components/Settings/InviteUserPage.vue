@@ -52,7 +52,6 @@
           :options="roleOptions"
           :description="description"
         />
-        <ErrorMessage class="mt-2" v-if="error" :message="error" />
       </div>
       <template v-if="pendingInvitations.data?.length && !invitees.length">
         <div class="flex flex-col gap-4">
@@ -183,11 +182,14 @@ const inviteByEmail = createResource({
       role.value = 'Sales User'
       error.value = null
     }
+
     invitees.value = []
     pendingInvitations.reload()
+    updateOnboardingStep('invite_your_team')
+    $telemetry.capture("user_invited", true);
   },
-  onError(error) {
-    error.value = error
+  onError(err) {
+    error.value = err?.messages?.[0]
   },
 })
 
