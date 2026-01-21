@@ -76,7 +76,6 @@
             class="flex flex-1 flex-col justify-between overflow-hidden"
           >
             <SidePanelLayout
-              v-model="lead.data"
               :sections="sections.data"
               doctype="CRM Lead"
               :docname="leadId"
@@ -204,7 +203,6 @@ import { setupCustomizations } from '@/utils'
 import { getView } from '@/utils/view'
 import { getSettings } from '@/stores/settings'
 import { globalStore } from '@/stores/global'
-import { contactsStore } from '@/stores/contacts'
 import { statusesStore } from '@/stores/statuses'
 import { getMeta } from '@/stores/meta'
 import { useDocument } from '@/data/document'
@@ -213,6 +211,7 @@ import {
   callEnabled,
   isMobileView,
 } from '@/composables/settings'
+import { capture } from '@/telemetry'
 import { useActiveTabManager } from '@/composables/useActiveTabManager'
 import {
   createResource,
@@ -222,16 +221,19 @@ import {
   Breadcrumbs,
   call,
   usePageMeta,
+  toast,
 } from 'frappe-ui'
 import { ref, computed, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import { useTelemetry } from 'frappe-ui/frappe'
 
 const { brand } = getSettings()
 const { $dialog, $socket } = globalStore()
-const { getContactByName, contacts } = contactsStore()
 const { statusOptions, getLeadStatus } = statusesStore()
+const { doctypeMeta } = getMeta('CRM Lead')
 const route = useRoute()
 const router = useRouter()
+const $telemetry = useTelemetry()
 
 const props = defineProps({
   leadId: {
@@ -321,7 +323,7 @@ const title = computed(() => {
 
 usePageMeta(() => {
   return {
-    title: lead.data?.lead_name || lead.data?.name,
+    title: title.value,
     icon: brand.favicon,
   }
 })
@@ -428,26 +430,14 @@ const existingOrganizationChecked = ref(false)
 const existingContact = ref('')
 const existingOrganization = ref('')
 
-async function convertToDeal(updated) {
-  let valueUpdated = false
-
+async function convertToDeal() {
   if (existingContactChecked.value && !existingContact.value) {
-    createToast({
-      title: __('Error'),
-      text: __('Please select an existing contact'),
-      icon: 'x',
-      iconClasses: 'text-ink-red-4',
-    })
+    toast.error(__('Please select an existing contact'))
     return
   }
 
   if (existingOrganizationChecked.value && !existingOrganization.value) {
-    createToast({
-      title: __('Error'),
-      text: __('Please select an existing organization'),
-      icon: 'x',
-      iconClasses: 'text-ink-red-4',
-    })
+    toast.error(__('Please select an existing organization'))
     return
   }
 
@@ -468,42 +458,12 @@ async function convertToDeal(updated) {
   if (deal) {
     showConvertToDealModal.value = false
     existingContactChecked.value = false
-    valueUpdated = true
-  }
-
-  if (existingOrganizationChecked.value && existingOrganization.value) {
-    lead.data.organization = existingOrganization.value
     existingOrganizationChecked.value = false
-    valueUpdated = true
-  }
-
-  if (valueUpdated) {
-    updateLead(
-      {
-        salutation: lead.data.salutation,
-        first_name: lead.data.first_name,
-        last_name: lead.data.last_name,
-        email_id: lead.data.email_id,
-        mobile_no: lead.data.mobile_no,
-        organization: lead.data.organization,
-      },
-      '',
-      () => convertToDeal(true),
-    )
-    showConvertToDealModal.value = false
-  } else {
-    let deal = await call(
-      'crm.fcrm.doctype.crm_lead.crm_lead.convert_to_deal',
-      {
-        lead: lead.data.name,
-      },
-    )
-    if (deal) {
-      if (updated) {
-        await contacts.reload()
-      }
-      router.push({ name: 'Deal', params: { dealId: deal } })
-    }
+    existingContact.value = ''
+    existingOrganization.value = ''
+    capture('convert_lead_to_deal')
+    $telemetry.capture('convert_lead_to_deal', true)
+    router.push({ name: 'Deal', params: { dealId: deal } })
   }
 }
 
