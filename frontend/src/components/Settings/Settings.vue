@@ -37,15 +37,7 @@
             </nav>
           </template>
         </div>
-        <div
-          class="relative flex flex-col flex-1 overflow-y-auto bg-surface-modal"
-        >
-          <Button
-            class="absolute right-5 top-5"
-            variant="ghost"
-            icon="x"
-            @click="showSettings = false"
-          />
+        <div class="flex flex-col flex-1 overflow-y-auto bg-surface-modal">
           <component :is="activeTab.component" v-if="activeTab" />
         </div>
       </div>
@@ -59,7 +51,6 @@ import SparkleIcon from '@/components/Icons/SparkleIcon.vue'
 import WhatsAppIcon from '@/components/Icons/WhatsAppIcon.vue'
 import ERPNextIcon from '@/components/Icons/ERPNextIcon.vue'
 import PhoneIcon from '@/components/Icons/PhoneIcon.vue'
-import InviteIcon from '@/components/Icons/InviteIcon.vue'
 import Email2Icon from '@/components/Icons/Email2Icon.vue'
 import EmailTemplateIcon from '@/components/Icons/EmailTemplateIcon.vue'
 import SettingsIcon2 from '@/components/Icons/SettingsIcon2.vue'
@@ -68,17 +59,13 @@ import InviteUserPage from '@/components/Settings/InviteUserPage.vue'
 import ProfileSettings from '@/components/Settings/ProfileSettings.vue'
 import WhatsAppSettings from '@/components/Settings/WhatsAppSettings.vue'
 import ERPNextSettings from '@/components/Settings/ERPNextSettings.vue'
-<<<<<<< HEAD
-=======
-import HelpdeskSettings from '@/components/Settings/HelpdeskSettings.vue'
 import LeadSyncSourcePage from '@/components/Settings/LeadSyncing/LeadSyncSourcePage.vue'
->>>>>>> 7d2ccc2e (chore: boilerplate frontend code)
 import BrandSettings from '@/components/Settings/BrandSettings.vue'
 import HomeActions from '@/components/Settings/HomeActions.vue'
 import ForecastingSettings from '@/components/Settings/ForecastingSettings.vue'
 import CurrencySettings from '@/components/Settings/CurrencySettings.vue'
 import EmailTemplatePage from '@/components/Settings/EmailTemplate/EmailTemplatePage.vue'
-import TelephonySettings from '@/components/Settings/TelephonySettings.vue'
+import TelephonyPage from '@/components/Settings/Telephony/TelephonyPage.vue'
 import EmailConfig from '@/components/Settings/EmailConfig.vue'
 import SidebarLink from '@/components/SidebarLink.vue'
 import { usersStore } from '@/stores/users'
@@ -88,11 +75,11 @@ import {
   activeSettingsPage,
   disableSettingModalOutsideClick,
 } from '@/composables/settings'
-import { Dialog, Button, Avatar } from 'frappe-ui'
+import { Dialog, Avatar } from 'frappe-ui'
 import { ref, markRaw, computed, watch, h } from 'vue'
 import AssignmentRulePage from './AssignmentRules/AssignmentRulePage.vue'
 
-const { isManager, isAgent, getUser } = usersStore()
+const { isManager, isTelephonyAgent, getUser } = usersStore()
 
 const user = computed(() => getUser() || {})
 
@@ -195,8 +182,8 @@ const tabs = computed(() => {
         {
           label: __('Telephony'),
           icon: PhoneIcon,
-          component: markRaw(TelephonySettings),
-          condition: () => isManager() || isAgent(),
+          component: markRaw(TelephonyPage),
+          condition: () => isManager() || isTelephonyAgent(),
         },
         {
           label: __('WhatsApp'),
@@ -210,23 +197,14 @@ const tabs = computed(() => {
           component: markRaw(ERPNextSettings),
           condition: () => isManager(),
         },
-<<<<<<< HEAD
-=======
-        {
-          label: __('Helpdesk'),
-          icon: HelpdeskIcon,
-          component: markRaw(HelpdeskSettings),
-          condition: () => isManager(),
-        },
         {
           label: __('Lead syncing'),
           icon: 'refresh-cw',
           component: markRaw(LeadSyncSourcePage),
           condition: () => isManager(),
         },
->>>>>>> 7d2ccc2e (chore: boilerplate frontend code)
       ],
-      condition: () => isManager() || isAgent(),
+      condition: () => isManager() || isTelephonyAgent(),
     },
   ]
 
