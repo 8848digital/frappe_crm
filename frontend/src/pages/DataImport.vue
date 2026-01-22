@@ -43,7 +43,7 @@ const doctypeMap = {
 
 usePageMeta(() => {
   return {
-    title: __('Data Import'),
+    title: __('Data import'),
   }
 })
 </script>
