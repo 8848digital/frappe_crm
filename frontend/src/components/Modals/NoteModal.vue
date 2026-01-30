@@ -60,8 +60,8 @@
 
 <script setup>
 import ArrowUpRightIcon from '@/components/Icons/ArrowUpRightIcon.vue'
-import { capture } from '@/telemetry'
 import { TextEditor, call } from 'frappe-ui'
+import { useOnboarding, useTelemetry } from 'frappe-ui/frappe'
 import { ref, nextTick, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
@@ -88,6 +88,7 @@ const emit = defineEmits(['after'])
 const router = useRouter()
 
 const { updateOnboardingStep } = useOnboarding('frappecrm')
+const { capture } = useTelemetry()
 
 const error = ref(null)
 const title = ref(null)
@@ -126,6 +127,7 @@ async function updateNote() {
       },
     )
     if (d.name) {
+      updateOnboardingStep('create_first_note')
       capture('note_created')
       notes.value?.reload()
       emit('after', d, true)

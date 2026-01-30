@@ -3,7 +3,9 @@
     <div class="flex gap-1.5">
       <Button
         variant="ghost"
-        :class="[showEmailBox ? '!bg-surface-gray-4 hover:!bg-surface-gray-3' : '']"
+        :class="[
+          showEmailBox ? '!bg-surface-gray-4 hover:!bg-surface-gray-3' : '',
+        ]"
         :label="__('Reply')"
         :iconLeft="Email2Icon"
         @click="toggleEmailBox()"
@@ -85,9 +87,9 @@ import EmailEditor from '@/components/EmailEditor.vue'
 import CommentBox from '@/components/CommentBox.vue'
 import CommentIcon from '@/components/Icons/CommentIcon.vue'
 import Email2Icon from '@/components/Icons/Email2Icon.vue'
-import { capture } from '@/telemetry'
 import { usersStore } from '@/stores/users'
 import { useStorage } from '@vueuse/core'
+import { useOnboarding, useTelemetry } from 'frappe-ui/frappe'
 import { call, createResource } from 'frappe-ui'
 import { ref, watch, computed } from 'vue'
 
@@ -104,6 +106,8 @@ const reload = defineModel('reload')
 const emit = defineEmits(['scroll'])
 
 const { getUser } = usersStore()
+const { updateOnboardingStep } = useOnboarding('frappecrm')
+const { capture } = useTelemetry()
 
 const showEmailBox = ref(false)
 const showCommentBox = ref(false)
@@ -165,7 +169,7 @@ watch(
       editor.commands.focus()
       setSignature(editor)
     }
-  }
+  },
 )
 
 watch(
@@ -174,7 +178,7 @@ watch(
     if (value) {
       newCommentEditor.value.editor.commands.focus()
     }
-  }
+  },
 )
 
 const commentEmpty = computed(() => {
@@ -182,7 +186,11 @@ const commentEmpty = computed(() => {
 })
 
 const emailEmpty = computed(() => {
-  return !newEmail.value || newEmail.value === '<p></p>'
+  return (
+    !newEmail.value ||
+    newEmail.value === '<p></p>' ||
+    !newEmailEditor.value?.toEmails?.length
+  )
 })
 
 async function sendMail() {
@@ -254,6 +262,7 @@ async function submitEmail() {
   reload.value = true
   emit('scroll')
   capture('email_sent', { doctype: props.doctype })
+  updateOnboardingStep('send_first_email')
 }
 
 async function submitComment() {
@@ -265,6 +274,7 @@ async function submitComment() {
   reload.value = true
   emit('scroll')
   capture('comment_sent', { doctype: props.doctype })
+  updateOnboardingStep('add_first_comment')
 }
 
 function toggleEmailBox() {
