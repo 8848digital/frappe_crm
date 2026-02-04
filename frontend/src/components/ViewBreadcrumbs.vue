@@ -13,10 +13,7 @@
     >
       /
     </span>
-    <Dropdown
-      v-if="viewControls"
-      :options="viewControls.viewsDropdownOptions"
-    >
+    <Dropdown v-if="viewControls" :options="viewControls.viewsDropdownOptions">
       <template #default="{ open }">
         <Button
           variant="ghost"
@@ -61,7 +58,11 @@
               <template #default>
                 <Button
                   variant="ghost"
+<<<<<<< HEAD
                   class="!size-5 hidden group-hover:block"
+=======
+                  class="group-hover:!w-auto !w-0 opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto"
+>>>>>>> 76dea5f6 (fix: navigate to default view by default)
                   icon="more-horizontal"
                   @click.stop
                 />
