@@ -51,7 +51,7 @@ def get_linked_deals(contact: str):
 	"""Get linked deals for a contact"""
 
 	if not frappe.has_permission("Contact", "read", contact):
-		frappe.throw("Not permitted", frappe.PermissionError)
+		frappe.throw(_("Not permitted"), frappe.PermissionError)
 
 	deal_names = frappe.get_all(
 		"CRM Contacts",
@@ -87,7 +87,7 @@ def get_linked_deals(contact: str):
 def create_new(contact: str, field: str, value: str):
 	"""Create new email or phone for a contact"""
 	if not frappe.has_permission("Contact", "write", contact):
-		frappe.throw("Not permitted", frappe.PermissionError)
+		frappe.throw(_("Not permitted"), frappe.PermissionError)
 
 	contact = frappe.get_doc("Contact", contact)
 
@@ -96,7 +96,7 @@ def create_new(contact: str, field: str, value: str):
 	elif field in ("mobile_no", "phone"):
 		contact.append("phone_nos", {"phone": value})
 	else:
-		frappe.throw("Invalid field")
+		frappe.throw(_("Invalid field"))
 
 	contact.save()
 	return True
@@ -106,7 +106,7 @@ def create_new(contact: str, field: str, value: str):
 def set_as_primary(contact: str, field: str, value: str):
 	"""Set email or phone as primary for a contact"""
 	if not frappe.has_permission("Contact", "write", contact):
-		frappe.throw("Not permitted", frappe.PermissionError)
+		frappe.throw(_("Not permitted"), frappe.PermissionError)
 
 	contact = frappe.get_doc("Contact", contact)
 
@@ -124,7 +124,7 @@ def set_as_primary(contact: str, field: str, value: str):
 			else:
 				phone.set(name, 0)
 	else:
-		frappe.throw("Invalid field")
+		frappe.throw(_("Invalid field"))
 
 	contact.save()
 	return True
