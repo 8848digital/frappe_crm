@@ -738,8 +738,6 @@ export function validateConditions(conditions) {
 
   return conditions.length > 0
 }
-<<<<<<< HEAD
-=======
 
 // sameArrayContents: returns true if both arrays have exactly the same elements
 // (including duplicate counts) irrespective of order.
@@ -897,4 +895,3 @@ export function clearCache() {
     }
   }
 }
->>>>>>> 13308a3d (feat: add language preference and improve settings UI)
