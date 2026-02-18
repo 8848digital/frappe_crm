@@ -1,7 +1,5 @@
 # Copyright (c) 2022, Frappe Technologies Pvt. Ltd. and Contributors
 # GNU GPLv3 License. See license.txt
-
-
 import os
 import subprocess
 
@@ -58,15 +56,3 @@ def get_boot():
 
 def get_default_route():
 	return "/crm"
-
-
-def run_git_command(command):
-	try:
-		with open(os.devnull, "wb") as null_stream:
-			result = subprocess.check_output(command, shell=True, stdin=null_stream, stderr=null_stream)
-		return safe_decode(result).strip()
-	except Exception:
-		frappe.log_error(
-			title="Git Command Error",
-		)
-		return ""
