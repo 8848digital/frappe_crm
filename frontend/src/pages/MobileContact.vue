@@ -34,13 +34,13 @@
                           {
                             icon: 'upload',
                             label: contact.doc.image
-                              ? __('Change image')
-                              : __('Upload image'),
+                              ? __('Change Image')
+                              : __('Upload Image'),
                             onClick: openFileSelector,
                           },
                           {
                             icon: 'trash-2',
-                            label: __('Remove image'),
+                            label: __('Remove Image'),
                             onClick: () => changeContactImage(''),
                           },
                         ],
@@ -70,7 +70,7 @@
               <div class="flex items-center gap-1.5">
                 <Button
                   v-if="callEnabled && contact.doc.mobile_no"
-                  :label="__('Make a call')"
+                  :label="__('Make a Call')"
                   size="sm"
                   :iconLeft="PhoneIcon"
                   @click="callEnabled && makeCall(contact.doc.mobile_no)"
@@ -130,7 +130,6 @@
             class="flex flex-1 flex-col justify-between overflow-hidden"
           >
             <SidePanelLayout
-              v-model="contact.data"
               :sections="sections.data"
               doctype="Contact"
               :docname="contact.doc.name"
@@ -188,6 +187,7 @@ import {
   createResource,
   usePageMeta,
   Dropdown,
+  toast,
 } from 'frappe-ui'
 import { ref, computed, h } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -198,6 +198,7 @@ const { $dialog, makeCall } = globalStore()
 const { getUser } = usersStore()
 const { getOrganization } = organizationsStore()
 const { getDealStatus } = statusesStore()
+const { doctypeMeta } = getMeta('Contact')
 
 const props = defineProps({
   contactId: {
@@ -235,7 +236,7 @@ const breadcrumbs = computed(() => {
   }
 
   items.push({
-    label: contact.data?.full_name,
+    label: title.value,
     route: { name: 'Contact', params: { contactId: props.contactId } },
   })
   return items
@@ -248,7 +249,7 @@ const title = computed(() => {
 
 usePageMeta(() => {
   return {
-    title: contact.data?.full_name || contact.data?.name,
+    title: title.value,
     icon: brand.favicon,
   }
 })
@@ -257,14 +258,14 @@ function changeContactImage(file) {
   contact.doc.image = file?.file_url || ''
   contact.save.submit(null, {
     onSuccess: () => {
-      toast.success(__('Contact image updated'))
+      toast.success(__('Contact Image Updated'))
     },
   })
 }
 
 async function deleteContact() {
   $dialog({
-    title: __('Delete contact'),
+    title: __('Delete Contact'),
     message: __('Are you sure you want to delete this contact?'),
     actions: [
       {
@@ -437,11 +438,7 @@ async function setAsPrimary(field, value) {
   })
   if (d) {
     contact.reload()
-    createToast({
-      title: 'Contact updated',
-      icon: 'check',
-      iconClasses: 'text-ink-green-3',
-    })
+    toast.success(__('Contact Updated'))
   }
 }
 
@@ -454,11 +451,7 @@ async function createNew(field, value) {
   })
   if (d) {
     contact.reload()
-    createToast({
-      title: 'Contact updated',
-      icon: 'check',
-      iconClasses: 'text-ink-green-3',
-    })
+    toast.success(__('Contact Updated'))
   }
 }
 
@@ -471,11 +464,7 @@ async function editOption(doctype, name, fieldname, value) {
   })
   if (d) {
     contact.reload()
-    createToast({
-      title: 'Contact updated',
-      icon: 'check',
-      iconClasses: 'text-ink-green-3',
-    })
+    toast.success(__('Contact Updated'))
   }
 }
 
@@ -485,11 +474,7 @@ async function deleteOption(doctype, name) {
     name,
   })
   await contact.reload()
-  createToast({
-    title: 'Contact updated',
-    icon: 'check',
-    iconClasses: 'text-ink-green-3',
-  })
+  toast.success(__('Contact Updated'))
 }
 
 const { getFormattedCurrency } = getMeta('CRM Deal')
@@ -544,17 +529,17 @@ const dealColumns = [
     width: '12rem',
   },
   {
-    label: __('Mobile no'),
+    label: __('Mobile No.'),
     key: 'mobile_no',
     width: '11rem',
   },
   {
-    label: __('Deal owner'),
+    label: __('Deal Owner'),
     key: 'deal_owner',
     width: '10rem',
   },
   {
-    label: __('Last modified'),
+    label: __('Last Modified'),
     key: 'modified',
     width: '8rem',
   },

@@ -71,7 +71,6 @@
             class="flex flex-1 flex-col justify-between overflow-hidden"
           >
             <SidePanelLayout
-              v-model="deal.data"
               :sections="sections.data"
               doctype="CRM Deal"
               :docname="dealId"
@@ -207,7 +206,7 @@
                     v-else
                     class="flex h-20 items-center justify-center text-base text-ink-gray-5"
                   >
-                    {{ __('No contacts added') }}
+                    {{ __('No Contacts Added') }}
                   </div>
                 </div>
               </template>
@@ -314,6 +313,7 @@ import {
   Breadcrumbs,
   call,
   usePageMeta,
+  toast,
 } from 'frappe-ui'
 import { ref, computed, h, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -321,6 +321,7 @@ import { useRoute, useRouter } from 'vue-router'
 const { brand } = getSettings()
 const { $dialog, $socket } = globalStore()
 const { statusOptions, getDealStatus } = statusesStore()
+const { doctypeMeta } = getMeta('CRM Deal')
 const route = useRoute()
 const router = useRouter()
 
@@ -414,7 +415,7 @@ const title = computed(() => {
 
 usePageMeta(() => {
   return {
-    title: organization.data?.name || deal.data?.name,
+    title: title.value,
     icon: brand.favicon,
   }
 })
@@ -522,7 +523,7 @@ function contactOptions(contact) {
 
   if (!contact.is_primary) {
     options.push({
-      label: __('Set as primary contact'),
+      label: __('Set as Primary Contact'),
       icon: h(SuccessIcon, { class: 'h-4 w-4' }),
       onClick: () => setPrimaryContact(contact.name),
     })
@@ -533,11 +534,7 @@ function contactOptions(contact) {
 
 async function addContact(contact) {
   if (dealContacts.data?.find((c) => c.name === contact)) {
-    createToast({
-      title: __('Contact already added'),
-      icon: 'x',
-      iconClasses: 'text-ink-red-3',
-    })
+    toast.error(__('Contact Already Added'))
     return
   }
 
@@ -547,11 +544,7 @@ async function addContact(contact) {
   })
   if (d) {
     dealContacts.reload()
-    createToast({
-      title: __('Contact added'),
-      icon: 'check',
-      iconClasses: 'text-ink-green-3',
-    })
+    toast.success(__('Contact Added'))
   }
 }
 
@@ -562,11 +555,7 @@ async function removeContact(contact) {
   })
   if (d) {
     dealContacts.reload()
-    createToast({
-      title: __('Contact removed'),
-      icon: 'check',
-      iconClasses: 'text-ink-green-3',
-    })
+    toast.success(__('Contact Removed'))
   }
 }
 
@@ -577,11 +566,7 @@ async function setPrimaryContact(contact) {
   })
   if (d) {
     dealContacts.reload()
-    createToast({
-      title: __('Primary contact set'),
-      icon: 'check',
-      iconClasses: 'text-ink-green-3',
-    })
+    toast.success(__('Primary Contact Set'))
   }
 }
 

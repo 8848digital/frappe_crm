@@ -7,13 +7,6 @@ import { getMeta } from '@/stores/meta'
 import { toast, dayjsLocal, dayjs, getConfig, FeatherIcon } from 'frappe-ui'
 import { h } from 'vue'
 
-export function createToast(options) {
-  toast({
-    position: 'bottom-right',
-    ...options,
-  })
-}
-
 export function formatTime(seconds) {
   const days = Math.floor(seconds / (3600 * 24))
   const hours = Math.floor((seconds % (3600 * 24)) / 3600)
@@ -203,11 +196,9 @@ export function prettyDate(date, mini = false) {
   }
 }
 
-const taskMeta = getMeta('CRM Task')
-
 export function taskStatusOptions(action, data) {
   let options = ['Backlog', 'Todo', 'In Progress', 'Done', 'Canceled']
-  let statusMeta = taskMeta
+  let statusMeta = getMeta('CRM Task')
     .getFields()
     ?.find((field) => field.fieldname == 'status')
   if (statusMeta) {
@@ -226,7 +217,7 @@ export function taskStatusOptions(action, data) {
 
 export function taskPriorityOptions(action, data) {
   let options = ['Low', 'Medium', 'High']
-  let priorityMeta = taskMeta
+  let priorityMeta = getMeta('CRM Task')
     .getFields()
     ?.find((field) => field.fieldname == 'priority')
   if (priorityMeta) {
@@ -278,7 +269,7 @@ export function openWebsite(url) {
   const safeUrl = getSafeWebsiteUrl(url)
 
   if (!safeUrl) {
-    toast.error(__('Invalid website URL'))
+    toast.error(__('Invalid Website URL'))
     return false
   }
 
@@ -366,34 +357,20 @@ export async function setupListCustomizations(data, obj = {}) {
   return { actions, bulkActions }
 }
 
-export function errorMessage(title, message) {
-  createToast({
-    title: title || 'Error',
-    text: message,
-    icon: 'x',
-    iconClasses: 'text-ink-red-4',
-  })
-}
-
 export function copyToClipboard(text) {
   if (navigator.clipboard && window.isSecureContext) {
-    navigator.clipboard.writeText(text).then(show_success_alert)
+    navigator.clipboard.writeText(text).then(showSuccessAlert)
   } else {
     let input = document.createElement('textarea')
     document.body.appendChild(input)
     input.value = text
     input.select()
     document.execCommand('copy')
-    show_success_alert()
+    showSuccessAlert()
     document.body.removeChild(input)
   }
-  function show_success_alert() {
-    createToast({
-      title: 'Copied to clipboard',
-      text: text,
-      icon: 'check',
-      iconClasses: 'text-ink-green-3',
-    })
+  function showSuccessAlert() {
+    toast.success(__('Copied to Clipboard'))
   }
 }
 
@@ -479,6 +456,36 @@ export function evaluateDependsOnValue(expression, doc) {
   return out
 }
 
+export function evaluateExpression(expression, doc, parent) {
+  if (!expression) return false
+  if (!doc) return false
+
+  let out = null
+  if (typeof expression === 'boolean') {
+    out = expression
+  } else if (typeof expression === 'function') {
+    out = expression(doc)
+  } else if (expression.substr(0, 5) == 'eval:') {
+    try {
+      out = _eval(expression.substr(5), { doc, parent })
+      if (parent && parent.istable && expression.includes('is_submittable')) {
+        out = true
+      }
+    } catch (e) {
+      out = true
+    }
+  } else {
+    let value = doc[expression]
+    if (Array.isArray(value)) {
+      out = !!value.length
+    } else {
+      out = !!value
+    }
+  }
+
+  return out
+}
+
 export function convertSize(size) {
   const units = ['B', 'KB', 'MB', 'GB', 'TB']
   let unitIndex = 0
@@ -513,6 +520,7 @@ export function getRandom(len = 4) {
 
   return text
 }
+
 export function runSequentially(functions) {
   return functions.reduce((promise, fn) => {
     return promise.then(() => fn())
@@ -818,10 +826,10 @@ export function ConfirmDelete({ isConfirmingDelete, onConfirmDelete }) {
       condition: () => !isConfirmingDelete.value,
     },
     {
-      label: __('Confirm delete'),
+      label: __('Confirm Delete'),
       component: (props) =>
         TemplateOption({
-          option: __('Confirm delete'),
+          option: __('Confirm Delete'),
           icon: 'trash-2',
           active: props.active,
           variant: 'danger',

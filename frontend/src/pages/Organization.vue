@@ -44,13 +44,13 @@
                               {
                                 icon: 'upload',
                                 label: organization.doc.organization_logo
-                                  ? __('Change image')
-                                  : __('Upload image'),
+                                  ? __('Change Image')
+                                  : __('Upload Image'),
                                 onClick: openFileSelector,
                               },
                               {
                                 icon: 'trash-2',
-                                label: __('Remove image'),
+                                label: __('Remove Image'),
                                 onClick: () => changeOrganizationImage(''),
                               },
                             ],
@@ -94,7 +94,7 @@
                   @click="deleteOrganization()"
                 />
                 <Button
-                  :tooltip="__('Open website')"
+                  :tooltip="__('Open Website')"
                   icon="link"
                   @click="openWebsite"
                 />
@@ -332,7 +332,7 @@ function website(url) {
 
 function openWebsite() {
   if (!organization.doc.website) {
-    toast.error(__('No website found'))
+    toast.error(__('No Website Found'))
     return
   }
 
@@ -514,17 +514,17 @@ const dealColumns = [
     width: '12rem',
   },
   {
-    label: __('Mobile no'),
+    label: __('Mobile No.'),
     key: 'mobile_no',
     width: '11rem',
   },
   {
-    label: __('Deal owner'),
+    label: __('Deal Owner'),
     key: 'deal_owner',
     width: '10rem',
   },
   {
-    label: __('Last modified'),
+    label: __('Last Modified'),
     key: 'modified',
     width: '8rem',
   },
@@ -552,7 +552,7 @@ const contactColumns = [
     width: '12rem',
   },
   {
-    label: __('Last modified'),
+    label: __('Last Modified'),
     key: 'modified',
     width: '8rem',
   },
