@@ -22,11 +22,12 @@
         </div>
 
         <div class="flex gap-2">
-          <Button :label="__('Refresh')" @click="reload()" :loading="isLoading">
-            <template #icon>
-              <RefreshIcon class="h-4 w-4" />
-            </template>
-          </Button>
+          <Button
+            :tooltip="__('Refresh')"
+            :icon="RefreshIcon"
+            :loading="isLoading"
+            @click="reload()"
+          />
           <SortBy
             v-if="route.params.viewType !== 'kanban'"
             v-model="list"
@@ -64,58 +65,59 @@
   >
     <div class="flex flex-1 items-center overflow-hidden pl-1 gap-2">
       <FadedScrollableDiv
-        class="flex items-center gap-2 overflow-x-auto -ml-1"
+        class="flex overflow-x-auto -ml-1"
         orientation="horizontal"
       >
         <Draggable
-          class="flex gap-2"
+          class="flex w-full gap-2 items-center"
           :list="newQuickFilters"
           group="filters"
           item-key="fieldname"
         >
           <template #item="{ element: filter }">
-            <Button class="group whitespace-nowrap cursor-grab">
-              <template #default>
-                <Tooltip :text="filter.fieldname">
-                  <span>{{ filter.label }}</span>
-                </Tooltip>
-              </template>
-              <template #suffix>
-                <FeatherIcon
-                  class="h-3.5 cursor-pointer group-hover:flex hidden"
-                  name="x"
-                  @click.stop="removeQuickFilter(filter)"
-                />
-              </template>
-            </Button>
+            <div class="group whitespace-nowrap cursor-grab">
+              <Button class="cursor-grab">
+                <template #default>
+                  <Tooltip :text="filter.fieldname">
+                    <span>{{ filter.label }}</span>
+                  </Tooltip>
+                </template>
+                <template #suffix>
+                  <FeatherIcon
+                    class="h-3.5 cursor-pointer group-hover:flex hidden"
+                    name="x"
+                    @click.stop="removeQuickFilter(filter)"
+                  />
+                </template>
+              </Button>
+            </div>
           </template>
         </Draggable>
       </FadedScrollableDiv>
-      <Autocomplete
-        value=""
-        :options="quickFilterOptions"
-        @change="(e) => addQuickFilter(e)"
-      >
-        <template #target="{ togglePopover }">
-          <Button
-            class="whitespace-nowrap mr-2"
-            variant="ghost"
-            @click="togglePopover()"
-            :label="__('Add filter')"
-          >
-            <template #prefix>
-              <FeatherIcon name="plus" class="h-4" />
-            </template>
-          </Button>
-        </template>
-        <template #item-label="{ option }">
-          <Tooltip :text="option.value" :hover-delay="1">
-            <div class="flex-1 truncate text-ink-gray-7">
-              {{ option.label }}
-            </div>
-          </Tooltip>
-        </template>
-      </Autocomplete>
+      <div>
+        <Autocomplete
+          value=""
+          :options="quickFilterOptions"
+          @change="(e) => addQuickFilter(e)"
+        >
+          <template #target="{ togglePopover }">
+            <Button
+              class="whitespace-nowrap mr-2"
+              variant="ghost"
+              :label="__('Add filter')"
+              iconLeft="plus"
+              @click="togglePopover()"
+            />
+          </template>
+          <template #item-label="{ option }">
+            <Tooltip :text="option.value" :hover-delay="1">
+              <div class="flex-1 truncate text-ink-gray-7">
+                {{ option.label }}
+              </div>
+            </Tooltip>
+          </template>
+        </Autocomplete>
+      </div>
     </div>
     <div class="-ml-2 h-[70%] border-l" />
     <div class="flex gap-1">
@@ -124,11 +126,7 @@
         :loading="updateQuickFilters.loading"
         @click="saveQuickFilters"
       />
-      <Button @click="customizeQuickFilter = false">
-        <template #icon>
-          <FeatherIcon name="x" class="h-4 w-4" />
-        </template>
-      </Button>
+      <Button icon="x" @click="customizeQuickFilter = false" />
     </div>
   </div>
   <div v-else class="flex items-center justify-between gap-2 px-5 py-4">
@@ -157,11 +155,12 @@
         <Button :label="__('Save Changes')" @click="saveView" />
       </div>
       <div class="flex items-center gap-2">
-        <Button :label="__('Refresh')" @click="reload()" :loading="isLoading">
-          <template #icon>
-            <RefreshIcon class="h-4 w-4" />
-          </template>
-        </Button>
+        <Button
+          :tooltip="__('Refresh')"
+          :icon="RefreshIcon"
+          :loading="isLoading"
+          @click="reload()"
+        />
         <GroupBy
           v-if="route.params.viewType === 'group_by'"
           v-model="list"
@@ -194,6 +193,7 @@
         />
         <Dropdown
           v-if="route.params.viewType !== 'kanban' || isManager()"
+          placement="right"
           :options="[
             {
               group: __('Options'),
@@ -218,7 +218,7 @@
           ]"
         >
           <template #default>
-            <Button icon="more-horizontal" />
+            <Button :tooltip="__('More Options')" icon="more-horizontal" />
           </template>
         </Dropdown>
       </div>
@@ -940,9 +940,9 @@ async function updateKanbanSettings(data) {
       value: data.to,
     })
   }
-  let isDirty = viewUpdated.value
 
   viewUpdated.value = true
+
   if (!defaultParams.value) {
     defaultParams.value = getParams()
   }
@@ -970,26 +970,6 @@ async function updateKanbanSettings(data) {
 
   if (!route.query.view) {
     createOrUpdateStandardView()
-  } else if (!data.column_field) {
-    if (isDirty) {
-      $dialog({
-        title: __('Unsaved Changes'),
-        message: __('You have unsaved changes. Do you want to save them?'),
-        variant: 'danger',
-        actions: [
-          {
-            label: __('Update'),
-            variant: 'solid',
-            onClick: (close) => {
-              updateCustomView()
-              close()
-            },
-          },
-        ],
-      })
-    } else {
-      updateCustomView()
-    }
   }
 }
 
@@ -1043,31 +1023,6 @@ function createOrUpdateStandardView() {
   })
 }
 
-function updateCustomView() {
-  viewUpdated.value = false
-  view.value = {
-    doctype: props.doctype,
-    label: view.value.label,
-    type: view.value.type || 'list',
-    icon: view.value.icon,
-    name: view.value.name,
-    filters: defaultParams.value.filters,
-    order_by: defaultParams.value.order_by,
-    group_by_field: defaultParams.value.view.group_by_field,
-    column_field: defaultParams.value.column_field,
-    title_field: defaultParams.value.title_field,
-    kanban_columns: defaultParams.value.kanban_columns,
-    kanban_fields: defaultParams.value.kanban_fields,
-    columns: defaultParams.value.columns,
-    rows: defaultParams.value.rows,
-    route_name: route.name,
-    load_default_columns: view.value.load_default_columns,
-  }
-  call('crm.fcrm.doctype.crm_view_settings.crm_view_settings.update', {
-    view: view.value,
-  }).then(() => reloadView())
-}
-
 function updatePageLength(value, loadMore = false) {
   if (list.value.loading) return
   if (!defaultParams.value) {
@@ -1089,7 +1044,7 @@ function updatePageLength(value, loadMore = false) {
 }
 
 // View Actions
-const viewActions = (view) => {
+const viewActions = (view, close) => {
   let isStandard = typeof view.name === 'string'
   let _view = getView(view.name)
 
@@ -1113,7 +1068,7 @@ const viewActions = (view) => {
         {
           label: __('Duplicate'),
           icon: () => h(DuplicateIcon, { class: 'h-4 w-4' }),
-          onClick: () => duplicateView(_view),
+          onClick: () => duplicateView(_view, close),
         },
       ],
     },
@@ -1131,7 +1086,7 @@ const viewActions = (view) => {
     actions[0].items.push({
       label: __('Edit'),
       icon: () => h(EditIcon, { class: 'h-4 w-4' }),
-      onClick: () => editView(_view),
+      onClick: () => editView(_view, close),
     })
 
     if (!_view.public) {
@@ -1214,17 +1169,19 @@ function setAsDefault(v) {
   })
 }
 
-function duplicateView(v) {
+function duplicateView(v, close) {
   v.label = v.label + __(' (New)')
   viewModalObj.value = v
   viewModalObj.value.mode = 'duplicate'
   showViewModal.value = true
+  close()
 }
 
-function editView(v) {
+function editView(v, close) {
   viewModalObj.value = v
   viewModalObj.value.mode = 'edit'
   showViewModal.value = true
+  close()
 }
 
 function publicView(v) {

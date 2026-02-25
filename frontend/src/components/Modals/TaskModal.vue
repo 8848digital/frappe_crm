@@ -1,17 +1,5 @@
 <template>
-  <Dialog
-    v-model="show"
-    :options="{
-      size: 'xl',
-      actions: [
-        {
-          label: editMode ? __('Update') : __('Create'),
-          variant: 'solid',
-          onClick: () => updateTask(),
-        },
-      ],
-    }"
-  >
+  <Dialog v-model="show" :options="{ size: 'xl' }">
     <template #body-title>
       <div class="flex items-center gap-3">
         <h3 class="text-2xl font-semibold leading-6 text-ink-gray-9">
@@ -25,12 +13,9 @@
               ? __('Open Deal')
               : __('Open Lead')
           "
+          :iconRight="ArrowUpRightIcon"
           @click="redirect()"
-        >
-          <template #suffix>
-            <ArrowUpRightIcon class="w-4 h-4" />
-          </template>
-        </Button>
+        />
       </div>
     </template>
     <template #body-content>
@@ -62,7 +47,7 @@
         </div>
         <div class="flex flex-wrap items-center gap-2">
           <Dropdown :options="taskStatusOptions(updateTaskStatus)">
-            <Button :label="_task.status" class="justify-between w-full">
+            <Button :label="_task.status">
               <template #prefix>
                 <TaskStatusIcon :status="_task.status" />
               </template>
@@ -93,15 +78,17 @@
               </Tooltip>
             </template>
           </Link>
-          <DateTimePicker
-            class="datepicker w-36"
-            v-model="_task.due_date"
-            :placeholder="__('01/04/2024 11:30 PM')"
-            :formatter="(date) => getFormat(date, '', true, true)"
-            input-class="border-none"
-          />
+          <div class="w-36">
+            <DateTimePicker
+              class="datepicker"
+              v-model="_task.due_date"
+              :placeholder="__('01/04/2024 11:30 PM')"
+              :formatter="(date) => getFormat(date, '', true, true)"
+              input-class="border-none"
+            />
+          </div>
           <Dropdown :options="taskPriorityOptions(updateTaskPriority)">
-            <Button :label="_task.priority" class="justify-between w-full">
+            <Button :label="_task.priority">
               <template #prefix>
                 <TaskPriorityIcon :priority="_task.priority" />
               </template>
@@ -109,6 +96,15 @@
           </Dropdown>
         </div>
         <ErrorMessage class="mt-4" v-if="error" :message="__(error)" />
+      </div>
+    </template>
+    <template #actions>
+      <div class="flex justify-end">
+        <Button
+          :label="editMode ? __('Update') : __('Create')"
+          variant="solid"
+          @click="updateTask"
+        />
       </div>
     </template>
   </Dialog>

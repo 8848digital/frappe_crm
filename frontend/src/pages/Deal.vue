@@ -108,7 +108,6 @@
             />
 
             <Button
-              v-if="canDelete"
               :tooltip="__('Delete')"
               variant="subtle"
               icon="trash-2"

@@ -6,22 +6,18 @@
         variant="ghost"
         :class="[showEmailBox ? '!bg-surface-gray-4 hover:!bg-surface-gray-3' : '']"
         :label="__('Reply')"
+        :iconLeft="Email2Icon"
         @click="toggleEmailBox()"
-      >
-        <template #prefix>
-          <Email2Icon class="h-4" />
-        </template>
-      </Button>
+      />
       <Button
         variant="ghost"
         :label="__('Comment')"
-        :class="[showCommentBox ? '!bg-surface-gray-4 hover:!bg-surface-gray-3' : '']"
+        :class="[
+          showCommentBox ? '!bg-surface-gray-4 hover:!bg-surface-gray-3' : '',
+        ]"
+        :iconLeft="CommentIcon"
         @click="toggleCommentBox()"
-      >
-        <template #prefix>
-          <CommentIcon class="h-4" />
-        </template>
-      </Button>
+      />
     </div>
   </div>
   <div

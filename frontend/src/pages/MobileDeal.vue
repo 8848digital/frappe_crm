@@ -22,15 +22,13 @@
           "
         >
           <template #default="{ open }">
-            <Button v-if="doc.status" :label="doc.status">
+            <Button
+              v-if="doc.status"
+              :label="doc.status"
+              :iconRight="open ? 'chevron-up' : 'chevron-down'"
+            >
               <template #prefix>
                 <IndicatorIcon :class="getDealStatus(doc.status).color" />
-              </template>
-              <template #suffix>
-                <FeatherIcon
-                  :name="open ? 'chevron-up' : 'chevron-down'"
-                  class="h-4"
-                />
               </template>
             </Button>
           </template>
@@ -42,7 +40,7 @@
     v-if="doc.name"
     class="flex h-12 items-center justify-between gap-2 border-b px-3 py-2.5"
   >
-    <AssignTo v-model="assignees.data" :data="doc" doctype="CRM Deal" />
+    <AssignTo v-model="assignees.data" doctype="CRM Deal" :docname="dealId" />
     <div class="flex items-center gap-2">
       <CustomActions
         v-if="document._actions?.length"

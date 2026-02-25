@@ -6,29 +6,32 @@
     >
       {{ __(routeName) }}
     </router-link>
-    <span class="mx-0.5 text-base text-ink-gray-4" aria-hidden="true"> / </span>
-    <Dropdown v-if="viewControls" :options="viewControls.viewsDropdownOptions">
+    <span
+      v-if="viewControls"
+      class="mx-0.5 text-base text-ink-gray-4"
+      aria-hidden="true"
+    >
+      /
+    </span>
+    <Dropdown
+      v-if="viewControls"
+      :options="viewControls.viewsDropdownOptions"
+    >
       <template #default="{ open }">
         <Button
           variant="ghost"
           class="text-lg font-medium text-nowrap"
           :label="__(viewControls.currentView.label)"
+          :iconRight="open ? 'chevron-up' : 'chevron-down'"
         >
           <template #prefix>
             <Icon :icon="viewControls.currentView.icon" class="h-4" />
           </template>
-          <template #suffix>
-            <FeatherIcon
-              :name="open ? 'chevron-up' : 'chevron-down'"
-              class="h-4 text-ink-gray-8"
-            />
-          </template>
         </Button>
       </template>
-      <template #item="{ item, active }">
+      <template #item="{ item, close }">
         <button
-          class="group flex text-ink-gray-6 gap-4 h-7 w-full justify-between items-center rounded px-2 text-base"
-          :class="{ 'bg-surface-gray-3': active }"
+          class="group flex text-ink-gray-6 gap-4 h-7 w-full justify-between items-center rounded px-2 text-base hover:bg-surface-gray-3"
           @click="item.onClick"
         >
           <div class="flex items-center">
@@ -52,16 +55,15 @@
             class="flex flex-row-reverse gap-2 items-center min-w-11"
           >
             <Dropdown
-              :class="active ? 'block' : 'hidden'"
               placement="right-start"
-              :options="viewControls.viewActions(item)"
+              :options="viewControls.viewActions(item, close)"
             >
-              <template #default="{ togglePopover }">
+              <template #default>
                 <Button
                   variant="ghost"
-                  class="!size-5"
+                  class="!size-5 hidden group-hover:block"
                   icon="more-horizontal"
-                  @click.stop="togglePopover()"
+                  @click.stop
                 />
               </template>
             </Dropdown>
@@ -78,7 +80,7 @@
 </template>
 <script setup>
 import Icon from '@/components/Icon.vue'
-import Dropdown from '@/components/frappe-ui/Dropdown.vue'
+import { Dropdown } from 'frappe-ui'
 
 const props = defineProps({
   routeName: {
