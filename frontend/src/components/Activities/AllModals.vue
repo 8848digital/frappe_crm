@@ -4,7 +4,7 @@
     v-model:reloadTasks="activities"
     :task="task"
     :doctype="doctype"
-    :doc="doc.data?.name"
+    :doc="doc?.name"
     @after="redirect('tasks')"
   />
   <NoteModal
@@ -12,12 +12,14 @@
     v-model:reloadNotes="activities"
     :note="note"
     :doctype="doctype"
-    :doc="doc.data?.name"
+    :doc="doc?.name"
     @after="redirect('notes')"
   />
-   <CallLogModal
+  <CallLogModal
+    v-if="showCallLogModal"
     v-model="showCallLogModal"
-    v-model:callLog="callLog"
+    :data="callLog"
+    :referenceDoc="referenceDoc"
     :options="{ afterInsert: () => activities.reload() }"
   />
 </template>
@@ -86,15 +88,15 @@ function showNote(n) {
 // Call Logs
 const showCallLogModal = ref(false)
 const callLog = ref({})
+const referenceDoc = ref({})
 
 function createCallLog() {
   let doctype = props.doctype
-  let docname = props.doc.data?.name
+  let docname = props.doc?.name
+  referenceDoc.value = { ...props.doc }
   callLog.value = {
-    data: {
-      reference_doctype: doctype,
-      reference_docname: docname,
-    },
+    reference_doctype: doctype,
+    reference_docname: docname,
   }
   showCallLogModal.value = true
 }

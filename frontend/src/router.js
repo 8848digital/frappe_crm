@@ -14,6 +14,11 @@ const routes = [
     component: () => import('@/pages/MobileNotification.vue'),
   },
   {
+    path: '/dashboard',
+    name: 'Dashboard',
+    component: () => import('@/pages/Dashboard.vue'),
+  },
+  {
     alias: '/leads',
     path: '/leads/view/:viewType?',
     name: 'Leads',
@@ -80,16 +85,9 @@ const routes = [
     component: () => import('@/pages/CallLogs.vue'),
   },
   {
-    alias: '/email-templates',
-    path: '/email-templates/view/:viewType?',
-    name: 'Email Templates',
-    component: () => import('@/pages/EmailTemplates.vue'),
-  },
-  {
-    path: '/email-templates/:emailTemplateId',
-    name: 'Email Template',
-    component: () => import('@/pages/EmailTemplate.vue'),
-    props: true,
+    path: '/welcome',
+    name: 'Welcome',
+    component: () => import('@/pages/Welcome.vue'),
   },
   {
     path: '/:invalidpath',

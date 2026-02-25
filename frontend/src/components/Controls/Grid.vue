@@ -58,7 +58,9 @@
             variant="outline"
             @click="showGridFieldsEditorModal = true"
           >
-            <FeatherIcon name="settings" class="h-4 w-4 text-ink-gray-7" />
+            <template #icon>
+              <FeatherIcon name="settings" class="size-4 text-ink-gray-7" />
+            </template>
           </Button>
         </div>
       </div>
@@ -281,7 +283,9 @@
                   variant="outline"
                   @click="showRowList[index] = true"
                 >
-                  <EditIcon class="h-4 w-4 text-ink-gray-7" />
+                  <template #icon>
+                    <EditIcon class="text-ink-gray-7" />
+                  </template>
                 </Button>
               </div>
               <GridRowModal
@@ -376,9 +380,9 @@ const props = defineProps({
   },
 })
 
-const triggerOnChange = inject('triggerOnChange')
-const triggerOnRowAdd = inject('triggerOnRowAdd')
-const triggerOnRowRemove = inject('triggerOnRowRemove')
+const triggerOnChange = inject('triggerOnChange', () => {})
+const triggerOnRowAdd = inject('triggerOnRowAdd', () => {})
+const triggerOnRowRemove = inject('triggerOnRowRemove', () => {})
 
 const {
   getGridViewSettings,
@@ -389,7 +393,7 @@ const {
   getGridSettings,
 } = getMeta(props.doctype)
 getMeta(props.parentDoctype)
-const { getUser } = usersStore()
+const { users, getUser } = usersStore()
 
 const rows = defineModel()
 const parentDoc = defineModel('parent')
@@ -431,6 +435,15 @@ function getFieldObj(field) {
       }
     }
   }
+
+  if (field.fieldtype === 'Link' && field.options === 'User') {
+    field.fieldtype = 'User'
+    field.link_filters = JSON.stringify({
+      ...(field.link_filters ? JSON.parse(field.link_filters) : {}),
+      name: ['in', users.data.crmUsers?.map((user) => user.name)],
+    })
+  }
+
   return {
     ...field,
     filters: field.link_filters && JSON.parse(field.link_filters),
@@ -506,8 +519,7 @@ const deleteRows = () => {
 }
 
 function fieldChange(value, field, row) {
-  row[field.fieldname] = value
-  triggerOnChange(field.fieldname, row)
+  triggerOnChange(field.fieldname, value, row)
 }
 
 function getDefaultValue(defaultValue, fieldtype) {

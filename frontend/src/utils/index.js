@@ -196,6 +196,130 @@ export function prettyDate(date, mini = false) {
   }
 }
 
+export function prettyDate(date, mini = false) {
+  if (!date) return ''
+
+  let systemTimezone = getConfig('systemTimezone')
+  let localTimezone = getConfig('localTimezone') || getBrowserTimezone()
+
+  if (typeof date == 'string') {
+    date = dayjsLocal(date)
+  }
+
+  let nowDatetime = dayjs().tz(localTimezone || systemTimezone)
+  let diff = nowDatetime.diff(date, 'seconds')
+
+  let dayDiff = diff / 86400
+
+  if (isNaN(dayDiff)) return ''
+
+  if (mini) {
+    // Return short format of time difference
+    if (dayDiff < 0) {
+      if (Math.abs(dayDiff) < 1) {
+        if (Math.abs(diff) < 60) {
+          return __('now')
+        } else if (Math.abs(diff) < 3600) {
+          return __('in {0} m', [Math.floor(Math.abs(diff) / 60)])
+        } else if (Math.abs(diff) < 86400) {
+          return __('in {0} h', [Math.floor(Math.abs(diff) / 3600)])
+        }
+      }
+      if (Math.abs(dayDiff) >= 1 && Math.abs(dayDiff) < 1.5) {
+        return __('tomorrow')
+      } else if (Math.abs(dayDiff) < 7) {
+        return __('in {0} d', [Math.floor(Math.abs(dayDiff))])
+      } else if (Math.abs(dayDiff) < 31) {
+        return __('in {0} w', [Math.floor(Math.abs(dayDiff) / 7)])
+      } else if (Math.abs(dayDiff) < 365) {
+        return __('in {0} M', [Math.floor(Math.abs(dayDiff) / 30)])
+      } else {
+        return __('in {0} y', [Math.floor(Math.abs(dayDiff) / 365)])
+      }
+    } else if (dayDiff >= 0 && dayDiff < 1) {
+      if (diff < 60) {
+        return __('now')
+      } else if (diff < 3600) {
+        return __('{0} m', [Math.floor(diff / 60)])
+      } else if (diff < 86400) {
+        return __('{0} h', [Math.floor(diff / 3600)])
+      }
+    } else {
+      dayDiff = Math.floor(dayDiff)
+      if (dayDiff < 7) {
+        return __('{0} d', [dayDiff])
+      } else if (dayDiff < 31) {
+        return __('{0} w', [Math.floor(dayDiff / 7)])
+      } else if (dayDiff < 365) {
+        return __('{0} M', [Math.floor(dayDiff / 30)])
+      } else {
+        return __('{0} y', [Math.floor(dayDiff / 365)])
+      }
+    }
+  } else {
+    // Return long format of time difference
+    if (dayDiff < 0) {
+      if (Math.abs(dayDiff) < 1) {
+        if (Math.abs(diff) < 60) {
+          return __('just now')
+        } else if (Math.abs(diff) < 120) {
+          return __('in 1 minute')
+        } else if (Math.abs(diff) < 3600) {
+          return __('in {0} minutes', [Math.floor(Math.abs(diff) / 60)])
+        } else if (Math.abs(diff) < 7200) {
+          return __('in 1 hour')
+        } else if (Math.abs(diff) < 86400) {
+          return __('in {0} hours', [Math.floor(Math.abs(diff) / 3600)])
+        }
+      }
+      if (Math.abs(dayDiff) >= 1 && Math.abs(dayDiff) < 1.5) {
+        return __('tomorrow')
+      } else if (Math.abs(dayDiff) < 7) {
+        return __('in {0} days', [Math.floor(Math.abs(dayDiff))])
+      } else if (Math.abs(dayDiff) < 31) {
+        return __('in {0} weeks', [Math.floor(Math.abs(dayDiff) / 7)])
+      } else if (Math.abs(dayDiff) < 365) {
+        return __('in {0} months', [Math.floor(Math.abs(dayDiff) / 30)])
+      } else if (Math.abs(dayDiff) < 730) {
+        return __('in 1 year')
+      } else {
+        return __('in {0} years', [Math.floor(Math.abs(dayDiff) / 365)])
+      }
+    } else if (dayDiff >= 0 && dayDiff < 1) {
+      if (diff < 60) {
+        return __('just now')
+      } else if (diff < 120) {
+        return __('1 minute ago')
+      } else if (diff < 3600) {
+        return __('{0} minutes ago', [Math.floor(diff / 60)])
+      } else if (diff < 7200) {
+        return __('1 hour ago')
+      } else if (diff < 86400) {
+        return __('{0} hours ago', [Math.floor(diff / 3600)])
+      }
+    } else {
+      dayDiff = Math.floor(dayDiff)
+      if (dayDiff == 1) {
+        return __('yesterday')
+      } else if (dayDiff < 7) {
+        return __('{0} days ago', [dayDiff])
+      } else if (dayDiff < 14) {
+        return __('1 week ago')
+      } else if (dayDiff < 31) {
+        return __('{0} weeks ago', [Math.floor(dayDiff / 7)])
+      } else if (dayDiff < 62) {
+        return __('1 month ago')
+      } else if (dayDiff < 365) {
+        return __('{0} months ago', [Math.floor(dayDiff / 30)])
+      } else if (dayDiff < 730) {
+        return __('1 year ago')
+      } else {
+        return __('{0} years ago', [Math.floor(dayDiff / 365)])
+      }
+    }
+  }
+}
+
 export function taskStatusOptions(action, data) {
   let options = ['Backlog', 'Todo', 'In Progress', 'Done', 'Canceled']
   let statusMeta = getMeta('CRM Task')
@@ -527,13 +651,23 @@ export function runSequentially(functions) {
   }, Promise.resolve())
 }
 
-export function DropdownOption({ option, icon, selected, onClick }) {
+export function DropdownOption({
+  active,
+  option,
+  theme,
+  icon,
+  onClick,
+  selected,
+}) {
   return h(
     'button',
     {
-      class:
-        'group flex w-full text-ink-gray-8 justify-between items-center rounded-md px-2 py-2 text-sm hover:bg-surface-gray-2',
-      onClick,
+      class: [
+        active ? 'bg-surface-gray-2' : 'text-ink-gray-8',
+        'group flex w-full justify-between items-center rounded-md px-2 py-2 text-sm',
+        theme == 'danger' ? 'text-ink-red-3 hover:bg-ink-red-1' : '',
+      ],
+      onClick: !selected ? onClick : null,
     },
     [
       h('div', { class: 'flex gap-2' }, [
@@ -556,235 +690,14 @@ export function DropdownOption({ option, icon, selected, onClick }) {
   )
 }
 
-export function deepClone(obj) {
-  if (obj === null || typeof obj !== 'object') {
-    return obj
-  }
-
-  if (obj instanceof Date) {
-    return new Date(obj.getTime())
-  }
-
-  if (Array.isArray(obj)) {
-    return obj.map((item) => deepClone(item))
-  }
-
-  if (typeof obj === 'object') {
-    const cloned = {}
-    for (const key in obj) {
-      if (obj.hasOwnProperty(key)) {
-        cloned[key] = deepClone(obj[key])
-      }
-    }
-    return cloned
-  }
-
-  return obj
-}
-
-export function copy(obj) {
-  if (!obj) return obj
-  return JSON.parse(JSON.stringify(obj))
-}
-
-export const convertToConditions = ({ conditions, fieldPrefix }) => {
-  if (!conditions || conditions.length === 0) {
-    return ''
-  }
-
-  const processCondition = (condition) => {
-    if (typeof condition === 'string') {
-      return condition.toLowerCase()
-    }
-
-    if (Array.isArray(condition)) {
-      // Nested condition group
-      if (Array.isArray(condition[0])) {
-        const nestedStr = convertToConditions({
-          conditions: condition,
-          fieldPrefix,
-        })
-        return `(${nestedStr})`
-      }
-
-      // Simple condition: [fieldname, operator, value]
-      const [field, operator, value] = condition
-      const fieldAccess = fieldPrefix ? `${fieldPrefix}.${field}` : field
-
-      const operatorMap = {
-        equals: '==',
-        '=': '==',
-        '==': '==',
-        '!=': '!=',
-        'not equals': '!=',
-        '<': '<',
-        '<=': '<=',
-        '>': '>',
-        '>=': '>=',
-        in: 'in',
-        'not in': 'not in',
-        like: 'like',
-        'not like': 'not like',
-        is: 'is',
-        'is not': 'is not',
-        between: 'between',
-      }
-
-      let op = operatorMap[operator.toLowerCase()] || operator
-
-      if (
-        (op === '==' || op === '!=') &&
-        (String(value).toLowerCase() === 'yes' ||
-          String(value).toLowerCase() === 'no')
-      ) {
-        let checkVal = String(value).toLowerCase() === 'yes'
-        if (op === '!=') {
-          checkVal = !checkVal
-        }
-        return checkVal ? fieldAccess : `not ${fieldAccess}`
-      }
-
-      if (op === 'is' && String(value).toLowerCase() === 'set') {
-        return fieldAccess
-      }
-      if (
-        (op === 'is' && String(value).toLowerCase() === 'not set') ||
-        (op === 'is not' && String(value).toLowerCase() === 'set')
-      ) {
-        return `not ${fieldAccess}`
-      }
-
-      if (op === 'like') {
-        return `(${fieldAccess} and "${value}" in ${fieldAccess})`
-      }
-      if (op === 'not like') {
-        return `(${fieldAccess} and "${value}" not in ${fieldAccess})`
-      }
-
-      if (
-        op === 'between' &&
-        typeof value === 'string' &&
-        value.includes(',')
-      ) {
-        const [start, end] = value.split(',').map((v) => v.trim())
-        return `(${fieldAccess} >= "${start}" and ${fieldAccess} <= "${end}")`
-      }
-
-      let valueStr = ''
-      if (op === 'in' || op === 'not in') {
-        let items
-        if (Array.isArray(value)) {
-          items = value.map((v) => `"${String(v).trim()}"`)
-        } else if (typeof value === 'string') {
-          items = value.split(',').map((v) => `"${v.trim()}"`)
-        } else {
-          items = [`"${String(value).trim()}"`]
-        }
-        valueStr = `[${items.join(', ')}]`
-        return `(${fieldAccess} and ${fieldAccess} ${op} ${valueStr})`
-      }
-
-      if (typeof value === 'string') {
-        valueStr = `"${value.replace(/"/g, '\\"')}"`
-      } else if (typeof value === 'number' || typeof value === 'boolean') {
-        valueStr = String(value)
-      } else if (value === null || value === undefined) {
-        return op === '==' || op === 'is' ? `not ${fieldAccess}` : fieldAccess
-      } else {
-        valueStr = `"${String(value).replace(/"/g, '\\"')}"`
-      }
-
-      return `${fieldAccess} ${op} ${valueStr}`
-    }
-
-    return ''
-  }
-
-  const parts = conditions.map(processCondition)
-  return parts.join(' ')
-}
-
-export function validateConditions(conditions) {
-  if (!Array.isArray(conditions)) return false
-
-  // Handle simple condition [field, operator, value]
-  if (
-    conditions.length === 3 &&
-    typeof conditions[0] === 'string' &&
-    typeof conditions[1] === 'string'
-  ) {
-    return conditions[0] !== '' && conditions[1] !== '' && conditions[2] !== ''
-  }
-
-  // Iterate through conditions and logical operators
-  for (let i = 0; i < conditions.length; i++) {
-    const item = conditions[i]
-
-    // Skip logical operators (they will be validated by their position)
-    if (item === 'and' || item === 'or') {
-      // Ensure logical operators are not at start/end and not consecutive
-      if (
-        i === 0 ||
-        i === conditions.length - 1 ||
-        conditions[i - 1] === 'and' ||
-        conditions[i - 1] === 'or'
-      ) {
-        return false
-      }
-      continue
-    }
-
-    // Handle nested conditions (arrays)
-    if (Array.isArray(item)) {
-      if (!validateConditions(item)) {
-        return false
-      }
-    } else if (item !== undefined && item !== null) {
-      return false
-    }
-  }
-
-  return conditions.length > 0
-}
-
-// sameArrayContents: returns true if both arrays have exactly the same elements
-// (including duplicate counts) irrespective of order.
-// Non-arrays or arrays of different length return false.
-export function sameArrayContents(a, b) {
-  if (a === b) return true
-  if (!Array.isArray(a) || !Array.isArray(b)) return false
-  if (a.length !== b.length) return false
-  if (a.length === 0) return true
-  const counts = new Map()
-  for (const v of a) {
-    counts.set(v, (counts.get(v) || 0) + 1)
-  }
-  for (const v of b) {
-    const c = counts.get(v)
-    if (!c) return false
-    if (c === 1) counts.delete(v)
-    else counts.set(v, c - 1)
-  }
-  return counts.size === 0
-}
-
-// orderSensitiveEqual: returns true only if arrays are strictly equal index-wise
-export function orderSensitiveEqual(a, b) {
-  if (a === b) return true
-  if (!Array.isArray(a) || !Array.isArray(b)) return false
-  if (a.length !== b.length) return false
-  for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) return false
-  return true
-}
-
-export function TemplateOption({ active, option, variant, icon, onClick }) {
+export function TemplateOption({ active, option, theme, icon, onClick }) {
   return h(
     'button',
     {
       class: [
-        active ? 'bg-surface-gray-2' : 'text-ink-gray-7',
-        'group flex w-full gap-2 items-center rounded-md px-2 py-2 text-base hover:bg-surface-gray-3',
-        variant == 'danger' ? 'text-ink-red-3 hover:bg-ink-red-1' : '',
+        active ? 'bg-surface-gray-2 text-ink-gray-8' : 'text-ink-gray-7',
+        'group flex w-full gap-2 items-center rounded-md px-2 py-2 text-sm',
+        theme == 'danger' ? 'text-ink-red-3 hover:bg-ink-red-1' : '',
       ],
       onClick: onClick,
     },
@@ -801,105 +714,7 @@ export function TemplateOption({ active, option, variant, icon, onClick }) {
   )
 }
 
-/**
- * @param {Object} config - Configuration object
- * @param {Ref<boolean>} config.isConfirmingDelete - Ref to track confirmation state
- * @param {Function} config.onConfirmDelete - Callback when delete is confirmed
- * @returns {Array} Array of option objects for use in dropdowns
- */
-export function ConfirmDelete({ isConfirmingDelete, onConfirmDelete }) {
-  return [
-    {
-      label: __('Delete'),
-      component: (props) =>
-        TemplateOption({
-          option: __('Delete'),
-          icon: 'trash-2',
-          active: props.active,
-          variant: 'grey',
-          onClick: (event) => {
-            event.preventDefault()
-            event.stopImmediatePropagation()
-            isConfirmingDelete.value = true
-          },
-        }),
-      condition: () => !isConfirmingDelete.value,
-    },
-    {
-      label: __('Confirm Delete'),
-      component: (props) =>
-        TemplateOption({
-          option: __('Confirm Delete'),
-          icon: 'trash-2',
-          active: props.active,
-          variant: 'danger',
-          onClick: () => {
-            onConfirmDelete()
-            // Reset state after confirming
-            isConfirmingDelete.value = false
-          },
-        }),
-      condition: () => isConfirmingDelete.value,
-    },
-  ]
-}
-
-export function formatTimeHMS(seconds) {
-  const days = Math.floor(seconds / (3600 * 24))
-  const hours = Math.floor((seconds % (3600 * 24)) / 3600)
-  const minutes = Math.floor((seconds % 3600) / 60)
-  const remainingSeconds = Math.floor(seconds % 60)
-
-  let formattedTime = ''
-
-  if (days > 0) {
-    formattedTime += `${days} days `
-  }
-
-  if (hours > 0) {
-    formattedTime += `${hours} hours `
-  }
-
-  if (minutes > 0) {
-    formattedTime += `${minutes} minutes `
-  }
-
-  if (remainingSeconds > 0) {
-    formattedTime += `${remainingSeconds} seconds`
-  }
-
-  return formattedTime.trim() == '' ? '0 seconds' : formattedTime.trim()
-}
-
-export function getGridTemplateColumnsForTable(columns) {
-  let columnsWidth = columns
-    .map((col) => {
-      let width = col.width || 1
-      if (typeof width === 'number') {
-        return width + 'fr'
-      }
-      return width
-    })
-    .join(' ')
-  return columnsWidth + ' 22px'
-}
-
-export function clearCache() {
-  ;[
-    '_last_load',
-    '_version_number',
-    'metadata_version',
-    'page_info',
-    'last_visited',
-  ].forEach((key) => localStorage.removeItem(key))
-
-  for (let key in localStorage) {
-    if (
-      key.startsWith('_page:') ||
-      key.startsWith('_doctype:') ||
-      key.startsWith('preferred_breadcrumbs:')
-    ) {
-      localStorage.removeItem(key)
-    }
-  }
+export function copy(obj) {
+  if (!obj) return obj
+  return JSON.parse(JSON.stringify(obj))
 }

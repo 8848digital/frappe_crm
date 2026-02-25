@@ -250,14 +250,14 @@
               </span>
               <span v-if="activity.type">{{ __(activity.type) }}</span>
               <span
-                v-if="activity.data.field_label"
+                v-if="activity.data?.field_label"
                 class="max-w-xs truncate font-medium text-ink-gray-8"
               >
                 {{ __(activity.data.field_label) }}
               </span>
               <span v-if="activity.value">{{ __(activity.value) }}</span>
               <span
-                v-if="activity.data.old_value"
+                v-if="activity.data?.old_value"
                 class="max-w-xs font-medium text-ink-gray-8"
               >
                 <div
@@ -273,7 +273,7 @@
               </span>
               <span v-if="activity.to">{{ __('to') }}</span>
               <span
-                v-if="activity.data.value"
+                v-if="activity.data?.value"
                 class="max-w-xs font-medium text-ink-gray-8"
               >
                 <div
@@ -307,7 +307,7 @@
             >
               <div class="inline-flex flex-wrap gap-1 text-ink-gray-5">
                 <span
-                  v-if="activity.data.field_label"
+                  v-if="activity.data?.field_label"
                   class="max-w-xs truncate text-ink-gray-5"
                 >
                   {{ __(activity.data.field_label) }}
@@ -320,7 +320,7 @@
                   {{ startCase(__(activity.type)) }}
                 </span>
                 <span
-                  v-if="activity.data.old_value"
+                  v-if="activity.data?.old_value"
                   class="max-w-xs font-medium text-ink-gray-8"
                 >
                   <div
@@ -336,7 +336,7 @@
                 </span>
                 <span v-if="activity.to">{{ __('to') }}</span>
                 <span
-                  v-if="activity.data.value"
+                  v-if="activity.data?.value"
                   class="max-w-xs font-medium text-ink-gray-8"
                 >
                   <div
@@ -365,7 +365,12 @@
       </div>
     </div>
     <div v-else-if="title == 'Data'" class="h-full flex flex-col px-3 sm:px-10">
-      <DataFields :doctype="doctype" :docname="doc.data.name" />
+      <DataFields
+        :doctype="doctype"
+        :docname="docname"
+        @beforeSave="(data) => emit('beforeSave', data)"
+        @afterSave="(data) => emit('afterSave', data)"
+      />
     </div>
     <div
       v-else
@@ -433,10 +438,9 @@
     :doc="doc"
   />
   <FilesUploader
-    v-if="doc.data?.name"
     v-model="showFilesUploader"
     :doctype="doctype"
-    :docname="doc.data.name"
+    :docname="docname"
     @after="
       () => {
         all_activities.reload()
@@ -485,6 +489,7 @@ import { timeAgo, formatDate, startCase } from '@/utils'
 import { globalStore } from '@/stores/global'
 import { usersStore } from '@/stores/users'
 import { whatsappEnabled, callEnabled } from '@/composables/settings'
+import { useDocument } from '@/data/document'
 import { capture } from '@/telemetry'
 import { Button, Tooltip, createResource } from 'frappe-ui'
 import { useElementVisibility } from '@vueuse/core'
@@ -508,17 +513,26 @@ const props = defineProps({
     type: String,
     default: 'CRM Lead',
   },
+  docname: {
+    type: String,
+    default: '',
+  },
   tabs: {
     type: Array,
     default: () => [],
   },
 })
 
+const emit = defineEmits(['beforeSave', 'afterSave'])
+
 const route = useRoute()
 
-const doc = defineModel()
 const reload = defineModel('reload')
 const tabIndex = defineModel('tabIndex')
+
+const { document: _document } = useDocument(props.doctype, props.docname)
+
+const doc = computed(() => _document.doc || {})
 
 const reload_email = ref(false)
 const modalRef = ref(null)
@@ -535,8 +549,8 @@ const changeTabTo = (tabName) => {
 
 const all_activities = createResource({
   url: 'crm.api.activities.get_activities',
-  params: { name: doc.value.data.name },
-  cache: ['activity', doc.value.data.name],
+  params: { name: props.docname },
+  cache: ['activity', props.docname],
   auto: true,
   transform: ([versions, calls, notes, tasks, attachments]) => {
     return { versions, calls, notes, tasks, attachments }
@@ -547,12 +561,12 @@ const showWhatsappTemplates = ref(false)
 
 const whatsappMessages = createResource({
   url: 'crm.api.whatsapp.get_whatsapp_messages',
-  cache: ['whatsapp_messages', doc.value.data.name],
+  cache: ['whatsapp_messages', props.docname],
   params: {
     reference_doctype: props.doctype,
-    reference_name: doc.value.data.name,
+    reference_name: props.docname,
   },
-  auto: true,
+  auto: whatsappEnabled.value,
   transform: (data) => sortByCreation(data),
   onSuccess: () => nextTick(() => scroll()),
 })
@@ -565,7 +579,7 @@ onMounted(() => {
   $socket.on('whatsapp_message', (data) => {
     if (
       data.reference_doctype === props.doctype &&
-      data.reference_name === doc.value.data.name
+      data.reference_name === props.docname
     ) {
       whatsappMessages.reload()
     }
@@ -587,8 +601,8 @@ function sendTemplate(template) {
     url: 'crm.api.whatsapp.send_whatsapp_template',
     params: {
       reference_doctype: props.doctype,
-      reference_name: doc.value.data.name,
-      to: doc.value.data.mobile_no,
+      reference_name: props.docname,
+      to: doc.value.mobile_no,
       template,
     },
     auto: true,
@@ -760,6 +774,7 @@ const whatsappBox = ref(null)
 watch([reload, reload_email], ([reload_value, reload_email_value]) => {
   if (reload_value || reload_email_value) {
     all_activities.reload()
+    _document.reload()
     reload.value = false
     reload_email.value = false
   }
@@ -785,12 +800,12 @@ function scroll(hash) {
 const callActions = computed(() => {
   let actions = [
     {
-      label: __('Create Call Log'),
+      label: __('Log a Call'),
       onClick: () => modalRef.value.createCallLog(),
     },
     {
       label: __('Make a Call'),
-      onClick: () => makeCall(doc.data.mobile_no),
+      onClick: () => makeCall(doc.value.mobile_no),
       condition: () => callEnabled.value,
     },
   ]
@@ -800,5 +815,5 @@ const callActions = computed(() => {
   )
 })
 
-defineExpose({ emailBox, all_activities })
+defineExpose({ emailBox, all_activities, changeTabTo })
 </script>

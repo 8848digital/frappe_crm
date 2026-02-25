@@ -14,7 +14,7 @@
     <FormControl
       v-if="
         field.read_only &&
-       !['Int', 'Float', 'Currency', 'Percent', 'Check'].includes(
+        !['Int', 'Float', 'Currency', 'Percent', 'Check'].includes(
           field.fieldtype,
         )
       "
@@ -89,12 +89,9 @@
         v-if="data[field.fieldname] && field.edit"
         class="shrink-0"
         :label="__('Edit')"
+        :iconLeft="EditIcon"
         @click="field.edit(data[field.fieldname])"
-      >
-        <template #prefix>
-          <EditIcon class="h-4 w-4" />
-        </template>
-      </Button>
+      />
     </div>
 
     <TableMultiselectInput
@@ -243,7 +240,7 @@ const isGridRow = inject('isGridRow')
 const { getFormattedPercent, getFormattedFloat, getFormattedCurrency } =
   getMeta(doctype)
 
-const { getUser } = usersStore()
+const { users, getUser } = usersStore()
 
 let triggerOnChange
 let parentDoc
@@ -260,7 +257,7 @@ if (!isGridRow) {
   provide('triggerOnRowAdd', triggerOnRowAdd)
   provide('triggerOnRowRemove', triggerOnRowRemove)
 } else {
-  triggerOnChange = inject('triggerOnChange')
+  triggerOnChange = inject('triggerOnChange', () => {})
   parentDoc = inject('parentDoc')
 }
 
@@ -278,6 +275,10 @@ const field = computed(() => {
 
   if (field.fieldtype === 'Link' && field.options === 'User') {
     field.fieldtype = 'User'
+    field.link_filters = JSON.stringify({
+      ...(field.link_filters ? JSON.parse(field.link_filters) : {}),
+      name: ['in', users.data.crmUsers?.map((user) => user.name)],
+    })
   }
 
   if (field.fieldtype === 'Link' && field.options !== 'User') {
@@ -290,7 +291,7 @@ const field = computed(() => {
       }
     }
   }
-  
+
   let _field = {
     ...field,
     filters: field.link_filters && JSON.parse(field.link_filters),
@@ -311,9 +312,17 @@ const field = computed(() => {
 
 function isFieldVisible(field) {
   if (preview.value) return true
+
+  const hideEmptyReadOnly = Number(window.sysdefaults?.hide_empty_read_only_fields ?? 1)
+
+  const shouldShowReadOnly = field.read_only && (
+    data.value[field.fieldname] ||
+    !hideEmptyReadOnly
+  )
+
   return (
     (field.fieldtype == 'Check' ||
-      (field.read_only && data.value[field.fieldname]) ||
+      shouldShowReadOnly ||
       !field.read_only) &&
     (!field.depends_on || field.display_via_depends_on) &&
     !field.hidden
@@ -332,14 +341,13 @@ const getPlaceholder = (field) => {
 }
 
 function fieldChange(value, df) {
-  data.value[df.fieldname] = value
-
   if (isGridRow) {
-    triggerOnChange(df.fieldname, data.value)
+    triggerOnChange(df.fieldname, value, data.value)
   } else {
-    triggerOnChange(df.fieldname)
+    triggerOnChange(df.fieldname, value)
   }
 }
+
 function getDataValue(value, field) {
   if (field.fieldtype === 'Duration') {
     return value || 0

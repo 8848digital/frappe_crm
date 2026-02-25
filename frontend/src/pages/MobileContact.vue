@@ -34,8 +34,8 @@
                           {
                             icon: 'upload',
                             label: contact.doc.image
-                              ? __('Change Image')
-                              : __('Upload Image'),
+                              ? __('Change image')
+                              : __('Upload image'),
                             onClick: openFileSelector,
                           },
                           {
@@ -70,11 +70,14 @@
               <div class="flex items-center gap-1.5">
                 <Button
                   v-if="callEnabled && contact.doc.mobile_no"
-                  :label="__('Make a Call')"
+                  :label="__('Make Call')"
                   size="sm"
-                  :iconLeft="PhoneIcon"
                   @click="callEnabled && makeCall(contact.doc.mobile_no)"
-                />
+                >
+                  <template #prefix>
+                    <PhoneIcon class="h-4 w-4" />
+                  </template>
+                </Button>
                 <Button
                   v-if="canDelete"
                   :label="__('Delete')"
@@ -210,12 +213,7 @@ const props = defineProps({
 const route = useRoute()
 const router = useRouter()
 
-const { document: contact, permissions } = useDocument(
-  'Contact',
-  props.contactId,
-)
-
-const canDelete = computed(() => permissions.data?.permissions?.delete || false)
+const { document: contact } = useDocument('Contact', props.contactId)
 
 const breadcrumbs = computed(() => {
   let items = [{ label: __('Contacts'), route: { name: 'Contacts' } }]
@@ -258,7 +256,7 @@ function changeContactImage(file) {
   contact.doc.image = file?.file_url || ''
   contact.save.submit(null, {
     onSuccess: () => {
-      toast.success(__('Contact Image Updated'))
+      toast.success(__('Contact image updated'))
     },
   })
 }
@@ -474,7 +472,11 @@ async function deleteOption(doctype, name) {
     name,
   })
   await contact.reload()
-  toast.success(__('Contact Updated'))
+  createToast({
+    title: 'Contact updated',
+    icon: 'check',
+    iconClasses: 'text-ink-green-3',
+  })
 }
 
 const { getFormattedCurrency } = getMeta('CRM Deal')
