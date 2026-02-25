@@ -40,7 +40,7 @@
                           },
                           {
                             icon: 'trash-2',
-                            label: __('Remove image'),
+                            label: __('Remove Image'),
                             onClick: () => changeContactImage(''),
                           },
                         ],
@@ -76,6 +76,7 @@
                   @click="callEnabled && makeCall(contact.doc.mobile_no)"
                 />
                 <Button
+                  v-if="canDelete"
                   :label="__('Delete')"
                   theme="red"
                   size="sm"
@@ -97,11 +98,16 @@
         </div>
       </template>
     </FileUploader>
-    <Tabs as="div" v-model="tabIndex" :tabs="tabs" class="overflow-auto">
-      <TabList class="!px-4" v-slot="{ tab, selected }">
+    <Tabs
+      as="div"
+      v-model="tabIndex"
+      :tabs="tabs"
+      class="flex flex-1 overflow-auto flex-col [&_[role='tablist']]:gap-3 [&_[role='tablist']]:px-4 [&_[role='tabpanel']:not([hidden])]:flex [&_[role='tabpanel']:not([hidden])]:grow"
+    >
+      <template #tab-item="{ tab, selected }">
         <button
           v-if="tab.name == 'Deals'"
-          class="group flex items-center gap-2 border-b border-transparent py-2.5 text-base text-ink-gray-5 duration-300 ease-in-out hover:border-outline-gray-3 hover:text-ink-gray-9"
+          class="group flex items-center gap-2 border-b border-transparent py-2.5 text-base text-ink-gray-5 duration-300 ease-in-out hover:text-ink-gray-9 !px-4"
           :class="{ 'text-ink-gray-9': selected }"
         >
           <component v-if="tab.icon" :is="tab.icon" class="h-5" />
@@ -116,15 +122,14 @@
             {{ tab.count }}
           </Badge>
         </button>
-      </TabList>
-      <TabPanel v-slot="{ tab }">
+      </template>
+      <template #tab-panel="{ tab }">
         <div v-if="tab.name == 'Details'">
           <div
             v-if="sections.data"
             class="flex flex-1 flex-col justify-between overflow-hidden"
           >
             <SidePanelLayout
-              v-model="contact.data"
               :sections="sections.data"
               doctype="Contact"
               :docname="contact.doc.name"
@@ -145,10 +150,10 @@
         >
           <div class="flex flex-col items-center justify-center space-y-3">
             <component :is="tab.icon" class="!h-10 !w-10" />
-            <div>{{ __('No {0} Found', [__(tab.label)]) }}</div>
+            <div>{{ __('No {0} found', [__(tab.label.toLowerCase())]) }}</div>
           </div>
         </div>
-      </TabPanel>
+      </template>
     </Tabs>
   </div>
 </template>
@@ -178,12 +183,11 @@ import {
   Avatar,
   FileUploader,
   Tabs,
-  TabList,
-  TabPanel,
   call,
   createResource,
   usePageMeta,
   Dropdown,
+  toast,
 } from 'frappe-ui'
 import { ref, computed, h } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -194,6 +198,7 @@ const { $dialog, makeCall } = globalStore()
 const { getUser } = usersStore()
 const { getOrganization } = organizationsStore()
 const { getDealStatus } = statusesStore()
+const { doctypeMeta } = getMeta('Contact')
 
 const props = defineProps({
   contactId: {
@@ -226,7 +231,7 @@ const breadcrumbs = computed(() => {
   }
 
   items.push({
-    label: contact.data?.full_name,
+    label: title.value,
     route: { name: 'Contact', params: { contactId: props.contactId } },
   })
   return items
@@ -239,7 +244,7 @@ const title = computed(() => {
 
 usePageMeta(() => {
   return {
-    title: contact.data?.full_name || contact.data?.name,
+    title: title.value,
     icon: brand.favicon,
   }
 })
@@ -255,7 +260,7 @@ function changeContactImage(file) {
 
 async function deleteContact() {
   $dialog({
-    title: __('Delete contact'),
+    title: __('Delete Contact'),
     message: __('Are you sure you want to delete this contact?'),
     actions: [
       {
@@ -428,11 +433,7 @@ async function setAsPrimary(field, value) {
   })
   if (d) {
     contact.reload()
-    createToast({
-      title: 'Contact updated',
-      icon: 'check',
-      iconClasses: 'text-ink-green-3',
-    })
+    toast.success(__('Contact Updated'))
   }
 }
 
@@ -445,11 +446,7 @@ async function createNew(field, value) {
   })
   if (d) {
     contact.reload()
-    createToast({
-      title: 'Contact updated',
-      icon: 'check',
-      iconClasses: 'text-ink-green-3',
-    })
+    toast.success(__('Contact Updated'))
   }
 }
 
@@ -462,11 +459,7 @@ async function editOption(doctype, name, fieldname, value) {
   })
   if (d) {
     contact.reload()
-    createToast({
-      title: 'Contact updated',
-      icon: 'check',
-      iconClasses: 'text-ink-green-3',
-    })
+    toast.success(__('Contact Updated'))
   }
 }
 
@@ -535,17 +528,17 @@ const dealColumns = [
     width: '12rem',
   },
   {
-    label: __('Mobile no'),
+    label: __('Mobile No.'),
     key: 'mobile_no',
     width: '11rem',
   },
   {
-    label: __('Deal owner'),
+    label: __('Deal Owner'),
     key: 'deal_owner',
     width: '10rem',
   },
   {
-    label: __('Last modified'),
+    label: __('Last Modified'),
     key: 'modified',
     width: '8rem',
   },

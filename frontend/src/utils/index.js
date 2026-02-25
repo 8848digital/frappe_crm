@@ -7,13 +7,6 @@ import { getMeta } from '@/stores/meta'
 import { toast, dayjsLocal, dayjs, getConfig, FeatherIcon } from 'frappe-ui'
 import { h } from 'vue'
 
-export function createToast(options) {
-  toast({
-    position: 'bottom-right',
-    ...options,
-  })
-}
-
 export function formatTime(seconds) {
   const days = Math.floor(seconds / (3600 * 24))
   const hours = Math.floor((seconds % (3600 * 24)) / 3600)
@@ -203,11 +196,133 @@ export function prettyDate(date, mini = false) {
   }
 }
 
-const taskMeta = getMeta('CRM Task')
+export function prettyDate(date, mini = false) {
+  if (!date) return ''
+
+  let systemTimezone = getConfig('systemTimezone')
+  let localTimezone = getConfig('localTimezone') || getBrowserTimezone()
+
+  if (typeof date == 'string') {
+    date = dayjsLocal(date)
+  }
+
+  let nowDatetime = dayjs().tz(localTimezone || systemTimezone)
+  let diff = nowDatetime.diff(date, 'seconds')
+
+  let dayDiff = diff / 86400
+
+  if (isNaN(dayDiff)) return ''
+
+  if (mini) {
+    // Return short format of time difference
+    if (dayDiff < 0) {
+      if (Math.abs(dayDiff) < 1) {
+        if (Math.abs(diff) < 60) {
+          return __('now')
+        } else if (Math.abs(diff) < 3600) {
+          return __('in {0} m', [Math.floor(Math.abs(diff) / 60)])
+        } else if (Math.abs(diff) < 86400) {
+          return __('in {0} h', [Math.floor(Math.abs(diff) / 3600)])
+        }
+      }
+      if (Math.abs(dayDiff) >= 1 && Math.abs(dayDiff) < 1.5) {
+        return __('tomorrow')
+      } else if (Math.abs(dayDiff) < 7) {
+        return __('in {0} d', [Math.floor(Math.abs(dayDiff))])
+      } else if (Math.abs(dayDiff) < 31) {
+        return __('in {0} w', [Math.floor(Math.abs(dayDiff) / 7)])
+      } else if (Math.abs(dayDiff) < 365) {
+        return __('in {0} M', [Math.floor(Math.abs(dayDiff) / 30)])
+      } else {
+        return __('in {0} y', [Math.floor(Math.abs(dayDiff) / 365)])
+      }
+    } else if (dayDiff >= 0 && dayDiff < 1) {
+      if (diff < 60) {
+        return __('now')
+      } else if (diff < 3600) {
+        return __('{0} m', [Math.floor(diff / 60)])
+      } else if (diff < 86400) {
+        return __('{0} h', [Math.floor(diff / 3600)])
+      }
+    } else {
+      dayDiff = Math.floor(dayDiff)
+      if (dayDiff < 7) {
+        return __('{0} d', [dayDiff])
+      } else if (dayDiff < 31) {
+        return __('{0} w', [Math.floor(dayDiff / 7)])
+      } else if (dayDiff < 365) {
+        return __('{0} M', [Math.floor(dayDiff / 30)])
+      } else {
+        return __('{0} y', [Math.floor(dayDiff / 365)])
+      }
+    }
+  } else {
+    // Return long format of time difference
+    if (dayDiff < 0) {
+      if (Math.abs(dayDiff) < 1) {
+        if (Math.abs(diff) < 60) {
+          return __('just now')
+        } else if (Math.abs(diff) < 120) {
+          return __('in 1 minute')
+        } else if (Math.abs(diff) < 3600) {
+          return __('in {0} minutes', [Math.floor(Math.abs(diff) / 60)])
+        } else if (Math.abs(diff) < 7200) {
+          return __('in 1 hour')
+        } else if (Math.abs(diff) < 86400) {
+          return __('in {0} hours', [Math.floor(Math.abs(diff) / 3600)])
+        }
+      }
+      if (Math.abs(dayDiff) >= 1 && Math.abs(dayDiff) < 1.5) {
+        return __('tomorrow')
+      } else if (Math.abs(dayDiff) < 7) {
+        return __('in {0} days', [Math.floor(Math.abs(dayDiff))])
+      } else if (Math.abs(dayDiff) < 31) {
+        return __('in {0} weeks', [Math.floor(Math.abs(dayDiff) / 7)])
+      } else if (Math.abs(dayDiff) < 365) {
+        return __('in {0} months', [Math.floor(Math.abs(dayDiff) / 30)])
+      } else if (Math.abs(dayDiff) < 730) {
+        return __('in 1 year')
+      } else {
+        return __('in {0} years', [Math.floor(Math.abs(dayDiff) / 365)])
+      }
+    } else if (dayDiff >= 0 && dayDiff < 1) {
+      if (diff < 60) {
+        return __('just now')
+      } else if (diff < 120) {
+        return __('1 minute ago')
+      } else if (diff < 3600) {
+        return __('{0} minutes ago', [Math.floor(diff / 60)])
+      } else if (diff < 7200) {
+        return __('1 hour ago')
+      } else if (diff < 86400) {
+        return __('{0} hours ago', [Math.floor(diff / 3600)])
+      }
+    } else {
+      dayDiff = Math.floor(dayDiff)
+      if (dayDiff == 1) {
+        return __('yesterday')
+      } else if (dayDiff < 7) {
+        return __('{0} days ago', [dayDiff])
+      } else if (dayDiff < 14) {
+        return __('1 week ago')
+      } else if (dayDiff < 31) {
+        return __('{0} weeks ago', [Math.floor(dayDiff / 7)])
+      } else if (dayDiff < 62) {
+        return __('1 month ago')
+      } else if (dayDiff < 365) {
+        return __('{0} months ago', [Math.floor(dayDiff / 30)])
+      } else if (dayDiff < 730) {
+        return __('1 year ago')
+      } else {
+        return __('{0} years ago', [Math.floor(dayDiff / 365)])
+      }
+    }
+  }
+}
 
 export function taskStatusOptions(action, data) {
   let options = ['Backlog', 'Todo', 'In Progress', 'Done', 'Canceled']
-  let statusMeta = taskMeta
+  let statusMeta = getMeta('CRM Task')
     .getFields()
     ?.find((field) => field.fieldname == 'status')
   if (statusMeta) {
@@ -226,7 +341,7 @@ export function taskStatusOptions(action, data) {
 
 export function taskPriorityOptions(action, data) {
   let options = ['Low', 'Medium', 'High']
-  let priorityMeta = taskMeta
+  let priorityMeta = getMeta('CRM Task')
     .getFields()
     ?.find((field) => field.fieldname == 'priority')
   if (priorityMeta) {
@@ -244,11 +359,46 @@ export function taskPriorityOptions(action, data) {
   })
 }
 
-export function openWebsite(url) {
-  if (!url.startsWith('http://') && !url.startsWith('https://')) {
-    url = 'https://' + url
+export function getSafeWebsiteUrl(rawUrl) {
+  const allowedProtocols = new Set(['http:', 'https:'])
+
+  if (!rawUrl) {
+    return null
   }
-  window.open(url, '_blank')
+
+  const trimmedUrl = rawUrl.trim()
+
+  if (!trimmedUrl) {
+    return null
+  }
+
+  const urlToParse = /^[a-zA-Z][a-zA-Z\d+\-.]*:/.test(trimmedUrl)
+    ? trimmedUrl
+    : `https://${trimmedUrl}`
+
+  try {
+    const parsedUrl = new URL(urlToParse)
+
+    if (!allowedProtocols.has(parsedUrl.protocol)) {
+      return null
+    }
+
+    return parsedUrl.href
+  } catch (_error) {
+    return null
+  }
+}
+
+export function openWebsite(url) {
+  const safeUrl = getSafeWebsiteUrl(url)
+
+  if (!safeUrl) {
+    toast.error(__('Invalid Website URL'))
+    return false
+  }
+
+  window.open(safeUrl, '_blank', 'noopener')
+  return true
 }
 
 export function website(url) {
@@ -331,34 +481,20 @@ export async function setupListCustomizations(data, obj = {}) {
   return { actions, bulkActions }
 }
 
-export function errorMessage(title, message) {
-  createToast({
-    title: title || 'Error',
-    text: message,
-    icon: 'x',
-    iconClasses: 'text-ink-red-4',
-  })
-}
-
 export function copyToClipboard(text) {
   if (navigator.clipboard && window.isSecureContext) {
-    navigator.clipboard.writeText(text).then(show_success_alert)
+    navigator.clipboard.writeText(text).then(showSuccessAlert)
   } else {
     let input = document.createElement('textarea')
     document.body.appendChild(input)
     input.value = text
     input.select()
     document.execCommand('copy')
-    show_success_alert()
+    showSuccessAlert()
     document.body.removeChild(input)
   }
-  function show_success_alert() {
-    createToast({
-      title: 'Copied to clipboard',
-      text: text,
-      icon: 'check',
-      iconClasses: 'text-ink-green-3',
-    })
+  function showSuccessAlert() {
+    toast.success(__('Copied to Clipboard'))
   }
 }
 
@@ -444,6 +580,36 @@ export function evaluateDependsOnValue(expression, doc) {
   return out
 }
 
+export function evaluateExpression(expression, doc, parent) {
+  if (!expression) return false
+  if (!doc) return false
+
+  let out = null
+  if (typeof expression === 'boolean') {
+    out = expression
+  } else if (typeof expression === 'function') {
+    out = expression(doc)
+  } else if (expression.substr(0, 5) == 'eval:') {
+    try {
+      out = _eval(expression.substr(5), { doc, parent })
+      if (parent && parent.istable && expression.includes('is_submittable')) {
+        out = true
+      }
+    } catch (e) {
+      out = true
+    }
+  } else {
+    let value = doc[expression]
+    if (Array.isArray(value)) {
+      out = !!value.length
+    } else {
+      out = !!value
+    }
+  }
+
+  return out
+}
+
 export function convertSize(size) {
   const units = ['B', 'KB', 'MB', 'GB', 'TB']
   let unitIndex = 0
@@ -478,6 +644,7 @@ export function getRandom(len = 4) {
 
   return text
 }
+
 export function runSequentially(functions) {
   return functions.reduce((promise, fn) => {
     return promise.then(() => fn())
