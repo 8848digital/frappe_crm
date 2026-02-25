@@ -10,7 +10,8 @@
     }"
     row-key="name"
     v-bind="$attrs"
-  >
+    @update:selections="(selections) => emit('selectionsChanged', selections)"
+    >
     <ListHeader
       class="sm:mx-5 mx-3"
       @columnWidthUpdated="emit('columnWidthUpdated')"
@@ -205,6 +206,7 @@ const emit = defineEmits([
   'applyFilter',
   'applyLikeFilter',
   'likeDoc',
+  'selectionsChanged',
 ])
 
 const pageLengthCount = defineModel()

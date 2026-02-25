@@ -10,6 +10,8 @@
       :size="attrs.size || 'sm'"
       :variant="attrs.variant"
       :placeholder="attrs.placeholder"
+      :disabled="attrs.disabled"
+      :placement="attrs.placement"
       :filterable="false"
     >
       <template #target="{ open, togglePopover }">
@@ -46,24 +48,18 @@
             variant="ghost"
             class="w-full !justify-start"
             :label="__('Create New')"
+            iconLeft="plus"
             @click="() => attrs.onCreate(value, close)"
-          >
-            <template #prefix>
-              <FeatherIcon name="plus" class="h-4" />
-            </template>
-          </Button>
+          />
         </div>
         <div>
           <Button
             variant="ghost"
             class="w-full !justify-start"
             :label="__('Clear')"
+            iconLeft="x"
             @click="() => clearValue(close)"
-          >
-            <template #prefix>
-              <FeatherIcon name="x" class="h-4" />
-            </template>
-          </Button>
+          />
         </div>
       </template>
     </Autocomplete>
@@ -159,6 +155,7 @@ const options = createResource({
 })
 
 function reload(val) {
+  if (!props.doctype) return
   if (
     options.data?.length &&
     val === options.params?.txt &&

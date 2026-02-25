@@ -11,10 +11,9 @@
       <Button
         variant="solid"
         :label="__('Create')"
+        iconLeft="plus"
         @click="showDealModal = true"
-      >
-        <template #prefix><FeatherIcon name="plus" class="h-4" /></template>
-      </Button>
+      />
     </template>
   </LayoutHeader>
   <ViewControls
@@ -223,6 +222,9 @@
     @applyFilter="(data) => viewControls.applyFilter(data)"
     @applyLikeFilter="(data) => viewControls.applyLikeFilter(data)"
     @likeDoc="(data) => viewControls.likeDoc(data)"
+    @selectionsChanged="
+       (selections) => viewControls.updateSelections(selections)
+    "
   />
   <div v-else-if="deals.data" class="flex h-full items-center justify-center">
     <div
@@ -230,15 +232,16 @@
     >
       <DealsIcon class="h-10 w-10" />
       <span>{{ __('No {0} Found', [__('Deals')]) }}</span>
-      <Button :label="__('Create')" @click="showDealModal = true">
-        <template #prefix><FeatherIcon name="plus" class="h-4" /></template>
-      </Button>
+      <Button
+        :label="__('Create')"
+        iconLeft="plus"
+        @click="showDealModal = true"
+      />
     </div>
   </div>
   <DealModal
     v-if="showDealModal"
     v-model="showDealModal"
-    v-model:quickEntry="showQuickEntryModal"
     :defaults="defaults"
   />
   <NoteModal
@@ -254,11 +257,6 @@
     :task="task"
     doctype="CRM Deal"
     :doc="docname"
-  />
-  <QuickEntryModal
-    v-if="showQuickEntryModal"
-    v-model="showQuickEntryModal"
-    doctype="CRM Deal"
   />
 </template>
 
@@ -279,7 +277,6 @@ import KanbanView from '@/components/Kanban/KanbanView.vue'
 import DealModal from '@/components/Modals/DealModal.vue'
 import NoteModal from '@/components/Modals/NoteModal.vue'
 import TaskModal from '@/components/Modals/TaskModal.vue'
-import QuickEntryModal from '@/components/Modals/QuickEntryModal.vue'
 import ViewControls from '@/components/ViewControls.vue'
 import { getMeta } from '@/stores/meta'
 import { globalStore } from '@/stores/global'
@@ -303,7 +300,6 @@ const route = useRoute()
 
 const dealsListView = ref(null)
 const showDealModal = ref(false)
-const showQuickEntryModal = ref(false)
 
 const defaults = reactive({})
 
@@ -350,7 +346,9 @@ function getGroupedByRows(listRows, groupByField, columns) {
     if (!option) {
       filteredRows = listRows.filter((row) => !row[groupByField.fieldname])
     } else {
-      filteredRows = listRows.filter((row) => row[groupByField.fieldname] == option)
+      filteredRows = listRows.filter(
+        (row) => row[groupByField.fieldname] == option,
+      )
     }
 
     let groupDetail = {
@@ -382,14 +380,18 @@ function getKanbanRows(data, columns) {
 }
 
 function parseRows(rows, columns = []) {
+  let view_type = deals.value.data.view_type
+  let key = view_type === 'kanban' ? 'fieldname' : 'key'
+  let type = view_type === 'kanban' ? 'fieldtype' : 'type'
+
   return rows.map((deal) => {
     let _rows = {}
     deals.value.data.rows.forEach((row) => {
       _rows[row] = deal[row]
 
-      let fieldType = columns?.find(
-        (col) => (col.key || col.value) == row,
-      )?.type
+      let fieldType = columns?.find((col) => (col[key] || col.value) == row)?.[
+        type
+      ]
 
       if (
         fieldType &&
@@ -451,9 +453,6 @@ function parseRows(rows, columns = []) {
         }
       } else if (row == '_assign') {
         let assignees = JSON.parse(deal._assign || '[]')
-        if (!assignees.length && deal.deal_owner) {
-          assignees = [deal.deal_owner]
-        }
         _rows[row] = assignees.map((user) => ({
           name: user,
           image: getUser(user).user_image,

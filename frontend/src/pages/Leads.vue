@@ -11,10 +11,9 @@
       <Button
         variant="solid"
         :label="__('Create')"
+        iconLeft="plus"
         @click="showLeadModal = true"
-      >
-        <template #prefix><FeatherIcon name="plus" class="h-4" /></template>
-      </Button>
+      />
     </template>
   </LayoutHeader>
   <ViewControls
@@ -249,6 +248,9 @@
     @applyFilter="(data) => viewControls.applyFilter(data)"
     @applyLikeFilter="(data) => viewControls.applyLikeFilter(data)"
     @likeDoc="(data) => viewControls.likeDoc(data)"
+    @selectionsChanged="
+       (selections) => viewControls.updateSelections(selections)
+    "
   />
   <div v-else-if="leads.data" class="flex h-full items-center justify-center">
     <div
@@ -256,15 +258,16 @@
     >
       <LeadsIcon class="h-10 w-10" />
       <span>{{ __('No {0} Found', [__('Leads')]) }}</span>
-      <Button :label="__('Create')" @click="showLeadModal = true">
-        <template #prefix><FeatherIcon name="plus" class="h-4" /></template>
-      </Button>
+      <Button
+        :label="__('Create')"
+        iconLeft="plus"
+        @click="showLeadModal = true"
+      />
     </div>
   </div>
   <LeadModal
     v-if="showLeadModal"
     v-model="showLeadModal"
-    v-model:quickEntry="showQuickEntryModal"
     :defaults="defaults"
   />
   <NoteModal
@@ -281,7 +284,6 @@
     doctype="CRM Lead"
     :doc="docname"
   />
-  <QuickEntryModal v-if="showQuickEntryModal" v-model="showQuickEntryModal" />
 </template>
 
 <script setup>
@@ -301,7 +303,6 @@ import KanbanView from '@/components/Kanban/KanbanView.vue'
 import LeadModal from '@/components/Modals/LeadModal.vue'
 import NoteModal from '@/components/Modals/NoteModal.vue'
 import TaskModal from '@/components/Modals/TaskModal.vue'
-import QuickEntryModal from '@/components/Modals/QuickEntryModal.vue'
 import ViewControls from '@/components/ViewControls.vue'
 import { getMeta } from '@/stores/meta'
 import { globalStore } from '@/stores/global'
@@ -323,7 +324,6 @@ const route = useRoute()
 
 const leadsListView = ref(null)
 const showLeadModal = ref(false)
-const showQuickEntryModal = ref(false)
 
 const defaults = reactive({})
 
@@ -474,9 +474,6 @@ function parseRows(rows, columns = []) {
         }
       } else if (row == '_assign') {
         let assignees = JSON.parse(lead._assign || '[]')
-        if (!assignees.length && lead.lead_owner) {
-          assignees = [lead.lead_owner]
-        }
         _rows[row] = assignees.map((user) => ({
           name: user,
           image: getUser(user).user_image,

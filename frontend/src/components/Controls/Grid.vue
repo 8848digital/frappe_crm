@@ -33,20 +33,33 @@
           <div
             v-for="field in fields"
             class="border-r border-outline-gray-2 p-2 truncate"
+            :class="
+              ['Int', 'Float', 'Currency', 'Percent'].includes(field.fieldtype)
+                ? 'text-right'
+                : ''
+            "
             :key="field.fieldname"
             :title="field.label"
           >
             {{ __(field.label) }}
+            <span
+              v-if="
+                field.reqd ||
+                (field.mandatory_depends_on && field.mandatory_via_depends_on)
+              "
+              class="text-ink-red-2"
+              >*</span
+            >
           </div>
         </div>
-        <div class="w-12">
+        <div class="flex items-center justify-center w-12">
           <Button
-            class="flex w-full items-center justify-center rounded !bg-surface-gray-2 border-0"
+            :tooltip="__('Edit grid fields')"
+            class="rounded !bg-surface-gray-2 border-0 !text-ink-gray-5"
             variant="outline"
+            icon="settings"
             @click="showGridFieldsEditorModal = true"
-          >
-            <FeatherIcon name="settings" class="h-4 w-4 text-ink-gray-7" />
-          </Button>
+          />
         </div>
       </div>
       <!-- Rows -->
@@ -57,6 +70,7 @@
           :delay="isTouchScreenDevice() ? 200 : 0"
           group="rows"
           item-key="name"
+          @end="reorder"
         >
           <template #item="{ element: row, index }">
             <div
@@ -93,18 +107,37 @@
                   :key="field.fieldname"
                 >
                   <FormControl
-                    v-if="field.read_only && field.fieldtype !== 'Check'"
+                    v-if="
+                      field.read_only &&
+                      ![
+                        'Int',
+                        'Float',
+                        'Currency',
+                        'Percent',
+                        'Check',
+                      ].includes(field.fieldtype)
+                    "
                     type="text"
                     :placeholder="field.placeholder"
                     v-model="row[field.fieldname]"
                     :disabled="true"
                   />
                   <Link
-                    v-else-if="field.fieldtype === 'Link'"
+                    v-else-if="
+                      ['Link', 'Dynamic Link'].includes(field.fieldtype)
+                    "
                     class="text-sm text-ink-gray-8"
-                    v-model="row[field.fieldname]"
-                    :doctype="field.options"
+                    :value="row[field.fieldname] || '0'"
+                    :doctype="
+                      field.fieldtype == 'Link'
+                        ? field.options
+                        : row[field.options]
+                    "
                     :filters="field.filters"
+                    @change="(v) => fieldChange(v, field, row)"
+                    :onCreate="
+                      (value, close) => field.create(v, field, row, close)
+                    "
                   />
                   <Link
                     v-else-if="field.fieldtype === 'User'"
@@ -112,7 +145,7 @@
                     :value="getUser(row[field.fieldname]).full_name"
                     :doctype="field.options"
                     :filters="field.filters"
-                    @change="(v) => (row[field.fieldname] = v)"
+                    @change="(v) => fieldChange(v, field, row)"
                     :placeholder="field.placeholder"
                     :hideMe="true"
                   >
@@ -142,23 +175,26 @@
                       class="cursor-pointer duration-300"
                       v-model="row[field.fieldname]"
                       :disabled="!gridSettings.editable_grid"
+                      @change="(e) => fieldChange(e.target.checked, field, row)"
                     />
                   </div>
                   <DatePicker
                     v-else-if="field.fieldtype === 'Date'"
-                    v-model="row[field.fieldname]"
+                    :value="row[field.fieldname]"
                     icon-left=""
                     variant="outline"
                     :formatter="(date) => getFormat(date, '', true)"
                     input-class="border-none text-sm text-ink-gray-8"
+                    @change="(v) => fieldChange(v, field, row)"
                   />
                   <DateTimePicker
                     v-else-if="field.fieldtype === 'Datetime'"
-                    v-model="row[field.fieldname]"
+                    :value="row[field.fieldname]"
                     icon-left=""
                     variant="outline"
                     :formatter="(date) => getFormat(date, '', true, true)"
                     input-class="border-none text-sm text-ink-gray-8"
+                    @change="(v) => fieldChange(v, field, row)"
                   />
                   <FormControl
                     v-else-if="
@@ -169,13 +205,8 @@
                     rows="1"
                     type="textarea"
                     variant="outline"
-                    v-model="row[field.fieldname]"
-                  />
-                  <FormControl
-                    v-else-if="['Int'].includes(field.fieldtype)"
-                    type="number"
-                    variant="outline"
-                    v-model="row[field.fieldname]"
+                    :value="row[field.fieldname]"
+                    @change="fieldChange($event.target.value, field, row)"
                   />
                   <FormControl
                     v-else-if="field.fieldtype === 'Select'"
@@ -184,6 +215,55 @@
                     variant="outline"
                     v-model="row[field.fieldname]"
                     :options="field.options"
+                    @change="(e) => fieldChange(e.target.value, field, row)"
+                  />
+                   <Password
+                    v-else-if="field.fieldtype === 'Password'"
+                    variant="outline"
+                    :value="row[field.fieldname]"
+                    :disabled="Boolean(field.read_only)"
+                    @change="fieldChange($event.target.value, field, row)"
+                  />
+                  <FormattedInput
+                    v-else-if="field.fieldtype === 'Int'"
+                    class="[&_input]:text-right"
+                    type="text"
+                    variant="outline"
+                    :value="row[field.fieldname]"
+                    :disabled="Boolean(field.read_only)"
+                    @change="fieldChange($event.target.value, field, row)"
+                  />
+                  <FormattedInput
+                    v-else-if="field.fieldtype === 'Percent'"
+                    class="[&_input]:text-right"
+                    type="text"
+                    variant="outline"
+                    :value="getFloatWithPrecision(field.fieldname, row)"
+                    :formattedValue="(row[field.fieldname] || '0') + '%'"
+                    :disabled="Boolean(field.read_only)"
+                    @change="fieldChange(flt($event.target.value), field, row)"
+                  />
+                  <FormattedInput
+                    v-else-if="field.fieldtype === 'Float'"
+                    class="[&_input]:text-right"
+                    type="text"
+                    variant="outline"
+                    :value="getFloatWithPrecision(field.fieldname, row)"
+                    :formattedValue="row[field.fieldname]"
+                    :disabled="Boolean(field.read_only)"
+                    @change="fieldChange(flt($event.target.value), field, row)"
+                  />
+                  <FormattedInput
+                    v-else-if="field.fieldtype === 'Currency'"
+                    class="[&_input]:text-right"
+                    type="text"
+                    variant="outline"
+                    :value="getCurrencyWithPrecision(field.fieldname, row)"
+                    :formattedValue="
+                      getFormattedCurrency(field.fieldname, row, parentDoc)
+                    "
+                    :disabled="Boolean(field.read_only)"
+                    @change="fieldChange(flt($event.target.value), field, row)"
                   />
                   <FormControl
                     v-else
@@ -192,17 +272,18 @@
                     variant="outline"
                     v-model="row[field.fieldname]"
                     :options="field.options"
+                    @change="fieldChange($event.target.value, field, row)"
                   />
                 </div>
               </div>
-              <div class="edit-row w-12">
+              <div class="edit-row flex items-center justify-center w-12">
                 <Button
-                  class="flex w-full items-center justify-center rounded border-0"
+                  :tooltip="__('Edit row')"
+                  class="rounded border-0 !text-ink-gray-7"
                   variant="outline"
+                  :icon="EditIcon"
                   @click="showRowList[index] = true"
-                >
-                  <EditIcon class="h-4 w-4 text-ink-gray-7" />
-                </Button>
+                />
               </div>
               <GridRowModal
                 v-if="showRowList[index]"
@@ -252,6 +333,8 @@
 </template>
 
 <script setup>
+import Password from '@/components/Controls/Password.vue'
+import FormattedInput from '@/components/Controls/FormattedInput.vue'
 import GridFieldsEditorModal from '@/components/Controls/GridFieldsEditorModal.vue'
 import GridRowFieldsModal from '@/components/Controls/GridRowFieldsModal.vue'
 import GridRowModal from '@/components/Controls/GridRowModal.vue'
@@ -259,18 +342,20 @@ import EditIcon from '@/components/Icons/EditIcon.vue'
 import Link from '@/components/Controls/Link.vue'
 import UserAvatar from '@/components/UserAvatar.vue'
 import { getRandom, getFormat, isTouchScreenDevice } from '@/utils'
+import { flt } from '@/utils/numberFormat.js'
 import { usersStore } from '@/stores/users'
 import { getMeta } from '@/stores/meta'
+import { createDocument } from '@/composables/document'
 import {
-  FeatherIcon,
   FormControl,
   Checkbox,
   DateTimePicker,
   DatePicker,
   Tooltip,
+  dayjs,
 } from 'frappe-ui'
 import Draggable from 'vuedraggable'
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive, computed, inject, provide } from 'vue'
 
 const props = defineProps({
   label: {
@@ -285,15 +370,30 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  parentFieldname: {
+    type: String,
+    required: true,
+  },
 })
 
-const { getGridViewSettings, getFields, getGridSettings } = getMeta(
-  props.doctype,
-)
+const triggerOnChange = inject('triggerOnChange', () => {})
+const triggerOnRowAdd = inject('triggerOnRowAdd', () => {})
+const triggerOnRowRemove = inject('triggerOnRowRemove', () => {})
+
+const {
+  getGridViewSettings,
+  getFields,
+  getFloatWithPrecision,
+  getCurrencyWithPrecision,
+  getFormattedCurrency,
+  getGridSettings,
+} = getMeta(props.doctype)
 getMeta(props.parentDoctype)
-const { getUser } = usersStore()
+const { users, getUser } = usersStore()
 
 const rows = defineModel()
+const parentDoc = defineModel('parent')
+provide('parentDoc', parentDoc)
 const showRowList = ref(new Array(rows.value?.length || []).fill(false))
 const selectedRows = reactive(new Set())
 
@@ -316,7 +416,30 @@ const fields = computed(() => {
   )
 })
 
+const allFields = computed(() => {
+  return getFields()?.map((f) => getFieldObj(f)) || []
+})
+
 function getFieldObj(field) {
+  if (field.fieldtype === 'Link' && field.options !== 'User') {
+    if (!field.create) {
+      field.create = (value, field, row, close) => {
+        const callback = (d) => {
+          if (d) fieldChange(d.name, field, row)
+        }
+        createDocument(field.options, value, close, callback)
+      }
+    }
+  }
+
+  if (field.fieldtype === 'Link' && field.options === 'User') {
+    field.fieldtype = 'User'
+    field.link_filters = JSON.stringify({
+      ...(field.link_filters ? JSON.parse(field.link_filters) : {}),
+      name: ['in', users.data.crmUsers?.map((user) => user.name)],
+    })
+  }
+
   return {
     ...field,
     filters: field.link_filters && JSON.parse(field.link_filters),
@@ -361,20 +484,76 @@ const toggleSelectRow = (row) => {
 
 const addRow = () => {
   const newRow = {}
-  fields.value?.forEach((field) => {
-    if (field.fieldtype === 'Check') newRow[field.fieldname] = false
-    else newRow[field.fieldname] = ''
+  allFields.value?.forEach((field) => {
+    if (field.fieldtype === 'Check') {
+      newRow[field.fieldname] = false
+    } else {
+      newRow[field.fieldname] = ''
+    }
+
+    if (field.default) {
+      newRow[field.fieldname] = getDefaultValue(field.default, field.fieldtype)
+    }
   })
   newRow.name = getRandom(10)
   showRowList.value.push(false)
   newRow['__islocal'] = true
+  newRow['idx'] = rows.value.length + 1
+  newRow['doctype'] = props.doctype
+  newRow['parentfield'] = props.parentFieldname
+  newRow['parenttype'] = props.parentDoctype
   rows.value.push(newRow)
+  triggerOnRowAdd(newRow)
 }
 
 const deleteRows = () => {
   rows.value = rows.value.filter((row) => !selectedRows.has(row.name))
+  triggerOnRowRemove(selectedRows, rows.value)
+
   showRowList.value.pop()
   selectedRows.clear()
+}
+
+const reorder = () => {
+  rows.value.forEach((row, index) => {
+    row.idx = index + 1
+  })
+}
+
+
+function fieldChange(value, field, row) {
+  triggerOnChange(field.fieldname, value, row)
+}
+
+function getDefaultValue(defaultValue, fieldtype) {
+  if (['Float', 'Currency', 'Percent'].includes(fieldtype)) {
+    return flt(defaultValue)
+  } else if (fieldtype === 'Check') {
+    if (['1', 'true', 'True'].includes(defaultValue)) {
+      return true
+    } else if (['0', 'false', 'False'].includes(defaultValue)) {
+      return false
+    }
+  } else if (fieldtype === 'Int') {
+    return parseInt(defaultValue)
+  } else if (defaultValue === 'Today' && fieldtype === 'Date') {
+    return dayjs().format('YYYY-MM-DD')
+  } else if (
+    ['Now', 'now'].includes(defaultValue) &&
+    fieldtype === 'Datetime'
+  ) {
+    return dayjs().format('YYYY-MM-DD HH:mm:ss')
+  } else if (['Now', 'now'].includes(defaultValue) && fieldtype === 'Time') {
+    return dayjs().format('HH:mm:ss')
+  } else if (fieldtype === 'Date') {
+    return dayjs(defaultValue).format('YYYY-MM-DD')
+  } else if (fieldtype === 'Datetime') {
+    return dayjs(defaultValue).format('YYYY-MM-DD HH:mm:ss')
+  } else if (fieldtype === 'Time') {
+    return dayjs(defaultValue).format('HH:mm:ss')
+  }
+
+  return defaultValue
 }
 </script>
 

@@ -6,25 +6,29 @@
       'border-outline-gray-modals': hasTabs,
     }"
   >
-    <Tabs as="div" v-model="tabIndex" :tabs="tabs">
-      <TabList :class="!hasTabs ? 'hidden' : 'border-outline-gray-modals'" />
-      <TabPanel v-slot="{ tab }">
-        <div
-          class="sections overflow-hidden"
-          :class="{ 'my-4 sm:my-5': hasTabs }"
-        >
+    <Tabs
+      as="div"
+      v-model="tabIndex"
+      :tabs="tabs"
+      :class="[
+        !hasTabs ? `[&_[role='tablist']]:hidden` : '',
+        `[&_[role='tabpanel']]:overflow-visible !overflow-visible`,
+      ]"
+    >
+      <template #tab-panel="{ tab }">
+        <div class="sections" :class="{ 'my-4 sm:my-5': hasTabs }">
           <template v-for="section in tab.sections" :key="section.name">
             <Section :section="section" :data-name="section.name" />
           </template>
         </div>
-      </TabPanel>
+      </template>
     </Tabs>
   </div>
 </template>
 
 <script setup>
 import Section from '@/components/FieldLayout/Section.vue'
-import { Tabs, TabList, TabPanel } from 'frappe-ui'
+import { Tabs } from 'frappe-ui'
 import { ref, computed, provide } from 'vue'
 
 const props = defineProps({
@@ -33,6 +37,10 @@ const props = defineProps({
   doctype: {
     type: String,
     default: 'CRM Lead',
+  },
+  isGridRow: {
+    type: Boolean,
+    default: false,
   },
   preview: {
     type: Boolean,
@@ -55,6 +63,7 @@ provide(
 provide('hasTabs', hasTabs)
 provide('doctype', props.doctype)
 provide('preview', props.preview)
+provide('isGridRow', props.isGridRow)
 </script>
 <style scoped>
 .section:not(:has(.field)) {

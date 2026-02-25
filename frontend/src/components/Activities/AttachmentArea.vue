@@ -38,31 +38,31 @@
             </div>
           </Tooltip>
           <div class="flex gap-1">
-            <Tooltip
-              :text="
+            <Button
+              :tooltip="
                 attachment.is_private ? __('Make public') : __('Make private')
               "
+              class="!size-5"
+              @click.stop="
+                togglePrivate(attachment.name, attachment.is_private)
+              "
             >
-              <Button
-                class="!size-5"
-                @click.stop="
-                  togglePrivate(attachment.name, attachment.is_private)
-                "
-              >
+              <template #icon>
                 <FeatherIcon
                   :name="attachment.is_private ? 'lock' : 'unlock'"
                   class="size-3 text-ink-gray-7"
                 />
-              </Button>
-            </Tooltip>
-            <Tooltip :text="__('Delete attachment')">
-              <Button
-                class="!size-5"
-                @click.stop="() => deleteAttachment(attachment.name)"
-              >
+              </template>
+            </Button>
+            <Button
+              :tooltip="__('Delete attachment')"
+              class="!size-5"
+              @click.stop="() => deleteAttachment(attachment.name)"
+            >
+              <template #icon>
                 <FeatherIcon name="trash-2" class="size-3 text-ink-gray-7" />
-              </Button>
-            </Tooltip>
+              </template>
+            </Button>
           </div>
         </div>
       </div>

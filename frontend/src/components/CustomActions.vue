@@ -18,14 +18,10 @@
     :key="g.label"
   >
     <Dropdown :options="g.action" v-slot="{ open }">
-      <Button :label="g.label">
-        <template #suffix>
-          <FeatherIcon
-            :name="open ? 'chevron-up' : 'chevron-down'"
-            class="h-4"
-          />
-        </template>
-      </Button>
+      <Button
+        :label="g.label"
+        :iconRight="open ? 'chevron-up' : 'chevron-down'"
+      />
     </Dropdown>
   </div>
 </template>
@@ -37,8 +33,8 @@ import { isMobileView } from '@/composables/settings'
 
 const props = defineProps({
   actions: {
-    type: Object,
-    required: true,
+    type: [Object, Array, undefined],
+    default: () => [],
   },
 })
 
@@ -85,7 +81,7 @@ const groupedActions = computed(() => {
     })
   }
   _actions = _actions.concat(
-    props.actions.filter((action) => action.group && !action.buttonLabel)
+   props.actions.filter((action) => action.group && !action.buttonLabel),
   )
   return _actions
 })

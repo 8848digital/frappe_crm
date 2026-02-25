@@ -8,7 +8,7 @@
       </Breadcrumbs>
     </template>
   </LayoutHeader>
-  <div ref="parentRef" class="flex h-full">
+  <div v-if="organization.doc" ref="parentRef" class="flex h-full">
     <Resizer
       v-if="organization.doc"
       :parent="$refs.parentRef"
@@ -17,7 +17,7 @@
       <div class="border-b">
         <FileUploader
           @success="changeOrganizationImage"
-          :validateFile="validateFile"
+          :validateFile="validateIsImageFile"
         >
           <template #default="{ openFileSelector, error }">
             <div class="flex flex-col items-start justify-start gap-4 p-5">
@@ -30,14 +30,14 @@
                     :image="organization.doc.organization_logo"
                   />
                   <component
-                    :is="organization.doc.image ? Dropdown : 'div'"
+                    :is="organization.doc.organization_logo ? Dropdown : 'div'"
                     v-bind="
-                      organization.doc.image
+                      organization.doc.organization_logo
                         ? {
                             options: [
                               {
                                 icon: 'upload',
-                                label: organization.doc.image
+                                label: organization.doc.organization_logo
                                   ? __('Change image')
                                   : __('Upload image'),
                                 onClick: openFileSelector,
@@ -83,19 +83,14 @@
                   :label="__('Delete')"
                   theme="red"
                   size="sm"
-                  @click="deleteOrganization"
-                >
-                  <template #prefix>
-                    <FeatherIcon name="trash-2" class="h-4 w-4" />
-                  </template>
-                </Button>
-                <Tooltip :text="__('Open website')">
-                  <div>
-                    <Button @click="openWebsite">
-                      <FeatherIcon name="link" class="h-4 w-4" />
-                    </Button>
-                  </div>
-                </Tooltip>
+                  iconLeft="trash-2"
+                  @click="deleteOrganization()"
+                />
+                <Button
+                  :tooltip="__('Open website')"
+                  icon="link"
+                  @click="openWebsite"
+                />
               </div>
             </div>
           </template>
@@ -106,11 +101,12 @@
         class="flex flex-1 flex-col justify-between overflow-hidden"
       >
         <SidePanelLayout
-          v-model="organization.doc"
           :sections="sections.data"
           doctype="CRM Organization"
-          @update="updateField"
+          :docname="organization.doc.name"
+
           @reload="sections.reload"
+          @beforeFieldChange="beforeFieldChange"
         />
       </div>
     </Resizer>
@@ -160,46 +156,52 @@
       </template>
     </Tabs>
   </div>
-  <QuickEntryModal
-    v-if="showQuickEntryModal"
-    v-model="showQuickEntryModal"
-    doctype="CRM Organization"
+  <ErrorPage
+    v-else-if="errorTitle"
+    :errorTitle="errorTitle"
+    :errorMessage="errorMessage"
   />
-  <AddressModal v-model="showAddressModal" v-model:address="_address" />
+  <DeleteLinkedDocModal
+    v-if="showDeleteLinkedDocModal"
+    v-model="showDeleteLinkedDocModal"
+    :doctype="'CRM Organization'"
+    :docname="props.organizationId"
+    name="Organizations"
+  />
 </template>
 
 <script setup>
+import ErrorPage from '@/components/ErrorPage.vue'
 import Resizer from '@/components/Resizer.vue'
 import SidePanelLayout from '@/components/SidePanelLayout.vue'
 import Icon from '@/components/Icon.vue'
 import LayoutHeader from '@/components/LayoutHeader.vue'
-import QuickEntryModal from '@/components/Modals/QuickEntryModal.vue'
-import AddressModal from '@/components/Modals/AddressModal.vue'
 import DealsListView from '@/components/ListViews/DealsListView.vue'
 import ContactsListView from '@/components/ListViews/ContactsListView.vue'
 import WebsiteIcon from '@/components/Icons/WebsiteIcon.vue'
 import CameraIcon from '@/components/Icons/CameraIcon.vue'
 import DealsIcon from '@/components/Icons/DealsIcon.vue'
 import ContactsIcon from '@/components/Icons/ContactsIcon.vue'
+import DeleteLinkedDocModal from '@/components/DeleteLinkedDocModal.vue'
+import { showAddressModal, addressProps } from '@/composables/modals'
+import { useDocument } from '@/data/document'
 import { getSettings } from '@/stores/settings'
 import { getMeta } from '@/stores/meta'
-import { globalStore } from '@/stores/global'
 import { usersStore } from '@/stores/users'
 import { statusesStore } from '@/stores/statuses'
 import { getView } from '@/utils/view'
-import { formatDate, timeAgo, createToast } from '@/utils'
+import { formatDate, timeAgo, validateIsImageFile } from '@/utils'
 import {
-  Tooltip,
   Breadcrumbs,
   Avatar,
   FileUploader,
   Dropdown,
   Tabs,
-  call,
   createListResource,
-  createDocumentResource,
   usePageMeta,
   createResource,
+  toast,
+  call,
 } from 'frappe-ui'
 import { h, computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -213,20 +215,21 @@ const props = defineProps({
 
 const { brand } = getSettings()
 const { getUser } = usersStore()
-const { $dialog } = globalStore()
 const { getDealStatus } = statusesStore()
-const showQuickEntryModal = ref(false)
+const { doctypeMeta } = getMeta('CRM Organization')
 
 const route = useRoute()
 const router = useRouter()
 
-const organization = createDocumentResource({
-  doctype: 'CRM Organization',
-  name: props.organizationId,
-  cache: ['organization', props.organizationId],
-  fields: ['*'],
-  auto: true,
-})
+const errorTitle = ref('')
+const errorMessage = ref('')
+
+const showDeleteLinkedDocModal = ref(false)
+
+const { document: organization } = useDocument(
+  'CRM Organization',
+  props.organizationId,
+)
 
 async function updateField(fieldname, value) {
   await organization.setValue.submit({
@@ -246,7 +249,7 @@ const breadcrumbs = computed(() => {
     let view = getView(
       route.query.view,
       route.query.viewType,
-      'CRM Organization',
+      'CRM Organization'
     )
     if (view) {
       items.push({
@@ -262,7 +265,7 @@ const breadcrumbs = computed(() => {
   }
 
   items.push({
-    label: props.organizationId,
+    label: title.value,
     route: {
       name: 'Organization',
       params: { organizationId: props.organizationId },
@@ -271,50 +274,43 @@ const breadcrumbs = computed(() => {
   return items
 })
 
+const title = computed(() => {
+  let t = doctypeMeta['CRM Organization']?.title_field || 'name'
+  return organization.doc?.[t] || props.organizationId
+})
+
 usePageMeta(() => {
   return {
-    title: props.organizationId,
+    title: title.value,
     icon: brand.favicon,
   }
 })
 
-function validateFile(file) {
-  let extn = file.name.split('.').pop().toLowerCase()
-  if (!['png', 'jpg', 'jpeg'].includes(extn)) {
-    return __('Only PNG and JPG images are allowed')
-  }
-}
-
-async function changeOrganizationImage(file) {
-  await call('frappe.client.set_value', {
-    doctype: 'CRM Organization',
-    name: props.organizationId,
-    fieldname: 'organization_logo',
-    value: file?.file_url || '',
-  })
-  organization.reload()
-}
-
 async function deleteOrganization() {
-  $dialog({
-    title: __('Delete organization'),
-    message: __('Are you sure you want to delete this organization?'),
-    actions: [
-      {
-        label: __('Delete'),
-        theme: 'red',
-        variant: 'solid',
-        async onClick(close) {
-          await call('frappe.client.delete', {
-            doctype: 'CRM Organization',
-            name: props.organizationId,
-          })
-          close()
-          router.push({ name: 'Organizations' })
-        },
-      },
-    ],
+  showDeleteLinkedDocModal.value = true
+}
+
+function changeOrganizationImage(file) {
+  organization.setValue.submit({
+    organization_logo: file?.file_url || null,
   })
+}
+
+function beforeFieldChange(data) {
+  if (data?.hasOwnProperty('organization_name')) {
+    call('frappe.client.rename_doc', {
+      doctype: 'CRM Organization',
+      old_name: props.organizationId,
+      new_name: data.organization_name,
+    }).then(() => {
+      router.push({
+        name: 'Organization',
+        params: { organizationId: data.organization_name },
+      })
+    })
+  } else {
+    organization.save.submit()
+  }
 }
 
 function website(url) {
@@ -330,10 +326,6 @@ function openWebsite() {
     })
   else window.open(organization.doc.website, '_blank')
 }
-
-const showAddressModal = ref(false)
-const _organization = ref({})
-const _address = ref({})
 
 const sections = createResource({
   url: 'crm.fcrm.doctype.crm_fields_layout.crm_fields_layout.get_sidepanel_sections',
@@ -351,18 +343,10 @@ function getParsedSections(_sections) {
           return {
             ...field,
             create: (value, close) => {
-              _organization.value.address = value
-              _address.value = {}
-              showAddressModal.value = true
+              openAddressModal()
               close()
             },
-            edit: async (addr) => {
-              _address.value = await call('frappe.client.get', {
-                doctype: 'Address',
-                name: addr,
-              })
-              showAddressModal.value = true
-            },
+            edit: (address) => openAddressModal(address),
           }
         } else {
           return field
@@ -561,4 +545,12 @@ const contactColumns = [
     width: '8rem',
   },
 ]
+
+function openAddressModal(_address) {
+  showAddressModal.value = true
+  addressProps.value = {
+    doctype: 'Address',
+    address: _address,
+  }
+}
 </script>

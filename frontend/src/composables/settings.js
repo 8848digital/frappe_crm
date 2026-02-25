@@ -8,7 +8,7 @@ createResource({
   cache: 'Is Whatsapp Enabled',
   auto: true,
   onSuccess: (data) => {
-    whatsappEnabled.value = Boolean(data)
+    whatsappEnabled.value = true
   },
 })
 createResource({
@@ -16,7 +16,7 @@ createResource({
   cache: 'Is Whatsapp Installed',
   auto: true,
   onSuccess: (data) => {
-    isWhatsappInstalled.value = Boolean(data)
+    isWhatsappInstalled.value = true
   },
 })
 
@@ -32,7 +32,7 @@ createResource({
     twilioEnabled.value = Boolean(data.twilio_enabled)
     exotelEnabled.value = Boolean(data.exotel_enabled)
     defaultCallingMedium.value = data.default_calling_medium
-    callEnabled.value = twilioEnabled.value || exotelEnabled.value
+    callEnabled.value = true
   },
 })
 
@@ -41,4 +41,7 @@ export const mobileSidebarOpened = ref(false)
 export const isMobileView = computed(() => window.innerWidth < 768)
 
 export const showSettings = ref(false)
+
+export const disableSettingModalOutsideClick = ref(false)
+
 export const activeSettingsPage = ref('')

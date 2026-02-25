@@ -1,9 +1,10 @@
-from bs4 import BeautifulSoup
 import frappe
-from frappe.translate import get_all_translations
-from frappe.utils import validate_email_address, split_emails, cstr
-from frappe.utils.telemetry import POSTHOG_HOST_FIELD, POSTHOG_PROJECT_FIELD
+from bs4 import BeautifulSoup
+from frappe.config import get_modules_from_all_apps_for_user
 from frappe.core.api.file import get_max_file_size
+from frappe.translate import get_all_translations
+from frappe.utils import cstr, split_emails, validate_email_address
+from frappe.utils.telemetry import POSTHOG_HOST_FIELD, POSTHOG_PROJECT_FIELD
 
 
 @frappe.whitelist(allow_guest=True)
@@ -44,7 +45,7 @@ def get_user_signature():
 	if html_signature:
 		_signature = html_signature.renderContents()
 	content = ""
-	if (cstr(_signature) or signature):
+	if cstr(_signature) or signature:
 		content = f'<br><p class="signature">{signature}</p>'
 	return content
 
@@ -62,16 +63,23 @@ def get_posthog_settings():
 def check_app_permission():
 	if frappe.session.user == "Administrator":
 		return True
-
+	allowed_modules = get_modules_from_all_apps_for_user()
+	allowed_modules = [x["module_name"] for x in allowed_modules]
+	
+	if "FCRM" not in allowed_modules:
+		return False
+	
 	roles = frappe.get_roles()
-	if any(role in ["System Manager", "Sales User", "Sales Manager", "Sales Master Manager"] for role in roles):
+	if any(
+		role in ["System Manager", "Sales User", "Sales Manager"] for role in roles
+	):
 		return True
 
 	return False
 
 
 @frappe.whitelist(allow_guest=True)
-def accept_invitation(key: str = None):
+def accept_invitation(key: str | None = None):
 	if not key:
 		frappe.throw("Invalid or expired key")
 
@@ -91,6 +99,11 @@ def accept_invitation(key: str = None):
 
 @frappe.whitelist()
 def invite_by_email(emails: str, role: str):
+	frappe.only_for(["Sales Manager", "System Manager"])
+
+	if role not in ["System Manager", "Sales Manager", "Sales User"]:
+		frappe.throw("Cannot invite for this role")
+
 	if not emails:
 		return
 	email_string = validate_email_address(emails, throw=False)
@@ -100,7 +113,10 @@ def invite_by_email(emails: str, role: str):
 	existing_members = frappe.db.get_all("User", filters={"email": ["in", email_list]}, pluck="email")
 	existing_invites = frappe.db.get_all(
 		"CRM Invitation",
-		filters={"email": ["in", email_list], "role": ["in", ["Sales Manager", "Sales User"]]},
+		filters={
+			"email": ["in", email_list],
+			"role": ["in", ["System Manager", "Sales Manager", "Sales User"]],
+		},
 		pluck="email",
 	)
 
@@ -109,6 +125,11 @@ def invite_by_email(emails: str, role: str):
 	for email in to_invite:
 		frappe.get_doc(doctype="CRM Invitation", email=email, role=role).insert(ignore_permissions=True)
 
+	return {
+			"existing_members": existing_members,
+			"existing_invites": existing_invites,
+			"to_invite": to_invite,
+		}
 
 @frappe.whitelist()
 def get_file_uploader_defaults(doctype: str):
@@ -120,8 +141,8 @@ def get_file_uploader_defaults(doctype: str):
 		make_attachments_public = meta.get("make_attachments_public")
 
 	return {
-		'allowed_file_types': frappe.get_system_settings("allowed_file_extensions"),
-		'max_file_size': get_max_file_size(),
-		'max_number_of_files': max_number_of_files,
-		'make_attachments_public': bool(make_attachments_public),
+		"allowed_file_types": frappe.get_system_settings("allowed_file_extensions"),
+		"max_file_size": get_max_file_size(),
+		"max_number_of_files": max_number_of_files,
+		"make_attachments_public": bool(make_attachments_public),
 	}
