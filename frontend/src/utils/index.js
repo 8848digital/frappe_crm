@@ -1,18 +1,11 @@
+import LucideCheck from '~icons/lucide/check'
 import TaskStatusIcon from '@/components/Icons/TaskStatusIcon.vue'
 import TaskPriorityIcon from '@/components/Icons/TaskPriorityIcon.vue'
 import { usersStore } from '@/stores/users'
 import { gemoji } from 'gemoji'
-import { useTimeAgo } from '@vueuse/core'
 import { getMeta } from '@/stores/meta'
-import { toast, dayjsLocal, dayjs } from 'frappe-ui'
+import { toast, dayjsLocal, dayjs, getConfig, FeatherIcon } from 'frappe-ui'
 import { h } from 'vue'
-
-export function createToast(options) {
-  toast({
-    position: 'bottom-right',
-    ...options,
-  })
-}
 
 export function formatTime(seconds) {
   const days = Math.floor(seconds / (3600 * 24))
@@ -72,14 +65,140 @@ export function getFormat(
 }
 
 export function timeAgo(date) {
-  return useTimeAgo(date).value
+  return prettyDate(date)
 }
 
-const taskMeta = getMeta('CRM Task')
+function getBrowserTimezone() {
+  return Intl.DateTimeFormat().resolvedOptions().timeZone
+}
+
+export function prettyDate(date, mini = false) {
+  if (!date) return ''
+
+  let systemTimezone = getConfig('systemTimezone')
+  let localTimezone = getConfig('localTimezone') || getBrowserTimezone()
+
+  if (typeof date == 'string') {
+    date = dayjsLocal(date)
+  }
+
+  let nowDatetime = dayjs().tz(localTimezone || systemTimezone)
+  let diff = nowDatetime.diff(date, 'seconds')
+
+  let dayDiff = diff / 86400
+
+  if (isNaN(dayDiff)) return ''
+
+  if (mini) {
+    // Return short format of time difference
+    if (dayDiff < 0) {
+      if (Math.abs(dayDiff) < 1) {
+        if (Math.abs(diff) < 60) {
+          return __('now')
+        } else if (Math.abs(diff) < 3600) {
+          return __('in {0} m', [Math.floor(Math.abs(diff) / 60)])
+        } else if (Math.abs(diff) < 86400) {
+          return __('in {0} h', [Math.floor(Math.abs(diff) / 3600)])
+        }
+      }
+      if (Math.abs(dayDiff) >= 1 && Math.abs(dayDiff) < 1.5) {
+        return __('tomorrow')
+      } else if (Math.abs(dayDiff) < 7) {
+        return __('in {0} d', [Math.floor(Math.abs(dayDiff))])
+      } else if (Math.abs(dayDiff) < 31) {
+        return __('in {0} w', [Math.floor(Math.abs(dayDiff) / 7)])
+      } else if (Math.abs(dayDiff) < 365) {
+        return __('in {0} M', [Math.floor(Math.abs(dayDiff) / 30)])
+      } else {
+        return __('in {0} y', [Math.floor(Math.abs(dayDiff) / 365)])
+      }
+    } else if (dayDiff >= 0 && dayDiff < 1) {
+      if (diff < 60) {
+        return __('now')
+      } else if (diff < 3600) {
+        return __('{0} m', [Math.floor(diff / 60)])
+      } else if (diff < 86400) {
+        return __('{0} h', [Math.floor(diff / 3600)])
+      }
+    } else {
+      dayDiff = Math.floor(dayDiff)
+      if (dayDiff < 7) {
+        return __('{0} d', [dayDiff])
+      } else if (dayDiff < 31) {
+        return __('{0} w', [Math.floor(dayDiff / 7)])
+      } else if (dayDiff < 365) {
+        return __('{0} M', [Math.floor(dayDiff / 30)])
+      } else {
+        return __('{0} y', [Math.floor(dayDiff / 365)])
+      }
+    }
+  } else {
+    // Return long format of time difference
+    if (dayDiff < 0) {
+      if (Math.abs(dayDiff) < 1) {
+        if (Math.abs(diff) < 60) {
+          return __('just now')
+        } else if (Math.abs(diff) < 120) {
+          return __('in 1 minute')
+        } else if (Math.abs(diff) < 3600) {
+          return __('in {0} minutes', [Math.floor(Math.abs(diff) / 60)])
+        } else if (Math.abs(diff) < 7200) {
+          return __('in 1 hour')
+        } else if (Math.abs(diff) < 86400) {
+          return __('in {0} hours', [Math.floor(Math.abs(diff) / 3600)])
+        }
+      }
+      if (Math.abs(dayDiff) >= 1 && Math.abs(dayDiff) < 1.5) {
+        return __('tomorrow')
+      } else if (Math.abs(dayDiff) < 7) {
+        return __('in {0} days', [Math.floor(Math.abs(dayDiff))])
+      } else if (Math.abs(dayDiff) < 31) {
+        return __('in {0} weeks', [Math.floor(Math.abs(dayDiff) / 7)])
+      } else if (Math.abs(dayDiff) < 365) {
+        return __('in {0} months', [Math.floor(Math.abs(dayDiff) / 30)])
+      } else if (Math.abs(dayDiff) < 730) {
+        return __('in 1 year')
+      } else {
+        return __('in {0} years', [Math.floor(Math.abs(dayDiff) / 365)])
+      }
+    } else if (dayDiff >= 0 && dayDiff < 1) {
+      if (diff < 60) {
+        return __('just now')
+      } else if (diff < 120) {
+        return __('1 minute ago')
+      } else if (diff < 3600) {
+        return __('{0} minutes ago', [Math.floor(diff / 60)])
+      } else if (diff < 7200) {
+        return __('1 hour ago')
+      } else if (diff < 86400) {
+        return __('{0} hours ago', [Math.floor(diff / 3600)])
+      }
+    } else {
+      dayDiff = Math.floor(dayDiff)
+      if (dayDiff == 1) {
+        return __('yesterday')
+      } else if (dayDiff < 7) {
+        return __('{0} days ago', [dayDiff])
+      } else if (dayDiff < 14) {
+        return __('1 week ago')
+      } else if (dayDiff < 31) {
+        return __('{0} weeks ago', [Math.floor(dayDiff / 7)])
+      } else if (dayDiff < 62) {
+        return __('1 month ago')
+      } else if (dayDiff < 365) {
+        return __('{0} months ago', [Math.floor(dayDiff / 30)])
+      } else if (dayDiff < 730) {
+        return __('1 year ago')
+      } else {
+        return __('{0} years ago', [Math.floor(dayDiff / 365)])
+      }
+    }
+  }
+}
 
 export function taskStatusOptions(action, data) {
   let options = ['Backlog', 'Todo', 'In Progress', 'Done', 'Canceled']
-  let statusMeta = taskMeta
+  let statusMeta = getMeta('CRM Task')
     .getFields()
     ?.find((field) => field.fieldname == 'status')
   if (statusMeta) {
@@ -98,7 +217,7 @@ export function taskStatusOptions(action, data) {
 
 export function taskPriorityOptions(action, data) {
   let options = ['Low', 'Medium', 'High']
-  let priorityMeta = taskMeta
+  let priorityMeta = getMeta('CRM Task')
     .getFields()
     ?.find((field) => field.fieldname == 'priority')
   if (priorityMeta) {
@@ -116,11 +235,46 @@ export function taskPriorityOptions(action, data) {
   })
 }
 
-export function openWebsite(url) {
-  if (!url.startsWith('http://') && !url.startsWith('https://')) {
-    url = 'https://' + url
+export function getSafeWebsiteUrl(rawUrl) {
+  const allowedProtocols = new Set(['http:', 'https:'])
+
+  if (!rawUrl) {
+    return null
   }
-  window.open(url, '_blank')
+
+  const trimmedUrl = rawUrl.trim()
+
+  if (!trimmedUrl) {
+    return null
+  }
+
+  const urlToParse = /^[a-zA-Z][a-zA-Z\d+\-.]*:/.test(trimmedUrl)
+    ? trimmedUrl
+    : `https://${trimmedUrl}`
+
+  try {
+    const parsedUrl = new URL(urlToParse)
+
+    if (!allowedProtocols.has(parsedUrl.protocol)) {
+      return null
+    }
+
+    return parsedUrl.href
+  } catch (_error) {
+    return null
+  }
+}
+
+export function openWebsite(url) {
+  const safeUrl = getSafeWebsiteUrl(url)
+
+  if (!safeUrl) {
+    toast.error(__('Invalid Website URL'))
+    return false
+  }
+
+  window.open(safeUrl, '_blank', 'noopener')
+  return true
 }
 
 export function website(url) {
@@ -143,10 +297,9 @@ export function validateEmail(email) {
   return regExp.test(email)
 }
 
-export function setupAssignees(doc) {
+export function parseAssignees(assignees) {
   let { getUser } = usersStore()
-  let assignees = doc.data?._assign || []
-  doc.data._assignedTo = assignees.map((user) => ({
+  return assignees.map((user) => ({
     name: user,
     image: getUser(user).user_image,
     label: getUser(user).full_name,
@@ -160,25 +313,18 @@ async function getFormScript(script, obj) {
   return formScript || {}
 }
 
-export async function setupCustomizations(doc, obj) {
-  if (!doc.data?._form_script) return []
+export async function setupCustomizations(scripts, obj) {
+  if (!scripts) return []
 
   let statuses = []
   let actions = []
-  if (Array.isArray(doc.data._form_script)) {
-    for (let script of doc.data._form_script) {
-      let _script = await getFormScript(script, obj)
+  if (Array.isArray(scripts)) {
+    for (let s of scripts) {
+      let _script = await getFormScript(s.script, obj)
       actions = actions.concat(_script?.actions || [])
       statuses = statuses.concat(_script?.statuses || [])
     }
-  } else {
-    let _script = await getFormScript(doc.data._form_script, obj)
-    actions = _script?.actions || []
-    statuses = _script?.statuses || []
   }
-
-  doc.data._customStatuses = statuses
-  doc.data._customActions = actions
   return { statuses, actions }
 }
 
@@ -211,34 +357,20 @@ export async function setupListCustomizations(data, obj = {}) {
   return { actions, bulkActions }
 }
 
-export function errorMessage(title, message) {
-  createToast({
-    title: title || 'Error',
-    text: message,
-    icon: 'x',
-    iconClasses: 'text-ink-red-4',
-  })
-}
-
 export function copyToClipboard(text) {
   if (navigator.clipboard && window.isSecureContext) {
-    navigator.clipboard.writeText(text).then(show_success_alert)
+    navigator.clipboard.writeText(text).then(showSuccessAlert)
   } else {
     let input = document.createElement('textarea')
     document.body.appendChild(input)
     input.value = text
     input.select()
     document.execCommand('copy')
-    show_success_alert()
+    showSuccessAlert()
     document.body.removeChild(input)
   }
-  function show_success_alert() {
-    createToast({
-      title: 'Copied to clipboard',
-      text: text,
-      icon: 'check',
-      iconClasses: 'text-ink-green-3',
-    })
+  function showSuccessAlert() {
+    toast.success(__('Copied to Clipboard'))
   }
 }
 
@@ -324,6 +456,36 @@ export function evaluateDependsOnValue(expression, doc) {
   return out
 }
 
+export function evaluateExpression(expression, doc, parent) {
+  if (!expression) return false
+  if (!doc) return false
+
+  let out = null
+  if (typeof expression === 'boolean') {
+    out = expression
+  } else if (typeof expression === 'function') {
+    out = expression(doc)
+  } else if (expression.substr(0, 5) == 'eval:') {
+    try {
+      out = _eval(expression.substr(5), { doc, parent })
+      if (parent && parent.istable && expression.includes('is_submittable')) {
+        out = true
+      }
+    } catch (e) {
+      out = true
+    }
+  } else {
+    let value = doc[expression]
+    if (Array.isArray(value)) {
+      out = !!value.length
+    } else {
+      out = !!value
+    }
+  }
+
+  return out
+}
+
 export function convertSize(size) {
   const units = ['B', 'KB', 'MB', 'GB', 'TB']
   let unitIndex = 0
@@ -341,6 +503,13 @@ export function isImage(extention) {
   )
 }
 
+export function validateIsImageFile(file) {
+  const extn = file.name.split('.').pop().toLowerCase()
+  if (!isImage(extn)) {
+    return __('Only image files are allowed')
+  }
+}
+
 export function getRandom(len = 4) {
   let text = ''
   const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
@@ -351,8 +520,386 @@ export function getRandom(len = 4) {
 
   return text
 }
+
 export function runSequentially(functions) {
   return functions.reduce((promise, fn) => {
     return promise.then(() => fn())
   }, Promise.resolve())
+}
+
+export function DropdownOption({ option, icon, selected, onClick }) {
+  return h(
+    'button',
+    {
+      class:
+        'group flex w-full text-ink-gray-8 justify-between items-center rounded-md px-2 py-2 text-sm hover:bg-surface-gray-2',
+      onClick,
+    },
+    [
+      h('div', { class: 'flex gap-2' }, [
+        icon
+          ? h(FeatherIcon, {
+              name: icon,
+              class: ['h-4 w-4 shrink-0'],
+              'aria-hidden': true,
+            })
+          : null,
+        h('span', { class: 'whitespace-nowrap' }, option),
+      ]),
+      selected
+        ? h(LucideCheck, {
+            class: ['h-4 w-4 shrink-0 text-ink-gray-7'],
+            'aria-hidden': true,
+          })
+        : null,
+    ],
+  )
+}
+
+export function deepClone(obj) {
+  if (obj === null || typeof obj !== 'object') {
+    return obj
+  }
+
+  if (obj instanceof Date) {
+    return new Date(obj.getTime())
+  }
+
+  if (Array.isArray(obj)) {
+    return obj.map((item) => deepClone(item))
+  }
+
+  if (typeof obj === 'object') {
+    const cloned = {}
+    for (const key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        cloned[key] = deepClone(obj[key])
+      }
+    }
+    return cloned
+  }
+
+  return obj
+}
+
+export function copy(obj) {
+  if (!obj) return obj
+  return JSON.parse(JSON.stringify(obj))
+}
+
+export const convertToConditions = ({ conditions, fieldPrefix }) => {
+  if (!conditions || conditions.length === 0) {
+    return ''
+  }
+
+  const processCondition = (condition) => {
+    if (typeof condition === 'string') {
+      return condition.toLowerCase()
+    }
+
+    if (Array.isArray(condition)) {
+      // Nested condition group
+      if (Array.isArray(condition[0])) {
+        const nestedStr = convertToConditions({
+          conditions: condition,
+          fieldPrefix,
+        })
+        return `(${nestedStr})`
+      }
+
+      // Simple condition: [fieldname, operator, value]
+      const [field, operator, value] = condition
+      const fieldAccess = fieldPrefix ? `${fieldPrefix}.${field}` : field
+
+      const operatorMap = {
+        equals: '==',
+        '=': '==',
+        '==': '==',
+        '!=': '!=',
+        'not equals': '!=',
+        '<': '<',
+        '<=': '<=',
+        '>': '>',
+        '>=': '>=',
+        in: 'in',
+        'not in': 'not in',
+        like: 'like',
+        'not like': 'not like',
+        is: 'is',
+        'is not': 'is not',
+        between: 'between',
+      }
+
+      let op = operatorMap[operator.toLowerCase()] || operator
+
+      if (
+        (op === '==' || op === '!=') &&
+        (String(value).toLowerCase() === 'yes' ||
+          String(value).toLowerCase() === 'no')
+      ) {
+        let checkVal = String(value).toLowerCase() === 'yes'
+        if (op === '!=') {
+          checkVal = !checkVal
+        }
+        return checkVal ? fieldAccess : `not ${fieldAccess}`
+      }
+
+      if (op === 'is' && String(value).toLowerCase() === 'set') {
+        return fieldAccess
+      }
+      if (
+        (op === 'is' && String(value).toLowerCase() === 'not set') ||
+        (op === 'is not' && String(value).toLowerCase() === 'set')
+      ) {
+        return `not ${fieldAccess}`
+      }
+
+      if (op === 'like') {
+        return `(${fieldAccess} and "${value}" in ${fieldAccess})`
+      }
+      if (op === 'not like') {
+        return `(${fieldAccess} and "${value}" not in ${fieldAccess})`
+      }
+
+      if (
+        op === 'between' &&
+        typeof value === 'string' &&
+        value.includes(',')
+      ) {
+        const [start, end] = value.split(',').map((v) => v.trim())
+        return `(${fieldAccess} >= "${start}" and ${fieldAccess} <= "${end}")`
+      }
+
+      let valueStr = ''
+      if (op === 'in' || op === 'not in') {
+        let items
+        if (Array.isArray(value)) {
+          items = value.map((v) => `"${String(v).trim()}"`)
+        } else if (typeof value === 'string') {
+          items = value.split(',').map((v) => `"${v.trim()}"`)
+        } else {
+          items = [`"${String(value).trim()}"`]
+        }
+        valueStr = `[${items.join(', ')}]`
+        return `(${fieldAccess} and ${fieldAccess} ${op} ${valueStr})`
+      }
+
+      if (typeof value === 'string') {
+        valueStr = `"${value.replace(/"/g, '\\"')}"`
+      } else if (typeof value === 'number' || typeof value === 'boolean') {
+        valueStr = String(value)
+      } else if (value === null || value === undefined) {
+        return op === '==' || op === 'is' ? `not ${fieldAccess}` : fieldAccess
+      } else {
+        valueStr = `"${String(value).replace(/"/g, '\\"')}"`
+      }
+
+      return `${fieldAccess} ${op} ${valueStr}`
+    }
+
+    return ''
+  }
+
+  const parts = conditions.map(processCondition)
+  return parts.join(' ')
+}
+
+export function validateConditions(conditions) {
+  if (!Array.isArray(conditions)) return false
+
+  // Handle simple condition [field, operator, value]
+  if (
+    conditions.length === 3 &&
+    typeof conditions[0] === 'string' &&
+    typeof conditions[1] === 'string'
+  ) {
+    return conditions[0] !== '' && conditions[1] !== '' && conditions[2] !== ''
+  }
+
+  // Iterate through conditions and logical operators
+  for (let i = 0; i < conditions.length; i++) {
+    const item = conditions[i]
+
+    // Skip logical operators (they will be validated by their position)
+    if (item === 'and' || item === 'or') {
+      // Ensure logical operators are not at start/end and not consecutive
+      if (
+        i === 0 ||
+        i === conditions.length - 1 ||
+        conditions[i - 1] === 'and' ||
+        conditions[i - 1] === 'or'
+      ) {
+        return false
+      }
+      continue
+    }
+
+    // Handle nested conditions (arrays)
+    if (Array.isArray(item)) {
+      if (!validateConditions(item)) {
+        return false
+      }
+    } else if (item !== undefined && item !== null) {
+      return false
+    }
+  }
+
+  return conditions.length > 0
+}
+
+// sameArrayContents: returns true if both arrays have exactly the same elements
+// (including duplicate counts) irrespective of order.
+// Non-arrays or arrays of different length return false.
+export function sameArrayContents(a, b) {
+  if (a === b) return true
+  if (!Array.isArray(a) || !Array.isArray(b)) return false
+  if (a.length !== b.length) return false
+  if (a.length === 0) return true
+  const counts = new Map()
+  for (const v of a) {
+    counts.set(v, (counts.get(v) || 0) + 1)
+  }
+  for (const v of b) {
+    const c = counts.get(v)
+    if (!c) return false
+    if (c === 1) counts.delete(v)
+    else counts.set(v, c - 1)
+  }
+  return counts.size === 0
+}
+
+// orderSensitiveEqual: returns true only if arrays are strictly equal index-wise
+export function orderSensitiveEqual(a, b) {
+  if (a === b) return true
+  if (!Array.isArray(a) || !Array.isArray(b)) return false
+  if (a.length !== b.length) return false
+  for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) return false
+  return true
+}
+
+export function TemplateOption({ active, option, variant, icon, onClick }) {
+  return h(
+    'button',
+    {
+      class: [
+        active ? 'bg-surface-gray-2' : 'text-ink-gray-7',
+        'group flex w-full gap-2 items-center rounded-md px-2 py-2 text-base hover:bg-surface-gray-3',
+        variant == 'danger' ? 'text-ink-red-3 hover:bg-ink-red-1' : '',
+      ],
+      onClick: onClick,
+    },
+    [
+      icon
+        ? h(FeatherIcon, {
+            name: icon,
+            class: ['h-4 w-4 shrink-0'],
+            'aria-hidden': true,
+          })
+        : null,
+      h('span', { class: 'whitespace-nowrap' }, option),
+    ],
+  )
+}
+
+/**
+ * @param {Object} config - Configuration object
+ * @param {Ref<boolean>} config.isConfirmingDelete - Ref to track confirmation state
+ * @param {Function} config.onConfirmDelete - Callback when delete is confirmed
+ * @returns {Array} Array of option objects for use in dropdowns
+ */
+export function ConfirmDelete({ isConfirmingDelete, onConfirmDelete }) {
+  return [
+    {
+      label: __('Delete'),
+      component: (props) =>
+        TemplateOption({
+          option: __('Delete'),
+          icon: 'trash-2',
+          active: props.active,
+          variant: 'grey',
+          onClick: (event) => {
+            event.preventDefault()
+            event.stopImmediatePropagation()
+            isConfirmingDelete.value = true
+          },
+        }),
+      condition: () => !isConfirmingDelete.value,
+    },
+    {
+      label: __('Confirm Delete'),
+      component: (props) =>
+        TemplateOption({
+          option: __('Confirm Delete'),
+          icon: 'trash-2',
+          active: props.active,
+          variant: 'danger',
+          onClick: () => {
+            onConfirmDelete()
+            // Reset state after confirming
+            isConfirmingDelete.value = false
+          },
+        }),
+      condition: () => isConfirmingDelete.value,
+    },
+  ]
+}
+
+export function formatTimeHMS(seconds) {
+  const days = Math.floor(seconds / (3600 * 24))
+  const hours = Math.floor((seconds % (3600 * 24)) / 3600)
+  const minutes = Math.floor((seconds % 3600) / 60)
+  const remainingSeconds = Math.floor(seconds % 60)
+
+  let formattedTime = ''
+
+  if (days > 0) {
+    formattedTime += `${days} days `
+  }
+
+  if (hours > 0) {
+    formattedTime += `${hours} hours `
+  }
+
+  if (minutes > 0) {
+    formattedTime += `${minutes} minutes `
+  }
+
+  if (remainingSeconds > 0) {
+    formattedTime += `${remainingSeconds} seconds`
+  }
+
+  return formattedTime.trim() == '' ? '0 seconds' : formattedTime.trim()
+}
+
+export function getGridTemplateColumnsForTable(columns) {
+  let columnsWidth = columns
+    .map((col) => {
+      let width = col.width || 1
+      if (typeof width === 'number') {
+        return width + 'fr'
+      }
+      return width
+    })
+    .join(' ')
+  return columnsWidth + ' 22px'
+}
+
+export function clearCache() {
+  ;[
+    '_last_load',
+    '_version_number',
+    'metadata_version',
+    'page_info',
+    'last_visited',
+  ].forEach((key) => localStorage.removeItem(key))
+
+  for (let key in localStorage) {
+    if (
+      key.startsWith('_page:') ||
+      key.startsWith('_doctype:') ||
+      key.startsWith('preferred_breadcrumbs:')
+    ) {
+      localStorage.removeItem(key)
+    }
+  }
 }
