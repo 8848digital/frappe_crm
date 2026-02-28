@@ -5,7 +5,7 @@
       <router-view :key="$route.fullPath"/>
 =======
     <NotPermitted v-if="$route.name === 'Not Permitted'" />
-    <Layout class="isolate" v-else-if="session().isLoggedIn">
+    <Layout v-else-if="session().isLoggedIn" class="isolate">
       <router-view :key="$route.fullPath" />
 >>>>>>> 19d0a8a1 (refactor: add NotPermitted page and update routing logic for access control)
     </Layout>

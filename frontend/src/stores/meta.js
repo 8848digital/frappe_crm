@@ -24,7 +24,7 @@ export function getMeta(doctype) {
     },
   })
 
-  if (!doctypeMeta[doctype]) {
+  if (!doctypeMeta[doctype] && !meta.loading) {
     meta.fetch()
   }
 
@@ -58,14 +58,14 @@ export function getMeta(doctype) {
 
     if (df && df.options) {
       if (df.options.indexOf(':') != -1) {
-        currency = currency
+        // TODO: Handle this case
       } else if (doc && doc[df.options]) {
         currency = doc[df.options]
+      } else if (parentDoc && parentDoc[df.options]) {
+        currency = parentDoc[df.options]
       }
-    } else if (parentDoc && parentDoc[df.options]) {
-      currency = parentDoc[df.options]
     }
-    
+
     return formatCurrency(doc[fieldname], '', currency, precision)
   }
 
@@ -73,8 +73,7 @@ export function getMeta(doctype) {
     return doctypeMeta[doctype] || {}
   }
 
-  function getGridViewSettings(parentDoctype, dt = null) {
-    dt = dt || doctype
+  function getGridViewSettings(parentDoctype) {
     if (!userSettings[parentDoctype]?.['GridView']?.[doctype]) return {}
     return userSettings[parentDoctype]['GridView'][doctype]
   }

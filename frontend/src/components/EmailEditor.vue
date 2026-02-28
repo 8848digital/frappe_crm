@@ -7,7 +7,6 @@
       '[&_p.reply-to-content]:hidden',
     ]"
     :content="content"
-    @change="editable ? (content = $event) : null"
     :starterkit-options="{
       heading: { levels: [2, 3, 4, 5, 6] },
       paragraph: false,
@@ -15,14 +14,16 @@
     :placeholder="placeholder"
     :editable="editable"
     :extensions="[CustomParagraph]"
+    @change="editable ? (content = $event) : null"
   >
     <template #top>
       <div class="flex flex-col gap-3">
         <div class="sm:mx-10 mx-4 flex items-center gap-2 border-t pt-2.5">
           <span class="text-xs text-ink-gray-4">{{ __('TO') }}:</span>
-          <MultiselectInput
-            class="flex-1"
+          <MultiSelectEmailInput
             v-model="toEmails"
+            class="flex-1"
+            variant="ghost"
             :validate="validateEmail"
             :error-message="
               (value) => __('{0} is an invalid email address', [value])
@@ -32,31 +33,33 @@
             <Button
               :label="__('CC')"
               variant="ghost"
-              @click="toggleCC()"
               :class="[
                 cc
                   ? '!bg-surface-gray-4 hover:bg-surface-gray-3'
                   : '!text-ink-gray-4',
               ]"
+              @click="toggleCC()"
             />
             <Button
               :label="__('BCC')"
               variant="ghost"
-              @click="toggleBCC()"
               :class="[
                 bcc
                   ? '!bg-surface-gray-4 hover:bg-surface-gray-3'
                   : '!text-ink-gray-4',
               ]"
+              @click="toggleBCC()"
             />
           </div>
         </div>
         <div v-if="cc" class="sm:mx-10 mx-4 flex items-center gap-2">
           <span class="text-xs text-ink-gray-4">{{ __('CC') }}:</span>
-          <MultiselectInput
+          <MultiSelectEmailInput
             ref="ccInput"
-            class="flex-1"
             v-model="ccEmails"
+            class="flex-1"
+            variant="ghost"
+            :fetchContacts="true"
             :validate="validateEmail"
             :error-message="
               (value) => __('{0} is an invalid email address', [value])
@@ -65,10 +68,12 @@
         </div>
         <div v-if="bcc" class="sm:mx-10 mx-4 flex items-center gap-2">
           <span class="text-xs text-ink-gray-4">{{ __('BCC') }}:</span>
-          <MultiselectInput
+          <MultiSelectEmailInput
             ref="bccInput"
-            class="flex-1"
             v-model="bccEmails"
+            class="flex-1"
+            variant="ghost"
+            :fetchContacts="true"
             :validate="validateEmail"
             :error-message="
               (value) => __('{0} is an invalid email address', [value])
@@ -78,22 +83,22 @@
         <div class="sm:mx-10 mx-4 flex items-center gap-2 pb-2.5">
           <span class="text-xs text-ink-gray-4">{{ __('SUBJECT') }}:</span>
           <input
-            class="flex-1 border-none text-ink-gray-9 text-base bg-surface-white hover:bg-surface-white focus:border-none focus:!shadow-none focus-visible:!ring-0"
             v-model="subject"
+            class="flex-1 border-none text-ink-gray-9 text-base bg-surface-white hover:bg-surface-white focus:border-none focus:!shadow-none focus-visible:!ring-0"
           />
         </div>
       </div>
     </template>
-    <template v-slot:editor="{ editor }">
+    <template #editor="{ editor: _editor }">
       <EditorContent
         :class="[
           editable &&
             'sm:mx-10 mx-4 max-h-[35vh] overflow-y-auto border-t py-3',
         ]"
-        :editor="editor"
+        :editor="_editor"
       />
     </template>
-    <template v-slot:bottom>
+    <template #bottom>
       <div v-if="editable" class="flex flex-col gap-2">
         <div class="flex flex-wrap gap-2 sm:px-10 px-4">
           <AttachmentItem
@@ -116,8 +121,8 @@
           <div class="flex gap-1 items-center overflow-x-auto">
             <TextEditorBubbleMenu :buttons="textEditorMenuButtons" />
             <IconPicker
-              v-model="emoji"
               v-slot="{ togglePopover }"
+              v-model="emoji"
               @update:modelValue="() => appendEmoji()"
             >
               <Button
@@ -176,7 +181,7 @@ import SmileIcon from '@/components/Icons/SmileIcon.vue'
 import EmailTemplateIcon from '@/components/Icons/EmailTemplateIcon.vue'
 import AttachmentIcon from '@/components/Icons/AttachmentIcon.vue'
 import AttachmentItem from '@/components/AttachmentItem.vue'
-import MultiselectInput from '@/components/Controls/MultiselectInput.vue'
+import MultiSelectEmailInput from '@/components/Controls/MultiSelectEmailInput.vue'
 import EmailTemplateSelectorModal from '@/components/Modals/EmailTemplateSelectorModal.vue'
 import { TextEditorBubbleMenu, TextEditor, FileUploader, call } from 'frappe-ui'
 import { useTelemetry } from 'frappe-ui/frappe'
@@ -186,34 +191,13 @@ import { EditorContent } from '@tiptap/vue-3'
 import { ref, computed, nextTick } from 'vue'
 
 const props = defineProps({
-  placeholder: {
-    type: String,
-    default: null,
-  },
-  editable: {
-    type: Boolean,
-    default: true,
-  },
-  doctype: {
-    type: String,
-    default: 'CRM Lead',
-  },
-  subject: {
-    type: String,
-    default: __('Email From Lead'),
-  },
-  editorProps: {
-    type: Object,
-    default: () => ({}),
-  },
-  submitButtonProps: {
-    type: Object,
-    default: () => ({}),
-  },
-  discardButtonProps: {
-    type: Object,
-    default: () => ({}),
-  },
+  placeholder: { type: String, default: null },
+  editable: { type: Boolean, default: true },
+  doctype: { type: String, default: 'CRM Lead' },
+  subject: { type: String, default: __('Email From Lead') },
+  editorProps: { type: Object, default: () => ({}) },
+  submitButtonProps: { type: Object, default: () => ({}) },
+  discardButtonProps: { type: Object, default: () => ({}) },
 })
 
 const CustomParagraph = Paragraph.extend({
@@ -234,9 +218,12 @@ const CustomParagraph = Paragraph.extend({
   },
 })
 
-const modelValue = defineModel()
-const attachments = defineModel('attachments')
-const content = defineModel('content')
+const modelValue = defineModel({ type: Object })
+const attachments = defineModel('attachments', {
+  type: Array,
+  default: () => [],
+})
+const content = defineModel('content', { type: String, default: '' })
 
 const { capture } = useTelemetry()
 
@@ -292,12 +279,12 @@ function appendEmoji() {
 
 function toggleCC() {
   cc.value = !cc.value
-  cc.value && nextTick(() => ccInput.value.setFocus())
+  if (cc.value) nextTick(() => ccInput.value.setFocus())
 }
 
 function toggleBCC() {
   bcc.value = !bcc.value
-  bcc.value && nextTick(() => bccInput.value.setFocus())
+  if (bcc.value) nextTick(() => bccInput.value.setFocus())
 }
 
 defineExpose({

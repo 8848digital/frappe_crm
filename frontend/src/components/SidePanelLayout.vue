@@ -89,13 +89,13 @@
                         />
                         <FormControl
                           v-else-if="field.fieldtype == 'Check'"
+                          v-model="doc[field.fieldname]"
                           class="form-control"
                           type="checkbox"
-                          v-model="doc[field.fieldname]"
+                          :disabled="Boolean(field.read_only)"
                           @change.stop="
                             fieldChange($event.target.checked, field)
                           "
-                          :disabled="Boolean(field.read_only)"
                         />
                         <FormControl
                           v-else-if="
@@ -115,9 +115,9 @@
                         />
                         <FormControl
                           v-else-if="field.fieldtype === 'Select'"
+                          v-model="doc[field.fieldname]"
                           class="form-control cursor-pointer [&_select]:cursor-pointer truncate [&>*]:!ring-0"
                           type="select"
-                          v-model="doc[field.fieldname]"
                           :options="field.options"
                           :placeholder="field.placeholder"
                           @update:modelValue="(v) => fieldChange(v, field)"
@@ -131,11 +131,11 @@
                           "
                           doctype="User"
                           :filters="field.filters"
-                          @change="(v) => fieldChange(v, field)"
                           :placeholder="
                             __('Select') + ' ' + field.label + '...'
                           "
                           :hideMe="true"
+                          @change="(v) => fieldChange(v, field)"
                         >
                           <template v-if="doc[field.fieldname]" #prefix>
                             <UserAvatar
@@ -172,8 +172,8 @@
                           "
                           :filters="field.filters"
                           :placeholder="field.placeholder"
-                          @change="(v) => fieldChange(v, field)"
                           :onCreate="field.create"
+                          @change="(v) => fieldChange(v, field)"
                         />
                         <div
                           v-else-if="field.fieldtype === 'Datetime'"
@@ -210,10 +210,10 @@
                           :value="getFormattedPercent(field.fieldname, doc)"
                           :placeholder="field.placeholder"
                           :debounce="500"
+                          :disabled="Boolean(field.read_only)"
                           @change.stop="
                             fieldChange(flt($event.target.value), field)
                           "
-                          :disabled="Boolean(field.read_only)"
                         />
                         <Password
                           v-else-if="field.fieldtype === 'Password'"
@@ -221,8 +221,8 @@
                           :value="doc[field.fieldname]"
                           :placeholder="field.placeholder"
                           :debounce="500"
-                          @change.stop="fieldChange($event.target.value, field)"
                           :disabled="Boolean(field.read_only)"
+                          @change.stop="fieldChange($event.target.value, field)"
                         />
                         <FormattedInput
                           v-else-if="field.fieldtype === 'Int'"
@@ -231,8 +231,8 @@
                           :value="document.doc[field.fieldname] || '0'"
                           :placeholder="field.placeholder"
                           :debounce="500"
-                          @change.stop="fieldChange($event.target.value, field)"
                           :disabled="Boolean(field.read_only)"
+                          @change.stop="fieldChange($event.target.value, field)"
                         />
                         <FormattedInput
                           v-else-if="field.fieldtype === 'Float'"
@@ -241,10 +241,10 @@
                           :value="getFormattedFloat(field.fieldname, doc)"
                           :placeholder="field.placeholder"
                           :debounce="500"
+                          :disabled="Boolean(field.read_only)"
                           @change.stop="
                             fieldChange(flt($event.target.value), field)
                           "
-                          :disabled="Boolean(field.read_only)"
                         />
                         <FormattedInput
                           v-else-if="field.fieldtype === 'Currency'"
@@ -253,10 +253,10 @@
                           :value="getFormattedCurrency(field.fieldname, doc)"
                           :placeholder="field.placeholder"
                           :debounce="500"
+                          :disabled="Boolean(field.read_only)"
                           @change.stop="
                             fieldChange(flt($event.target.value), field)
                           "
-                          :disabled="Boolean(field.read_only)"
                         />
                         <FormControl
                           v-else
@@ -327,25 +327,11 @@ import { useDocument } from '@/data/document'
 import { ref, computed, getCurrentInstance } from 'vue'
 
 const props = defineProps({
-  sections: {
-    type: Object,
-  },
-  doctype: {
-    type: String,
-    default: 'CRM Lead',
-    required: true,
-  },
-  docname: {
-    type: String,
-    required: true,
-  },
-  preview: {
-    type: Boolean,
-    default: false,
-  },
-  addContact: {
-    type: Function,
-  },
+  sections: { type: Object, default: () => ({}) },
+  doctype: { type: String, default: 'CRM Lead' },
+  docname: { type: String, required: true },
+  preview: { type: Boolean, default: false },
+  addContact: { type: Function, default: null },
 })
 
 const emit = defineEmits(['beforeFieldChange', 'afterFieldChange', 'reload'])

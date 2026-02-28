@@ -20,14 +20,14 @@
             <Button
               variant="ghost"
               class="w-7"
-              @click="show = false"
               icon="x"
+              @click="show = false"
             />
           </div>
         </div>
         <div>
           <FieldLayout v-if="tabs.data" :tabs="tabs.data" :data="lead.doc" />
-          <ErrorMessage class="mt-4" v-if="error" :message="__(error)" />
+          <ErrorMessage v-if="error" class="mt-4" :message="__(error)" />
         </div>
       </div>
       <div class="px-4 pb-7 pt-4 sm:px-6">
@@ -59,14 +59,14 @@ import { computed, onMounted, ref, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 
 const props = defineProps({
-  defaults: Object,
+  defaults: { type: Object, default: () => ({}) },
 })
 
 const { getUser, isManager } = usersStore()
 const { user } = sessionStore()
 const { getLeadStatus, statusOptions } = statusesStore()
 
-const show = defineModel()
+const show = defineModel({ type: Boolean })
 const router = useRouter()
 const error = ref(null)
 const isLeadCreating = ref(false)
@@ -75,13 +75,7 @@ const { document: lead, triggerOnBeforeCreate } = useDocument('CRM Lead')
 
 const { capture } = useTelemetry()
 
-const leadStatuses = computed(() => {
-  let statuses = statusOptions('lead')
-  if (!lead.doc.status) {
-    lead.doc.status = statuses?.[0]?.value
-  }
-  return statuses
-})
+const leadStatuses = computed(() => statusOptions('lead'))
 
 const tabs = createResource({
   url: 'crm.fcrm.doctype.crm_fields_layout.crm_fields_layout.get_fields_layout',

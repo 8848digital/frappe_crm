@@ -17,11 +17,9 @@
         <Button
           :label="__('Send Invites')"
           variant="solid"
-          :disabled="
-            !invitees.length || userExistMessage || inviteeExistMessage
-          "
-          @click="inviteByEmail.submit()"
+          :disabled="!invitees.length"
           :loading="inviteByEmail.loading"
+          @click="inviteByEmail.submit()"
         />
       </div>
     </div>
@@ -31,7 +29,6 @@
           type="textarea"
           :label="__('Invite By Email')"
           placeholder="user1@example.com, user2@example.com, ..."
-          @input="updateInvitees($event.target.value)"
           :debounce="100"
           :disabled="inviteByEmail.loading"
           :description="
@@ -39,6 +36,7 @@
               'You can invite multiple users by comma separating their email addresses',
             )
           "
+          @input="updateInvitees($event.target.value)"
         />
         <div
           v-if="userExistMessage || inviteeExistMessage"
@@ -47,9 +45,9 @@
           {{ userExistMessage || inviteeExistMessage }}
         </div>
         <FormControl
+          v-model="role"
           type="select"
           class="mt-4"
-          v-model="role"
           :label="__('Invite As')"
           :options="roleOptions"
           :description="description"
@@ -64,9 +62,9 @@
           </div>
           <ul class="flex flex-col gap-1">
             <li
-              class="flex items-center justify-between px-2 py-1 rounded-lg bg-surface-gray-2"
               v-for="user in pendingInvitations.data"
               :key="user.name"
+              class="flex items-center justify-between px-2 py-1 rounded-lg bg-surface-gray-2"
             >
               <div class="text-base">
                 <span class="text-ink-gray-8">
@@ -100,12 +98,7 @@
 import { validateEmail, convertArrayToString } from '@/utils'
 import { usersStore } from '@/stores/users'
 import { useOnboarding, useTelemetry } from 'frappe-ui/frappe'
-import {
-  toast,
-  createListResource,
-  createResource,
-  FormControl,
-} from 'frappe-ui'
+import { createListResource, createResource, FormControl } from 'frappe-ui'
 import { ref, computed } from 'vue'
 
 const { updateOnboardingStep } = useOnboarding('frappecrm')
@@ -181,18 +174,23 @@ const inviteByEmail = createResource({
       role: role.value,
     }
   },
-  onSuccess() {
-    role.value = 'Sales User'
-    error.value = null
+  onSuccess(data) {
+    if (data?.existing_invites?.length) {
+      error.value = __('User with email {0} already exists', [
+        data.existing_invites.join(', '),
+      ])
+    } else {
+      role.value = 'Sales User'
+      error.value = null
+    }
+
     invitees.value = []
     pendingInvitations.reload()
-    toast.success(__('Invitations sent successfully'))
     updateOnboardingStep('invite_your_team')
     capture('user_invited')
   },
   onError(err) {
     error.value = err?.messages?.[0]
-    toast.error(error.value)
   },
 })
 
