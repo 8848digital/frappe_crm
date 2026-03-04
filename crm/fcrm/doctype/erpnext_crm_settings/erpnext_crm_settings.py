@@ -57,7 +57,7 @@ class ERPNextCRMSettings(Document):
 
 	def create_custom_fields(self):
 		if not self.is_erpnext_in_different_site:
-			from erpnext.frappe_crm_api import create_custom_fields_for_frappe_crm
+			from erpnext.crm.frappe_crm_api import create_custom_fields_for_frappe_crm
 
 			create_custom_fields_for_frappe_crm()
 		else:
@@ -81,7 +81,7 @@ class ERPNextCRMSettings(Document):
 	def create_custom_fields_in_remote_site(self):
 		client = get_erpnext_site_client(self)
 		try:
-			client.post_api("erpnext.frappe_crm_api.create_custom_fields_for_frappe_crm")
+			client.post_api("erpnext.crm.frappe_crm_api.create_custom_fields_for_frappe_crm")
 		except Exception:
 			frappe.log_error(
 				frappe.get_traceback(),
@@ -133,12 +133,18 @@ def get_customer_link(crm_deal: str):
 
 	if not erpnext_crm_settings.is_erpnext_in_different_site:
 		customer = frappe.db.exists("Customer", {"crm_deal": crm_deal})
+		if not customer:
+			customer = frappe.db.get_value("CRM Deal", crm_deal, "erpnext_customer")
 		return get_url_to_form("Customer", customer) if customer else ""
 	else:
 		client = get_erpnext_site_client(erpnext_crm_settings)
 		try:
 			customer = client.get_list("Customer", filters={"crm_deal": crm_deal})
 			customer = customer[0].get("name") if len(customer) else None
+
+			if not customer:
+				customer = frappe.db.get_value("CRM Deal", crm_deal, "erpnext_customer")
+
 			if customer:
 				return f"{erpnext_crm_settings.erpnext_site_url}/app/customer/{customer}"
 			else:
@@ -201,7 +207,7 @@ def create_prospect_in_remote_site(crm_deal, erpnext_crm_settings):
 			address = address.as_dict()
 
 		return client.post_api(
-			"erpnext.frappe_crm_api.create_prospect_against_crm_deal",
+			"erpnext.crm.frappe_crm_api.create_prospect_against_crm_deal",
 			{
 				"organization": doc.organization,
 				"lead_name": doc.lead_name,
@@ -298,22 +304,36 @@ def create_customer_in_erpnext(doc, method):
 		"crm_deal": doc.name,
 		"contacts": json.dumps(contacts),
 		"address": json.dumps(address) if address else None,
-		"custom_business_vertical": doc.business_vertical
 	}
-	if not erpnext_crm_settings.is_erpnext_in_different_site:
-		from erpnext.frappe_crm_api import create_customer
+	customer_name = None
 
-		create_customer(customer)
-	else:
-		create_customer_in_remote_site(customer, erpnext_crm_settings)
+	try:
+		if not erpnext_crm_settings.is_erpnext_in_different_site:
+			from erpnext.crm.frappe_crm_api import create_customer
 
-	frappe.publish_realtime("crm_customer_created")
+			customer_name = create_customer(customer)
+		else:
+			customer_name = create_customer_in_remote_site(customer, erpnext_crm_settings)
+
+		if not customer_name:
+			frappe.log_error(
+				"Customer name not returned from ERPNext after creation",
+				f"Error while creating customer in ERPNext for CRM Deal: {doc.name}",
+			)
+			frappe.throw(_("Error while creating customer in ERPNext, check error log for more details"))
+	except Exception:
+		frappe.log_error(frappe.get_traceback(), "Error while creating customer in ERPNext")
+		frappe.throw(_("Error while creating customer in ERPNext, check error log for more details"))
+
+	if customer_name:
+		frappe.db.set_value("CRM Deal", doc.name, "erpnext_customer", customer_name)
+		frappe.publish_realtime("crm_customer_created")
 
 
 def create_customer_in_remote_site(customer, erpnext_crm_settings):
 	client = get_erpnext_site_client(erpnext_crm_settings)
 	try:
-		client.post_api("erpnext.frappe_crm_api.create_customer", customer)
+		return client.post_api("erpnext.crm.frappe_crm_api.create_customer", customer)
 	except Exception:
 		frappe.log_error(frappe.get_traceback(), "Error while creating customer in remote site")
 		frappe.throw(_("Error while creating customer in ERPNext, check error log for more details"))
