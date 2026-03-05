@@ -399,7 +399,8 @@ class CRMLead(Document):
 			},
 			{
 				"label": "Status",
-				"type": "Select",
+				"type": "Link",
+				"options": "CRM Lead Status",
 				"key": "status",
 				"width": "8rem",
 			},
