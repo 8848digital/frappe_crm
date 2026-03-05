@@ -1,13 +1,8 @@
 <template>
   <FrappeUIProvider>
-<<<<<<< HEAD
-    <Layout v-if="session().isLoggedIn">
-      <router-view :key="$route.fullPath"/>
-=======
     <NotPermitted v-if="$route.name === 'Not Permitted'" />
     <Layout v-else-if="session().isLoggedIn" class="isolate">
       <router-view :key="$route.fullPath" />
->>>>>>> 19d0a8a1 (refactor: add NotPermitted page and update routing logic for access control)
     </Layout>
     <Dialogs />
   </FrappeUIProvider>
@@ -39,4 +34,5 @@ onMounted(() => setTheme())
 
 setConfig('systemTimezone', window.timezone?.system || null)
 setConfig('localTimezone', window.timezone?.user || null)
+setConfig('translatedMessages', window.translated_messages || {})
 </script>
