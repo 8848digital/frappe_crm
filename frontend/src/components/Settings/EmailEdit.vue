@@ -121,7 +121,7 @@ const info = {
 }
 
 const isCustomService = computed(() => {
-  return services.find((s) => s.name === props.accountData.service).custom
+  return services.find((s) => s.name === props.accountData.service)?.custom
 })
 
 const fields = computed(() => {
