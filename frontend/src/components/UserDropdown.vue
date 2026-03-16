@@ -59,7 +59,6 @@ import { showSettings, isMobileView } from '@/composables/settings'
 import { showAboutModal } from '@/composables/modals'
 import { confirmLoginToFrappeCloud } from '@/composables/frappecloud'
 import { Dropdown } from 'frappe-ui'
-import { theme, toggleTheme } from '@/stores/theme'
 import { computed, h, markRaw } from 'vue'
 
 defineProps({
@@ -129,13 +128,6 @@ function getStandardItem(item) {
       return {
         component: markRaw(Apps),
       }
-    
-    case 'toggle_theme':
-      return {
-        icon: theme.value === 'dark' ? 'sun' : item.icon,
-        label: __(item.label),
-        onClick: toggleTheme,
-      }
     case 'settings':
       return {
         icon: item.icon,
@@ -156,7 +148,6 @@ function getStandardItem(item) {
         label: __(item.label),
         onClick: () => (showAboutModal.value = true),
       }
-      
     case 'logout':
       return {
         icon: item.icon,
