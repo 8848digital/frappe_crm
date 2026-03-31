@@ -43,15 +43,18 @@ class CRMTask(Document):
 			unassign(self.doctype, self.name, user)
 
 	def assign_to(self):
-		if self.assigned_to:
-			assign(
-				{
-					"assign_to": [self.assigned_to],
-					"doctype": self.doctype,
-					"name": self.name,
-					"description": self.title or self.description,
-				}
-			)
+		if not self.assigned_to:
+			return
+
+		import frappe
+
+		frappe.get_doc({
+			"doctype": "ToDo",
+			"allocated_to": self.assigned_to,
+			"reference_type": self.doctype,
+			"reference_name": self.name,
+			"description": self.title or self.description
+		}).insert(ignore_permissions=True)
 
 	@staticmethod
 	def default_list_data():
